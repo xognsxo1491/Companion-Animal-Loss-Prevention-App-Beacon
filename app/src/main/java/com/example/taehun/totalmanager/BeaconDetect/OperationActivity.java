@@ -14,7 +14,6 @@ import android.view.View;
 import com.clj.fastble.BleManager;
 import com.clj.fastble.data.BleDevice;
 import com.example.taehun.totalmanager.R;
-import com.example.taehun.totalmanager.ServiceListFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -57,10 +59,10 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
 
     private LinearLayout layout_setting;
     private TextView txt_setting;
-    private Button btn_scan;
     private EditText et_name, et_mac, et_uuid;
     private Switch sw_auto;
     private ImageView img_loading;
+    private FloatingActionButton fab_detect;
 
     private Animation operatingAnim;
     private Adapter_Device mAdapterDevice;
@@ -96,13 +98,6 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_scan:
-                if (btn_scan.getText().equals(getString(R.string.start_scan))) {
-                    checkPermissions();
-                } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
-                    BleManager.getInstance().cancelScan();
-                }
-                break;
 
             case R.id.txt_setting:
                 if (layout_setting.getVisibility() == View.VISIBLE) {
@@ -113,6 +108,13 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
                     txt_setting.setText(getString(R.string.retrieve_search_settings));
                 }
                 break;
+
+            case R.id.fab_detect:
+                if (fab_detect.getTag().equals("실행")) {
+                    checkPermissions();
+                } else if (fab_detect.getTag().equals("중단")) {
+                    BleManager.getInstance().cancelScan();
+                }
         }
     }
 
@@ -120,14 +122,15 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        btn_scan = (Button) findViewById(R.id.btn_scan);
-        btn_scan.setText(getString(R.string.start_scan));
-        btn_scan.setOnClickListener(this);
+        fab_detect = (FloatingActionButton) findViewById(R.id.fab_detect);
+        fab_detect.setTag("실행");
+        fab_detect.setOnClickListener(this);
 
         et_name = (EditText) findViewById(R.id.et_name);
         et_mac = (EditText) findViewById(R.id.et_mac);
         et_uuid = (EditText) findViewById(R.id.et_uuid);
         sw_auto = (Switch) findViewById(R.id.sw_auto);
+
 
         layout_setting = (LinearLayout) findViewById(R.id.layout_setting);
         txt_setting = (TextView) findViewById(R.id.txt_setting);
@@ -138,6 +141,7 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
         img_loading = (ImageView) findViewById(R.id.img_loading);
         operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
+
         progressDialog = new ProgressDialog(this);
 
         mAdapterDevice = new Adapter_Device(this);
@@ -160,9 +164,6 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onDetail(BleDevice bleDevice) {
                 if (BleManager.getInstance().isConnected(bleDevice)) {
-                    Intent intent = new Intent(DetectBeaconActivity.this, OperationActivity.class);
-                    intent.putExtra(OperationActivity.KEY_DATA, bleDevice);
-                    startActivity(intent);
                 }
             }
         });
@@ -231,7 +232,11 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
                 mAdapterDevice.notifyDataSetChanged();
                 img_loading.startAnimation(operatingAnim);
                 img_loading.setVisibility(View.VISIBLE);
-                btn_scan.setText(getString(R.string.stop_scan));
+
+                fab_detect.setAnimation(operatingAnim);
+
+                fab_detect.setTag("중단");
+                fab_detect.setImageResource(R.drawable.baseline_pause_white_24dp);
             }
 
             @Override
@@ -249,7 +254,9 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
             public void onScanFinished(List<BleDevice> scanResultList) {
                 img_loading.clearAnimation();
                 img_loading.setVisibility(View.INVISIBLE);
-                btn_scan.setText(getString(R.string.start_scan));
+
+                fab_detect.setTag("실행");
+                fab_detect.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
             }
         });
     }
@@ -265,7 +272,9 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 img_loading.clearAnimation();
                 img_loading.setVisibility(View.INVISIBLE);
-                btn_scan.setText(getString(R.string.start_scan));
+
+                fab_detect.setTag("실행");
+                fab_detect.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
                 progressDialog.dismiss();
                 Toast.makeText(DetectBeaconActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
             }

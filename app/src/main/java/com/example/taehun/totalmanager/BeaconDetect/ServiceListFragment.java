@@ -1,4 +1,4 @@
-package com.example.taehun.totalmanager;
+package com.example.taehun.totalmanager.BeaconDetect;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGatt;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.clj.fastble.BleManager;
 import com.clj.fastble.data.BleDevice;
-import com.example.taehun.totalmanager.BeaconDetect.OperationActivity;
+import com.example.taehun.totalmanager.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.example.taehun.totalmanager.Adapter;
 
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,7 @@ public class Adapter_Device extends BaseAdapter {
         if (convertView != null) {
             holder = (ViewHolder) convertView.getTag();
         } else {
+
             convertView = View.inflate(context, R.layout.adapter_device, null);
             holder = new ViewHolder();
             convertView.setTag(holder);
@@ -93,63 +95,38 @@ public class Adapter_Device extends BaseAdapter {
             holder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
             holder.txt_mac = (TextView) convertView.findViewById(R.id.txt_mac);
             holder.txt_rssi = (TextView) convertView.findViewById(R.id.txt_rssi);
+
             holder.layout_idle = (LinearLayout) convertView.findViewById(R.id.layout_idle);
-            holder.layout_connected = (LinearLayout) convertView.findViewById(R.id.layout_connected);
-            holder.btn_disconnect = (Button) convertView.findViewById(R.id.btn_disconnect);
-            holder.btn_connect = (Button) convertView.findViewById(R.id.btn_connect);
-            holder.btn_detail = (Button) convertView.findViewById(R.id.btn_detail);
         }
 
         final BleDevice bleDevice = getItem(position);
         if (bleDevice != null) {
+
             boolean isConnected = BleManager.getInstance().isConnected(bleDevice);
+
             String name = bleDevice.getName();
             String mac = bleDevice.getMac();
+
             int rssi = bleDevice.getRssi();
+
             holder.txt_name.setText(name);
             holder.txt_mac.setText(mac);
             holder.txt_rssi.setText(String.valueOf(rssi));
+
             if (isConnected) {
                 holder.img_blue.setImageResource(R.drawable.baseline_bluetooth_connected_black_24dp);
                 holder.txt_name.setTextColor(0xFF1DE9B6);
                 holder.txt_mac.setTextColor(0xFF1DE9B6);
                 holder.layout_idle.setVisibility(View.GONE);
-                holder.layout_connected.setVisibility(View.VISIBLE);
+
             } else {
                 holder.img_blue.setImageResource(R.drawable.baseline_bluetooth_black_24dp);
                 holder.txt_name.setTextColor(0xFF000000);
                 holder.txt_mac.setTextColor(0xFF000000);
                 holder.layout_idle.setVisibility(View.VISIBLE);
-                holder.layout_connected.setVisibility(View.GONE);
+
             }
         }
-
-        holder.btn_connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onConnect(bleDevice);
-                }
-            }
-        });
-
-        holder.btn_disconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onDisConnect(bleDevice);
-                }
-            }
-        });
-
-        holder.btn_detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onDetail(bleDevice);
-                }
-            }
-        });
 
         return convertView;
     }
@@ -160,10 +137,6 @@ public class Adapter_Device extends BaseAdapter {
         TextView txt_mac;
         TextView txt_rssi;
         LinearLayout layout_idle;
-        LinearLayout layout_connected;
-        Button btn_disconnect;
-        Button btn_connect;
-        Button btn_detail;
     }
 
     public interface OnDeviceClickListener {
