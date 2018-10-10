@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "402371180683",
+    "firebase_url": "https://totalmanager-944bd.firebaseio.com",
+    "project_id": "totalmanager-944bd",
+    "storage_bucket": "totalmanager-944bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402371180683:android:7d5355ef8358c565",
+        "android_client_info": {
+          "package_name": "com.example.taehun.totalmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "402371180683-s1js83kq1l0grubhqd3gu0morqr0l2fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCca3QZGY8hglK4J1L4Ik98WHfKt8ZcPDs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
