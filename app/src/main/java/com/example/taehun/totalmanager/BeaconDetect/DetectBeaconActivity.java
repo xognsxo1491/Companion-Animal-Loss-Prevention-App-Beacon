@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,12 +57,12 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
     private static final String TAG = DetectBeaconActivity.class.getSimpleName();
     private static final int REQUEST_CODE_OPEN_GPS = 1;
     private static final int REQUEST_CODE_PERMISSION_LOCATION = 2;
+    BluetoothLeScanner bluetoothLeScanner;
 
     private LinearLayout layout_setting;
     private TextView txt_setting;
     private EditText et_name, et_mac, et_uuid;
     private Switch sw_auto;
-    private ImageView img_loading;
     private FloatingActionButton fab_detect;
 
     private Animation operatingAnim;
@@ -80,6 +81,7 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
                 .setReConnectCount(1, 5000)
                 .setConnectOverTime(20000)
                 .setOperateTimeout(5000);
+
     }
 
     @Override
@@ -119,6 +121,7 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initView() {
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -138,7 +141,6 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
         layout_setting.setVisibility(View.GONE);
         txt_setting.setText(getString(R.string.expand_search_settings));
 
-        img_loading = (ImageView) findViewById(R.id.img_loading);
         operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
 
@@ -167,6 +169,7 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         });
+
         ListView listView_device = (ListView) findViewById(R.id.list_device);
         listView_device.setAdapter(mAdapterDevice);
     }
@@ -230,13 +233,10 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
             public void onScanStarted(boolean success) {
                 mAdapterDevice.clearScanDevice();
                 mAdapterDevice.notifyDataSetChanged();
-                img_loading.startAnimation(operatingAnim);
-                img_loading.setVisibility(View.VISIBLE);
-
-                fab_detect.setAnimation(operatingAnim);
 
                 fab_detect.setTag("중단");
-                fab_detect.setImageResource(R.drawable.baseline_pause_white_24dp);
+                fab_detect.setImageResource(R.drawable.baseline_cached_white_24dp);
+                fab_detect.setAnimation(operatingAnim);
             }
 
             @Override
@@ -252,11 +252,10 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-                img_loading.clearAnimation();
-                img_loading.setVisibility(View.INVISIBLE);
 
                 fab_detect.setTag("실행");
                 fab_detect.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
+                fab_detect.clearAnimation();
             }
         });
     }
@@ -270,8 +269,6 @@ public class DetectBeaconActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
-                img_loading.clearAnimation();
-                img_loading.setVisibility(View.INVISIBLE);
 
                 fab_detect.setTag("실행");
                 fab_detect.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
