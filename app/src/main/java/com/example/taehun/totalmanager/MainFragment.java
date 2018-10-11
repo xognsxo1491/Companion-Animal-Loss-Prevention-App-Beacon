@@ -20,7 +20,7 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main,null);
 
         Button btn_board = (Button) view.findViewById(R.id.btn_board);
-        Button btn_beaconList = (Button)  view.findViewById(R.id.btn_beaconList);
+        Button btn_beacondialog = (Button)  view.findViewById(R.id.btn_beacondialog);
         Button btn_maps = (Button)  view.findViewById(R.id.btn_maps);
         Button btn_DetectBeacon = (Button)  view.findViewById(R.id.btn_DetectBeacon);
 
@@ -33,11 +33,14 @@ public class MainFragment extends Fragment {
             }
         });
 
-        btn_beaconList.setOnClickListener(new View.OnClickListener() {
+        btn_beacondialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), BeaconListActivity.class);
-                startActivity(intent);
+
+                CustomDialog customDialog = new CustomDialog(getContext());
+                // 커스텀 다이얼로그를 호출한다.
+                // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
+                customDialog.callFunction(null);
             }
         });
 

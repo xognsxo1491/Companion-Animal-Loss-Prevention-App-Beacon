@@ -52,7 +52,6 @@
             android:name=".Board_Comment_Activity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".Board1_Search_Activity" />
-        <activity android:name=".BeaconListActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

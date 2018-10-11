@@ -14,6 +14,7 @@ import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,16 +24,19 @@ import android.os.Build;
 import android.os.ParcelUuid;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -52,6 +56,9 @@ import com.clj.fastble.callback.BleScanCallback;
 import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
+import com.example.taehun.totalmanager.Adapter.Adapter_Device;
+import com.example.taehun.totalmanager.BeaconDetect.DetectBeaconActivity;
+import com.example.taehun.totalmanager.BeaconDetect.ObserverManager;
 import com.example.taehun.totalmanager.R;
 
 import java.util.ArrayList;
@@ -60,7 +67,8 @@ import java.util.UUID;
 
 public class Beacon2Fragment extends Fragment {
 
-    public Beacon2Fragment() { }
+    public Beacon2Fragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
