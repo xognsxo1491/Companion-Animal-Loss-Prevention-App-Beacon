@@ -119,7 +119,7 @@ public class CustomDialog implements BeaconConsumer{
 
                         final String uuid = dialogAdapter.getItem(i).getUuid();
                         final String major = dialogAdapter.getItem(i).getMajor();
-                        final String minor = dialogAdapter.getItem(i).getMajor();
+                        final String minor = dialogAdapter.getItem(i).getMinor();
 
                         dialog = builder.setMessage("해당 비콘을 등록하시겠습니까?")
                                 .setNegativeButton("확인", new DialogInterface.OnClickListener() {
@@ -151,7 +151,7 @@ public class CustomDialog implements BeaconConsumer{
                                             }
                                         };
 
-                                        BeaconWriteRequest board_delete_request = new BeaconWriteRequest(userId, uuid, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                                        BeaconWriteRequest board_delete_request = new BeaconWriteRequest(userId, uuid, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                                         RequestQueue queue = Volley.newRequestQueue(context);
                                         queue.add(board_delete_request);
                                     }

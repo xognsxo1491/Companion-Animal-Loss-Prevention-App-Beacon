@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.taehun.totalmanager.BeaconMap.BeacomMapActivity;
+import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
 
 public class MainFragment extends Fragment {
 
