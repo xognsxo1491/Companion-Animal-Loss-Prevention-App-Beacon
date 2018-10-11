@@ -1,20 +1,17 @@
-package com.example.taehun.totalmanager;
+package com.example.taehun.totalmanager.BeaconScan;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -28,9 +25,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.taehun.totalmanager.DialogAdapter;
-import com.example.taehun.totalmanager.BeaconWriteRequest;
-import com.google.android.gms.maps.MapFragment;
+import com.example.taehun.totalmanager.R;
+import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;

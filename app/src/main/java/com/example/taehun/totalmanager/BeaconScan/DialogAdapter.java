@@ -1,4 +1,4 @@
-package com.example.taehun.totalmanager;
+package com.example.taehun.totalmanager.BeaconScan;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.taehun.totalmanager.R;
 
 import java.util.ArrayList;
 
@@ -44,7 +46,7 @@ public class DialogAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView==null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.dialog_listview,null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.listview_dialog,null);
         }
         text_uuid = convertView.findViewById(R.id.text_scan_uuid);
         text_uuid.setText(getItem(position).getUuid());

@@ -1,4 +1,4 @@
-package com.example.taehun.totalmanager;
+package com.example.taehun.totalmanager.BeaconScan;
 
 public class BeaconItem {
     String uuid,major,minor,distance;
