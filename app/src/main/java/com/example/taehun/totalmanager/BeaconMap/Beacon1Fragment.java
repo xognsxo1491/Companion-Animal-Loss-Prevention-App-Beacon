@@ -1,6 +1,7 @@
 package com.example.taehun.totalmanager.BeaconMap;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -58,7 +59,7 @@ public class Beacon1Fragment extends Fragment {
 
                         imm.hideSoftInputFromWindow(editText_UUID.getWindowToken(), 0);
 
-                        Toast.makeText(getContext(), "검색란이 공백입니다.", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(view,"검색란이 공백입니다.",Snackbar.LENGTH_SHORT).show();
 
                     } else { // 아닐경우
                         imm.hideSoftInputFromWindow(editText_UUID.getWindowToken(), 0);

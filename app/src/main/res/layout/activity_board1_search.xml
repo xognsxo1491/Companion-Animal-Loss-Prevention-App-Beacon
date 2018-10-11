@@ -36,7 +36,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:background="#ffffff"
+            android:background="@drawable/shadow_13713"
             android:hint=" 자유게시판 내 통합검색"
             android:inputType="text"
             android:theme="@style/EditTextStyle"

@@ -1,12 +1,13 @@
 package com.example.taehun.totalmanager;
 
 public class BeaconItem {
-    String uuid;
-    String distance;
+    String uuid,major,minor,distance;
 
-    public BeaconItem(String uuid, String distance){
+    public BeaconItem(String uuid, String major, String minor, String distance){
         this.uuid = uuid;
         this.distance = distance;
+        this.major = major;
+        this.minor = minor;
     }
 
     public String getUuid() {
@@ -15,6 +16,22 @@ public class BeaconItem {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getMinor() {
+        return minor;
+    }
+
+    public void setMinor(String distance) {
+        this.minor = minor;
     }
 
     public String getDistance() {

@@ -13,8 +13,7 @@ public class DialogAdapter extends BaseAdapter {
 
     Context context;
     ArrayList<BeaconItem> itemArrayList;
-    TextView textView;
-    TextView textView2;
+    TextView text_uuid,text_distance,text_major,text_minor;
 
 
 
@@ -47,17 +46,25 @@ public class DialogAdapter extends BaseAdapter {
         if(convertView==null){
             convertView = LayoutInflater.from(context).inflate(R.layout.dialog_listview,null);
         }
-        textView = convertView.findViewById(R.id.beacon_ID);
-        textView2 = convertView.findViewById(R.id.distance);
-        textView.setText("ID : " +getItem(position).getUuid());
-        textView2.setText("거리 : " + getItem(position).getDistance());
+        text_uuid = convertView.findViewById(R.id.text_scan_uuid);
+        text_uuid.setText(getItem(position).getUuid());
+
+        text_major = convertView.findViewById(R.id.text_scan_major);
+        text_major.setText(getItem(position).getMajor());
+
+        text_minor = convertView.findViewById(R.id.text_scan_minor);
+        text_minor.setText(getItem(position).getMinor());
+
+        text_distance = convertView.findViewById(R.id.text_scan_distance);
+        text_distance.setText(getItem(position).getDistance()+" m");
+
 //        inListContentView.setText(getItem(position).getContent());
 //        inListTimeView.setText(getItem(position).getTime());
 
         return convertView;
     }
-    public void addItem(String uuid, String distance){
-        itemArrayList.add(new BeaconItem(uuid, distance));
+    public void addItem(String uuid, String major, String minor,  String distance){
+        itemArrayList.add(new BeaconItem(uuid, major, minor,  distance));
 
     }
     public void delItem(int position){

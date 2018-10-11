@@ -29,19 +29,13 @@
             android:id="@+id/btn_maps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/btn_DetectBeacon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="비콘 탐지" />
+            android:text="비콘 맵" />
 
         <Button
             android:id="@+id/btn_beacondialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="비콘 스캔" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

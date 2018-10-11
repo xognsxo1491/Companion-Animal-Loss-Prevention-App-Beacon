@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,11 +12,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -111,12 +110,12 @@ public class Sign_UpActivity extends AppCompatActivity {
                 }
 
                 if (id.equals("")) {
-                    Toast.makeText(Sign_UpActivity.this, "아이디 입력란이 공백입니다.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v,"아이디 입력란이 공백입니다.",Snackbar.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (id.length()>12 || id.length()<5) {
-                    Toast.makeText(Sign_UpActivity.this, "아이디 길이를 맞춰주세요.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v,"아이디 길이를 맞춰주세요.",Snackbar.LENGTH_SHORT).show();
                     return;
                 }
 
