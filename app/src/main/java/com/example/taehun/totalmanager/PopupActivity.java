@@ -53,7 +53,6 @@ public class PopupActivity extends Activity implements BeaconConsumer{
         strMajor = intent.getStringExtra("Major");
         strminor = intent.getStringExtra("Minor");
 
-        distance.setText("시발 몇임");
         beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
         beaconManager.bind(this);
@@ -95,7 +94,6 @@ public class PopupActivity extends Activity implements BeaconConsumer{
                     major.setText(beacon.getId2().toString());
                     mainor.setText(beacon.getId3().toString());
                     distance.setText( String.format("%.3f", beacon.getDistance()) +" m");
-                    System.out.println(beacon.getId2() + " " +beacon.getId3() + " "+ beacon.getDistance());
                     }
             }
             handler.sendEmptyMessageDelayed(0, 1000);
