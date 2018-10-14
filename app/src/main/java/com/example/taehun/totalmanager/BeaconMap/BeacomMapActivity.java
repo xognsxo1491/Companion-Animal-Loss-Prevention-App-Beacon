@@ -1,27 +1,37 @@
 package com.example.taehun.totalmanager.BeaconMap;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.taehun.totalmanager.Adapter.Adapter_BeaconSearch;
+import com.example.taehun.totalmanager.Board1_Activity;
 import com.example.taehun.totalmanager.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,35 +39,55 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
-public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCallback{
+
+    private static final String TAG_RESULT = "result";
+    private static final String TAG_UUID = "UUID";
+    private static final String TAG_MAJOR = "Major";
+    private static final String TAG_Minor = "Minor";
+    private static final String TAG_LATITUDE = "Latitude";
+    private static final String TAG_LONGITUDE = "Longitude";
 
     private BottomSheetBehavior bottomSheetBehavior;
     private BottomNavigationView bottomNavigationView;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    ListView listView;
-    Adapter_BeaconSearch adapter;
-
-    String beaconUUID, beaconMajor, beaconMinor;
+    LocationManager locationManager;
+    MarkerOptions markerOptions;
+    JSONArray jsonArray = null;
+    String myJSON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beaconmap);
 
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            Toast.makeText(this, "GPS가 켜져있어야 해당 기능을 사용할 수 있습니다.", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        SharedPreferences preferences = getSharedPreferences("BeaconInfo", MODE_PRIVATE);
-        preferences.getString("BeaconUUID", beaconUUID);
-        preferences.getString("BeaconMajor", beaconMajor);
-        preferences.getString("BeaconMinor", beaconMinor);
-
-        String[] items = { beaconUUID };
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.beacon_navi);
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -124,9 +154,8 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(SANGMYUNG));
 
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
         googleMap.animateCamera(zoom);
-
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -137,26 +166,143 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
         else {
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
         }
+
+        getData("http://xognsxo1491.cafe24.com/Beacon_search_connect.php", googleMap);
+
 
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
 
             @Override
             public boolean onMyLocationButtonClick() {
 
+                LocationListener mLocationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+
+                        Double lat = location.getLatitude();
+                        Double lon = location.getLongitude();
+
+                        LatLng mylocation = new LatLng(lat,lon);
+
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
+                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
+                        googleMap.animateCamera(zoom);
+
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                };
+
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
                     Intent gpsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(gpsIntent);
+                    locationManager.removeUpdates(mLocationListener);
                 } else {
 
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1 ,mLocationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000, 1, mLocationListener);
+
                 }
+
                 return true;
             }
-
-
         });
+
     }
 
+
+    protected void showList(GoogleMap googleMap) {  // php 파싱 설정
+        try {
+            JSONObject jsonObject = new JSONObject(myJSON);
+            jsonArray = jsonObject.getJSONArray(TAG_RESULT);
+
+            HashMap<String, String> hashMap = new HashMap<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+
+                String uuid = object.getString(TAG_UUID);
+                String major = object.getString(TAG_MAJOR);
+                String minor  = object.getString(TAG_Minor);
+                String str_lat = object.getString(TAG_LATITUDE);
+                String str_long = object.getString(TAG_LONGITUDE);
+
+                Double lat =  Double.parseDouble(str_lat);
+                Double lon = Double.parseDouble(str_long);
+
+                markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(lat, lon))
+                        .title(uuid)
+                        .snippet("Major : "+ major + "  Minor : " +minor);
+
+                googleMap.addMarker(markerOptions);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getData(String url, final GoogleMap googleMap) { // php 파싱관련
+
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            ProgressDialog progressDialog = new ProgressDialog(BeacomMapActivity.this);
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog.setMessage("불러오는 중입니다.");
+                progressDialog.show();
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) { // url 추출
+                progressDialog.dismiss();
+                myJSON = s;
+                showList(googleMap);
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+                BufferedReader bufferedReader = null;
+
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    StringBuilder builder = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        builder.append(json + "\n");
+                    }
+                    return builder.toString().trim();
+
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }
+        GetDataJSON getDataJSON = new GetDataJSON();
+        getDataJSON.execute(url);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.taehun.totalmanager.BeaconScan;
+package com.example.taehun.totalmanager.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.taehun.totalmanager.BeaconScan.BeaconItem;
 import com.example.taehun.totalmanager.R;
 
 import java.util.ArrayList;
 
-public class DialogAdapter extends BaseAdapter {
+public class Adapter_Dialog extends BaseAdapter {
 
     Context context;
     ArrayList<BeaconItem> itemArrayList;
@@ -19,7 +20,7 @@ public class DialogAdapter extends BaseAdapter {
 
 
 
-    public DialogAdapter(Context context, ArrayList<BeaconItem> list_itemArrayList) {
+    public Adapter_Dialog(Context context, ArrayList<BeaconItem> list_itemArrayList) {
         this.context = context;
         this.itemArrayList = list_itemArrayList;
     }

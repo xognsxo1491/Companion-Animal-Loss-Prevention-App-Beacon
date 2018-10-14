@@ -17,6 +17,7 @@
         android:background="@drawable/shadow_13713"
         android:ems="10"
         android:hint="비콘 UUID 검색"
+        android:textStyle="bold"
         android:inputType="textWebEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -20,6 +20,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="UUID :"
+            android:textStyle="bold"
             android:textColor="@color/colorDeepBlue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +41,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Major :"
+            android:textStyle="bold"
             android:textColor="@color/colorDeepBlue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
@@ -60,6 +62,7 @@
             android:layout_marginEnd="80dp"
             android:layout_marginTop="8dp"
             android:text="Minor :"
+            android:textStyle="bold"
             android:textColor="@color/colorDeepBlue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_UUID" />
@@ -81,6 +84,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="위도 :"
+            android:textStyle="bold"
             android:textColor="@color/colorDeepBlue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,6 +106,7 @@
             android:layout_marginEnd="93dp"
             android:layout_marginTop="8dp"
             android:text="경도 :"
+            android:textStyle="bold"
             android:textColor="@color/colorDeepBlue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView21" />

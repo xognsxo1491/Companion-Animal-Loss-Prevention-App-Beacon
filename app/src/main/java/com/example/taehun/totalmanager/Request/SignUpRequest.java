@@ -11,7 +11,7 @@ public class SignUpRequest extends StringRequest {
     final static private String URL = "http://xognsxo1491.cafe24.com/Sign_up_connect.php";
     private Map<String, String> parameters;
 
-    public SignUpRequest (String userName, String userId, String userPw, String userEmail, String BeaconUUID, String BeaconMajor, String BeaconMinor, Response.Listener<String> listener, String token){
+    public SignUpRequest (String userName, String userId, String userPw, String userEmail, Response.Listener<String> listener, String token){
         super(Request.Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
@@ -19,9 +19,6 @@ public class SignUpRequest extends StringRequest {
         parameters.put("Id",userId);
         parameters.put("Password",userPw);
         parameters.put("Email",userEmail);
-        parameters.put("BeaconUUID",BeaconUUID);
-        parameters.put("BeaconMajor",BeaconMajor);
-        parameters.put("BeaconMinor",BeaconMinor);
         parameters.put("Token", token);
     }
 

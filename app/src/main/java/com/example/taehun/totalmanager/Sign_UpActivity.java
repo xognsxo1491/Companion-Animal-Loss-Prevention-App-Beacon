@@ -1,16 +1,13 @@
 package com.example.taehun.totalmanager;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.taehun.totalmanager.BeaconScan.CustomDialog2;
 import com.example.taehun.totalmanager.Request.DuplicateRequest;
 import com.example.taehun.totalmanager.Request.SignUpRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -28,7 +26,7 @@ import org.json.JSONObject;
 
 public class Sign_UpActivity extends AppCompatActivity {
 
-    EditText editname, editTextid, editTextpw, editTextcheck, editTextemail, beacon_uuid, beacon_major, beacon_minor;
+    EditText editname, editTextid, editTextpw, editTextcheck, editTextemail;
     TextView text_id_check, text_password;
     Boolean duplicate = false;
     AlertDialog dialog;
@@ -39,24 +37,13 @@ public class Sign_UpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_sign_up);
         final Button btn_id_check = (Button) findViewById(R.id.btn_id_check);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("회원가입");
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_keyboard_backspace_white_24dp);
 
         editname = (EditText) findViewById(R.id.edit_name);
         editTextid = (EditText) findViewById(R.id.edit_id);
         editTextpw = (EditText) findViewById(R.id.edit_password);
         editTextcheck = (EditText) findViewById(R.id.edit_password_check);
         editTextemail = (EditText) findViewById(R.id.edit_email);
-
-        beacon_uuid = (EditText) findViewById(R.id.edit_beacon_uuid);
-        beacon_major = (EditText) findViewById(R.id.edit_beacon_major);
-        beacon_minor = (EditText) findViewById(R.id.edit_beacon_minor);
 
         text_id_check = (TextView)findViewById(R.id.text_id_check);
         text_password = (TextView)findViewById(R.id.text_password);
@@ -160,10 +147,6 @@ public class Sign_UpActivity extends AppCompatActivity {
                 final String password = editTextpw.getText().toString();
                 final String emali = editTextemail.getText().toString();
 
-                final String beaconuuid = beacon_uuid.getText().toString();
-                final String beaconmajor = beacon_major.getText().toString();
-                final String beaconminor = beacon_minor.getText().toString();
-
                 FirebaseMessaging.getInstance().subscribeToTopic("news");
                 String token = FirebaseInstanceId.getInstance().getToken();
 
@@ -219,9 +202,13 @@ public class Sign_UpActivity extends AppCompatActivity {
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                finish();
+                                                CustomDialog2 customDialog2  = new CustomDialog2(Sign_UpActivity.this);
+                                                // 커스텀 다이얼로그를 호출한다.
+                                                // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
+                                                customDialog2.callFunction(null);
                                             }
                                         })
+                                        .setCancelable(false)
                                         .create();
                                 dialog.show();
 
@@ -239,17 +226,15 @@ public class Sign_UpActivity extends AppCompatActivity {
                     }
                 };
 
-                SignUpRequest sign_upRequest = new SignUpRequest(name, id, password, emali, beaconuuid, beaconmajor, beaconminor, responseListener, token);
+                SignUpRequest sign_upRequest = new SignUpRequest(name, id, password, emali, responseListener, token);
                 RequestQueue queue = Volley.newRequestQueue(Sign_UpActivity.this);
                 queue.add(sign_upRequest);
 
-                SharedPreferences preferences = getSharedPreferences("BeaconInfo", MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-
-                editor.putString("BeaconUUID", beaconuuid);
-                editor.putString("BeaconMajor", beaconmajor);
-                editor.putString("BeaconMinor", beaconminor);
+                SharedPreferences sharedPreferences = getSharedPreferences("BeaconId", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("BeaconId",id);
                 editor.commit();
+
             }
         });
     }
@@ -262,20 +247,6 @@ public class Sign_UpActivity extends AppCompatActivity {
             dialog.dismiss();
             dialog = null;
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-
-            case android.R.id.home: { //마이페이지
-
-                finish();
-                break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
 

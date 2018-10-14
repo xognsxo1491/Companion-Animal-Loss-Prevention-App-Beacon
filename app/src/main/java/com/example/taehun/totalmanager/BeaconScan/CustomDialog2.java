@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
+import com.example.taehun.totalmanager.MainActivity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 
@@ -42,14 +44,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomDialog implements BeaconConsumer{
+public class CustomDialog2 implements BeaconConsumer{
     private BeaconManager beaconManager;
     private List<Beacon> beaconList = new ArrayList<>();
     private Context context;
     private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
-    private ListView listView;
+    private ListView listView2;
+
     Adapter_Dialog adapterDialog;
-    public CustomDialog(Context context) {
+    Animation operatingAnim;
+    Button btn_ok;
+
+    public CustomDialog2(Context context) {
         this.context = context;
     }
 
@@ -65,50 +71,60 @@ public class CustomDialog implements BeaconConsumer{
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        dlg.setContentView(R.layout.dialog_beacon_scan);
+        dlg.setContentView(R.layout.dialog_beacon_scan2);
 
         // 커스텀 다이얼로그를 노출한다..
         beaconManager = BeaconManager.getInstanceForApplication(context);
         dlg.show();
 
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
-        listView = (ListView) dlg.findViewById(R.id.beacon_list);
+        listView2 = (ListView) dlg.findViewById(R.id.beacon_list2);
         adapterDialog = new Adapter_Dialog(context, listViewBeacon);
-        listView.setAdapter(adapterDialog);
+        listView2.setAdapter(adapterDialog);
 
-        final Animation operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
 
-        final FloatingActionButton fab_scan = (FloatingActionButton) dlg.findViewById(R.id.fab_scan);
-        fab_scan.setTag("실행");
+        final FloatingActionButton fab_scan2 = (FloatingActionButton) dlg.findViewById(R.id.fab_scan2);
+        fab_scan2.setTag("실행");
 
-        fab_scan.setOnClickListener(new View.OnClickListener() {
+        btn_ok = (Button) dlg.findViewById(R.id.btn_ok);
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        fab_scan2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if (fab_scan.getTag().equals("실행")) {
+                if (fab_scan2.getTag().equals("실행")) {
 
-                    fab_scan.setTag("중단");
-                    fab_scan.setImageResource(R.drawable.baseline_cached_white_24dp);
-                    fab_scan.setAnimation(operatingAnim);
+                    fab_scan2.setTag("중단");
+                    fab_scan2.setImageResource(R.drawable.baseline_cached_white_24dp);
+                    fab_scan2.setAnimation(operatingAnim);
 
                     beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-                    beaconManager.bind(CustomDialog.this);
+                    beaconManager.bind(CustomDialog2.this);
 
                 }
 
-                else if(fab_scan.getTag().equals("중단")) {
+                else if(fab_scan2.getTag().equals("중단")) {
 
-                    fab_scan.setTag("실행");
-                    fab_scan.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
-                    fab_scan.clearAnimation();
+                    fab_scan2.setTag("실행");
+                    fab_scan2.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
+                    fab_scan2.clearAnimation();
 
-                    beaconManager.unbind(CustomDialog.this);
+                    beaconManager.unbind(CustomDialog2.this);
                 }
 
                 handler.sendEmptyMessage(0);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(final AdapterView<?> adapterView, View view, int i, long l) {
@@ -127,8 +143,9 @@ public class CustomDialog implements BeaconConsumer{
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                                        SharedPreferences preferences = context.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
-                                        String userId = preferences.getString("Id", null);
+                                        SharedPreferences preferences = context.getSharedPreferences("BeaconId", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        String userId = preferences.getString("BeaconId", null);
 
                                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
@@ -154,6 +171,10 @@ public class CustomDialog implements BeaconConsumer{
                                         BeaconWriteRequest board_delete_request = new BeaconWriteRequest(userId, uuid, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                                         RequestQueue queue = Volley.newRequestQueue(context);
                                         queue.add(board_delete_request);
+
+                                        editor.clear();
+                                        editor.commit();
+
                                     }
                                 })
                                 .create();

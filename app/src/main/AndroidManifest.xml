@@ -73,7 +73,12 @@
         <activity android:name=".BeaconDetect.DetectBeaconActivity" />
         <activity android:name=".Characteristic_ListFragment" />
         <activity android:name=".Characteristic_OperationFragment" />
-        <activity android:name=".BeaconServiceFragment"></activity>
+        <activity android:name=".BeaconServiceFragment" />
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".Sign_BeaconDialog" />
+        <activity android:name=".BeaconScan.CustomDialog2"></activity>
     </application>
 
 </manifest>
