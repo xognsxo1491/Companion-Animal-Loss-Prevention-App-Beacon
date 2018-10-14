@@ -37,14 +37,14 @@ public class myBeacon extends Application {
 
             @Override
             public void onServiceReady() {
-                beaconManager.startMonitoring(new BeaconRegion("monitored", UUID.fromString("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"), 40001, 16966));
+                beaconManager.startMonitoring(new BeaconRegion("monitored", UUID.fromString("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"), 40001, 15404));
             }
         });
 
         beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
             @Override
             public void onEnteredRegion(BeaconRegion beaconRegion, List<Beacon> beacons) {
-                Log.d("들어옴", "확인");
+                Log.d("비콘", "들어옴");
                 showNotification(
                         "비콘",
                         "가까이 있음");
@@ -53,8 +53,8 @@ public class myBeacon extends Application {
 
             @Override
             public void onExitedRegion(BeaconRegion beaconRegion) {
-                Log.d("나감", "확인");
-                showNotification(
+                Log.d("비콘", "나감");
+                showNotification2(
                         "비콘",
                         "멀리 있음");
             }
@@ -64,18 +64,18 @@ public class myBeacon extends Application {
     public void showNotification(String title, String message) {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
             int importance = NotificationManager.IMPORTANCE_HIGH;
-
             NotificationChannel mChannel = new NotificationChannel(title, message, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), title);
 
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), PopupActivity.class);
+        notificationIntent.putExtra("UUID", "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0");
+        notificationIntent.putExtra("Major", "40001");
+        notificationIntent.putExtra("Minor", "15404");
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         int requestID = (int) System.currentTimeMillis();
@@ -92,13 +92,49 @@ public class myBeacon extends Application {
                         .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 
                 .setSmallIcon(android.R.drawable.btn_star)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources()
-
-                        ,android.R.drawable.ic_dialog_info))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                        android.R.drawable.ic_dialog_info))
                 .setBadgeIconType(android.R.drawable.ic_dialog_info)
 
                 .setContentIntent(pendingIntent);
+        notificationManager.notify(0, builder.build());
+    }
+    public void showNotification2(String title, String message) {
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(title, message, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), title);
+
+        Intent notificationIntent = new Intent(getApplicationContext(), Popup2Activity.class);
+        notificationIntent.putExtra("UUID", "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0");
+        notificationIntent.putExtra("Major", "40001");
+        notificationIntent.putExtra("Minor", "15404");
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        int requestID = (int) System.currentTimeMillis();
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), requestID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentTitle(title) // required
+                .setContentText(message)  // required
+                .setDefaults(Notification.DEFAULT_ALL) // 알림, 사운드 진동 설정
+                .setAutoCancel(true) // 알림 터치시 반응 후 삭제
+
+                .setSound(RingtoneManager
+
+                        .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+
+                .setSmallIcon(android.R.drawable.btn_star)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                        android.R.drawable.ic_dialog_info))
+                .setBadgeIconType(android.R.drawable.ic_dialog_info)
+
+                .setContentIntent(pendingIntent);
         notificationManager.notify(0, builder.build());
     }
 }

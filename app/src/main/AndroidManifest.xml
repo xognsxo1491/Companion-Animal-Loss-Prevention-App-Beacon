@@ -70,7 +70,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
+        <activity android:name=".Popup2Activity" android:theme="@style/Theme.AppCompat.Dialog"/>
+        <activity android:name=".PopupActivity" android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity
             android:name=".BeaconMap.BeacomMapActivity"
             android:label="@string/title_activity_maps" />
