@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +32,7 @@ public class Sign_UpActivity extends AppCompatActivity {
     Boolean duplicate = false;
     AlertDialog dialog;
     String data = "";
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,12 @@ public class Sign_UpActivity extends AppCompatActivity {
 
         text_id_check = (TextView)findViewById(R.id.text_id_check);
         text_password = (TextView)findViewById(R.id.text_password);
+        toolbar = (Toolbar) findViewById(R.id.toolbar3);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("회원가입");
 
         editTextid.addTextChangedListener(new TextWatcher() { // 아이디 입력에 따른 텍스트 변화
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
@@ -68,7 +73,6 @@ public class Sign_UpActivity extends AppCompatActivity {
         });
 
         editTextpw.addTextChangedListener(new TextWatcher() { // 비밀번호 입력에 따른 텍스트 변화
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
@@ -226,7 +230,7 @@ public class Sign_UpActivity extends AppCompatActivity {
                     }
                 };
 
-                SignUpRequest sign_upRequest = new SignUpRequest(name, id, password, emali, responseListener, token);
+                SignUpRequest sign_upRequest = new SignUpRequest(name, id, password, emali,  token, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(Sign_UpActivity.this);
                 queue.add(sign_upRequest);
 
@@ -241,7 +245,9 @@ public class Sign_UpActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+
         super.onStop();
+
         if (dialog != null)
         {
             dialog.dismiss();

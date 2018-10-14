@@ -45,13 +45,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (!bluetoothAdapter.isEnabled()) {
-                    Snackbar.make(v, "블루투스를 켜주세요.", Snackbar.LENGTH_SHORT).show();
-                    return;
-                }
-
-
                 CustomDialog customDialog = new CustomDialog(getContext());
                 // 커스텀 다이얼로그를 호출한다.
                 // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.

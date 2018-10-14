@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.Window;
@@ -45,12 +46,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class CustomDialog2 implements BeaconConsumer{
-    private BeaconManager beaconManager;
-    private List<Beacon> beaconList = new ArrayList<>();
-    private Context context;
-    private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
-    private ListView listView2;
 
+    private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
+    private List<Beacon> beaconList = new ArrayList<>();
+    private BeaconManager beaconManager;
+    private ListView listView2;
+    private Context context;
+
+    FloatingActionButton fab_scan2;
     Adapter_Dialog adapterDialog;
     Animation operatingAnim;
     Button btn_ok;
@@ -58,8 +61,6 @@ public class CustomDialog2 implements BeaconConsumer{
     public CustomDialog2(Context context) {
         this.context = context;
     }
-
-    public BluetoothAdapter bluetoothAdapter;
 
     // 호출할 다이얼로그 함수를 정의한다.
     public void callFunction(final TextView main_label) {
@@ -85,8 +86,17 @@ public class CustomDialog2 implements BeaconConsumer{
         operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
 
-        final FloatingActionButton fab_scan2 = (FloatingActionButton) dlg.findViewById(R.id.fab_scan2);
+        fab_scan2 = (FloatingActionButton) dlg.findViewById(R.id.fab_scan2);
         fab_scan2.setTag("실행");
+
+        dlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                getApplicationContext().startActivity(intent);
+            }
+        });
 
         btn_ok = (Button) dlg.findViewById(R.id.btn_ok);
         btn_ok.setOnClickListener(new View.OnClickListener() {
@@ -99,28 +109,37 @@ public class CustomDialog2 implements BeaconConsumer{
         });
 
         fab_scan2.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
-                if (fab_scan2.getTag().equals("실행")) {
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (!bluetoothAdapter.isEnabled()) {
 
-                    fab_scan2.setTag("중단");
-                    fab_scan2.setImageResource(R.drawable.baseline_cached_white_24dp);
-                    fab_scan2.setAnimation(operatingAnim);
+                    Toast.makeText(context, "스캔을 위해 블루투스를 켜주세요.", Toast.LENGTH_SHORT).show();
 
-                    beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-                    beaconManager.bind(CustomDialog2.this);
-
+                    Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                    getApplicationContext().startActivity(intent);
                 }
 
-                else if(fab_scan2.getTag().equals("중단")) {
+                else {
 
-                    fab_scan2.setTag("실행");
-                    fab_scan2.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
-                    fab_scan2.clearAnimation();
+                    if (fab_scan2.getTag().equals("실행")) {
 
-                    beaconManager.unbind(CustomDialog2.this);
+                        fab_scan2.setTag("중단");
+                        fab_scan2.setImageResource(R.drawable.baseline_cached_white_24dp);
+                        fab_scan2.setAnimation(operatingAnim);
+
+                        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
+                        beaconManager.bind(CustomDialog2.this);
+
+                    } else if (fab_scan2.getTag().equals("중단")) {
+
+                        fab_scan2.setTag("실행");
+                        fab_scan2.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
+                        fab_scan2.clearAnimation();
+
+                        beaconManager.unbind(CustomDialog2.this);
+                    }
                 }
 
                 handler.sendEmptyMessage(0);
@@ -222,6 +241,8 @@ public class CustomDialog2 implements BeaconConsumer{
     public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
         return false;
     }
+
+
 
     Handler handler = new Handler(){
         public void handleMessage(Message msg){

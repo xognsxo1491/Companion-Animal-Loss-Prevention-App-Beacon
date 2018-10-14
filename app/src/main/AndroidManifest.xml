@@ -40,14 +40,20 @@
         <!-- <activity android:name=".Sub1Fragment" /> -->
         <!-- <activity android:name=".Sub2Fragment" /> -->
         <activity android:name=".Board1_Activity" />
-        <activity android:name=".Sign_UpActivity" />
+
+        <activity
+            android:name=".Sign_UpActivity"
+            android:windowSoftInputMode="adjustNothing" />
+
         <activity android:name=".Board1_Write_Activity" />
         <!-- <activity android:name=".Search1Fragment" /> -->
         <!-- <activity android:name=".Search2Fragment" /> -->
+
         <activity
             android:name=".SearchActivity"
-            android:label="@string/title_activity_search1"
+            android:windowSoftInputMode="stateUnchanged"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".Board_Comment_Activity"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -70,14 +76,9 @@
             android:label="@string/title_activity_maps" />
         <activity android:name=".BeaconMap.Beacon1Fragment" />
         <activity android:name=".BeaconMap.Beacon2Fragment" />
-        <activity android:name=".BeaconDetect.DetectBeaconActivity" />
-        <activity android:name=".Characteristic_ListFragment" />
-        <activity android:name=".Characteristic_OperationFragment" />
-        <activity android:name=".BeaconServiceFragment" />
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".Sign_BeaconDialog" />
         <activity android:name=".BeaconScan.CustomDialog2"></activity>
     </application>
 

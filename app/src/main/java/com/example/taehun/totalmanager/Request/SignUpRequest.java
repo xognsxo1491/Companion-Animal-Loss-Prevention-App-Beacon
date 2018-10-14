@@ -11,7 +11,7 @@ public class SignUpRequest extends StringRequest {
     final static private String URL = "http://xognsxo1491.cafe24.com/Sign_up_connect.php";
     private Map<String, String> parameters;
 
-    public SignUpRequest (String userName, String userId, String userPw, String userEmail, Response.Listener<String> listener, String token){
+    public SignUpRequest (String userName, String userId, String userPw, String userEmail, String token,  Response.Listener<String> listener){
         super(Request.Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();

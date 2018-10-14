@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.Window;
@@ -43,17 +44,20 @@ import java.util.Collection;
 import java.util.List;
 
 public class CustomDialog implements BeaconConsumer{
-    private BeaconManager beaconManager;
-    private List<Beacon> beaconList = new ArrayList<>();
-    private Context context;
+
     private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
+    private List<Beacon> beaconList = new ArrayList<>();
+    private BeaconManager beaconManager;
     private ListView listView;
+    private Context context;
+
+    FloatingActionButton fab_scan;
     Adapter_Dialog adapterDialog;
+    Animation operatingAnim;
+
     public CustomDialog(Context context) {
         this.context = context;
     }
-
-    public BluetoothAdapter bluetoothAdapter;
 
     // 호출할 다이얼로그 함수를 정의한다.
     public void callFunction(final TextView main_label) {
@@ -76,10 +80,10 @@ public class CustomDialog implements BeaconConsumer{
         adapterDialog = new Adapter_Dialog(context, listViewBeacon);
         listView.setAdapter(adapterDialog);
 
-        final Animation operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
 
-        final FloatingActionButton fab_scan = (FloatingActionButton) dlg.findViewById(R.id.fab_scan);
+        fab_scan = (FloatingActionButton) dlg.findViewById(R.id.fab_scan);
         fab_scan.setTag("실행");
 
         fab_scan.setOnClickListener(new View.OnClickListener() {
@@ -87,24 +91,34 @@ public class CustomDialog implements BeaconConsumer{
             @Override
             public void onClick(View v) {
 
-                if (fab_scan.getTag().equals("실행")) {
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (!bluetoothAdapter.isEnabled()) {
 
-                    fab_scan.setTag("중단");
-                    fab_scan.setImageResource(R.drawable.baseline_cached_white_24dp);
-                    fab_scan.setAnimation(operatingAnim);
+                    Toast.makeText(context, "스캔을 위해 블루투스를 켜주세요.", Toast.LENGTH_SHORT).show();
 
-                    beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-                    beaconManager.bind(CustomDialog.this);
-
+                    Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                    getApplicationContext().startActivity(intent);
                 }
 
-                else if(fab_scan.getTag().equals("중단")) {
+                else {
 
-                    fab_scan.setTag("실행");
-                    fab_scan.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
-                    fab_scan.clearAnimation();
+                    if (fab_scan.getTag().equals("실행")) {
 
-                    beaconManager.unbind(CustomDialog.this);
+                        fab_scan.setTag("중단");
+                        fab_scan.setImageResource(R.drawable.baseline_cached_white_24dp);
+                        fab_scan.setAnimation(operatingAnim);
+
+                        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
+                        beaconManager.bind(CustomDialog.this);
+
+                    } else if (fab_scan.getTag().equals("중단")) {
+
+                        fab_scan.setTag("실행");
+                        fab_scan.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
+                        fab_scan.clearAnimation();
+
+                        beaconManager.unbind(CustomDialog.this);
+                    }
                 }
 
                 handler.sendEmptyMessage(0);

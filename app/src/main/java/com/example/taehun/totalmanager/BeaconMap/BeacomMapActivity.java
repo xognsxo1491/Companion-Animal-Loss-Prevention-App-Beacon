@@ -10,10 +10,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -21,9 +23,13 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.telephony.SignalStrength;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,6 +57,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCallback{
@@ -67,9 +75,12 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     LocationManager locationManager;
+    FloatingActionButton fab_gps;
     MarkerOptions markerOptions;
     JSONArray jsonArray = null;
+    Animation operatingAnim;
     String myJSON;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +99,7 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.beacon_navi);
+        fab_gps = (FloatingActionButton) findViewById(R.id.fab_gps);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -115,6 +127,9 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        operatingAnim = AnimationUtils.loadAnimation(BeacomMapActivity.this, R.anim.rotate);
+        operatingAnim.setInterpolator(new LinearInterpolator());
+
         View bottomSheet = (View) findViewById(R.id.bottom_sheet1);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
@@ -127,14 +142,11 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-            }
+            public void onStateChanged(@NonNull View bottomSheet, int newState) { }
 
             @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) { }
 
-            }
         });
     }
 
@@ -163,66 +175,78 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION , Manifest.permission.ACCESS_FINE_LOCATION} , 1);
         }
 
-        else {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        }
-
         getData("http://xognsxo1491.cafe24.com/Beacon_search_connect.php", googleMap);
 
+        fab_gps.setTag("실행");
 
-        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+        final LocationListener mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                Double lat = location.getLatitude();
+                Double lon = location.getLongitude();
+
+                LatLng mylocation = new LatLng(lat, lon);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
+                googleMap.animateCamera(zoom);
+
+                fab_gps.clearAnimation();
+                fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
+
+            }
 
             @Override
-            public boolean onMyLocationButtonClick() {
+            public void onStatusChanged(String provider, int status, Bundle extras) { }
 
-                LocationListener mLocationListener = new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
+            @Override
+            public void onProviderEnabled(String provider) { }
 
-                        Double lat = location.getLatitude();
-                        Double lon = location.getLongitude();
+            @Override
+            public void onProviderDisabled(String provider) { }
 
-                        LatLng mylocation = new LatLng(lat,lon);
+        };
 
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
-                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
-                        googleMap.animateCamera(zoom);
+        fab_gps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
 
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                };
 
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
                     Intent gpsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(gpsIntent);
-                    locationManager.removeUpdates(mLocationListener);
+
                 } else {
 
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1 ,mLocationListener);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000, 1, mLocationListener);
+                    if (fab_gps.getTag().equals("실행")) {
 
+                        fab_gps.setImageResource(R.drawable.baseline_cached_white_24dp);
+                        fab_gps.startAnimation(operatingAnim);
+
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+
+                            TimerTask timerTask = new TimerTask() {
+                                @Override
+                                public void run() {
+
+                                        fab_gps.clearAnimation();
+                                        fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
+                                        locationManager.removeUpdates(mLocationListener);
+
+                                        Snackbar.make(v,"작동하지 않는다면 신호세기를 확인해주세요.",Snackbar.LENGTH_LONG).show();
+                                    }
+                            };
+
+                            timer = new Timer();
+                            timer.schedule(timerTask, 6500);
+
+                    }
                 }
-
-                return true;
             }
         });
-
     }
 
 
