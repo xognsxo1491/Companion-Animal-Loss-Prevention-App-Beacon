@@ -158,8 +158,6 @@ public class myBeacon extends Application implements BeaconConsumer{
     }
     Handler handler = new Handler(){
         public void handleMessage(Message msg){
-
-            Log.d("비콘", preferences.getBoolean("BeaconEmergency", false)+"");
             for(Beacon beacon : beaconList){
                 if(preferences.getBoolean("BeaconAlram", false)&&((int)beacon.getDistance())<=4){
                     Log.d("비콘", "가까이 있음");
