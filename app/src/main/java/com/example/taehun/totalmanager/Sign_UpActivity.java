@@ -25,6 +25,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Sign_UpActivity extends AppCompatActivity {
 
     EditText editname, editTextid, editTextpw, editTextcheck, editTextemail;
@@ -151,6 +154,9 @@ public class Sign_UpActivity extends AppCompatActivity {
                 final String password = editTextpw.getText().toString();
                 final String emali = editTextemail.getText().toString();
 
+                Pattern p = Pattern.compile("^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$");
+                Matcher m = p.matcher(emali);
+
                 FirebaseMessaging.getInstance().subscribeToTopic("news");
                 String token = FirebaseInstanceId.getInstance().getToken();
 
@@ -172,9 +178,8 @@ public class Sign_UpActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (password.equals(password_check)) { }
+                if (!password.equals(password_check)) {
 
-                else {
                     editTextcheck.setText("");
                     AlertDialog.Builder builder = new AlertDialog.Builder(Sign_UpActivity.this);
                     dialog = builder.setMessage("비밀번호 확인란을 확인해주세요.")
@@ -187,6 +192,17 @@ public class Sign_UpActivity extends AppCompatActivity {
                 if (password.length()>15 || password.length()<7) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Sign_UpActivity.this);
                     dialog = builder.setMessage("비밀번호 길이를 확인해주세요.")
+                            .setNegativeButton("확인", null)
+                            .create();
+                    dialog.show();
+                    return;
+                }
+
+                if(!m.matches()) {
+
+                    editTextemail.setText("");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Sign_UpActivity.this);
+                    dialog = builder.setMessage("이메일 형식을 확인해주세요.")
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();

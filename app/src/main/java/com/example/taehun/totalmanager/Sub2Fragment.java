@@ -27,6 +27,8 @@ public class Sub2Fragment extends Fragment {
 
     AlertDialog dialog;
     TextView text_page_id, text_page_email, text_page_beacon;
+    SharedPreferences preferences;
+    Button btn_logout, btn_edit;
 
     public Sub2Fragment() { }
 
@@ -37,12 +39,16 @@ public class Sub2Fragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sub2, container, false);
         final Activity activity = getActivity();
 
-        Button btn_logout = (Button) view.findViewById(R.id.btn_logout);
+        btn_logout = (Button) view.findViewById(R.id.btn_logout);
+        btn_edit = (Button) view.findViewById(R.id.btn_edit);
+
+        preferences = activity.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freelogin키 안에 데이터 불러오기
+        final String userid = preferences.getString("Id", null);
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) { //로그아웃 설정
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 dialog = builder.setMessage("로그아웃 하시겠습니까?")
                         .setPositiveButton("취소",null)
@@ -65,6 +71,16 @@ public class Sub2Fragment extends Fragment {
             }
         });
 
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(),Sign_editActivity.class);
+                intent.putExtra("id", userid);
+                startActivity(intent);
+            }
+        });
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             @Override
@@ -75,15 +91,12 @@ public class Sub2Fragment extends Fragment {
 
                     text_page_id =  view.findViewById(R.id.text_page_id);
                     text_page_email =  view.findViewById(R.id.text_page_email);
-                    text_page_beacon = view.findViewById(R.id.text_page_beacon);
 
                     if (success) {
                         String user_id = jsonObject.getString("Id");
                         text_page_id.setText(user_id);
                         String user_email = jsonObject.getString("Email");
                         text_page_email.setText(user_email);
-                        String user_beacon = jsonObject.getString("Beacon");
-                        text_page_beacon.setText(user_beacon);
 
                     } else
                         Toast.makeText(activity, "불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
@@ -93,9 +106,6 @@ public class Sub2Fragment extends Fragment {
                 }
             }
         };
-
-        SharedPreferences preferences = activity.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freelogin키 안에 데이터 불러오기
-        String userid = preferences.getString("Id", null);
 
         MypageRequest mypageRequest = new MypageRequest(userid, responseListener); // 입력값 넣기 위해서
         RequestQueue queue = Volley.newRequestQueue(activity);
