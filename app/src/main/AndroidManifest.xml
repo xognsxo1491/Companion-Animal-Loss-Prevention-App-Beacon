@@ -40,20 +40,18 @@
         <!-- <activity android:name=".Sub1Fragment" /> -->
         <!-- <activity android:name=".Sub2Fragment" /> -->
         <activity android:name=".Board1_Activity" />
-
+        <activity android:name=".Sign_editActivity" />
         <activity
             android:name=".Sign_UpActivity"
             android:windowSoftInputMode="adjustNothing" />
-
         <activity android:name=".Board1_Write_Activity" />
         <!-- <activity android:name=".Search1Fragment" /> -->
         <!-- <activity android:name=".Search2Fragment" /> -->
 
         <activity
             android:name=".SearchActivity"
-            android:windowSoftInputMode="stateUnchanged"
-            android:theme="@style/AppTheme" />
-
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".Board_Comment_Activity"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -70,9 +68,13 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <activity android:name=".Sign_editActivity" />
-        <activity android:name=".Popup2Activity" android:theme="@style/Theme.AppCompat.Dialog"/>
-        <activity android:name=".PopupActivity" android:theme="@style/Theme.AppCompat.Dialog"/>
+
+        <activity
+            android:name=".Popup2Activity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".PopupActivity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".BeaconMap.BeacomMapActivity"
             android:label="@string/title_activity_maps" />
@@ -81,7 +83,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".BeaconScan.CustomDialog2"></activity>
+        <activity android:name=".BeaconScan.CustomDialog2" />
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,13 +33,17 @@ import android.text.PrecomputedText;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +51,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest2;
 
@@ -63,9 +69,11 @@ import java.util.Locale;
 
 public class Board1_Write_Activity extends AppCompatActivity {
 
-    private int GALLERY = 1000;
+    private static final int INTENT_REQUEST_GET_IMAGES = 13;
 
+    ArrayList<Uri> image_uris = new ArrayList<Uri>();
     ByteArrayOutputStream byteArrayOutputStream;
+    private ViewGroup mSelectedImagesContainer;
     AlertDialog dialog;
     String ConvertImage;
     byte[] byteArray;
@@ -77,9 +85,10 @@ public class Board1_Write_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board1_write);
 
+        mSelectedImagesContainer = (ViewGroup) findViewById(R.id.selected_photos_container);
+
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.write_toolbar);
-        ShowSelectedImage = (ImageView)findViewById(R.id.imageView1);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("게시글 작성");
@@ -106,12 +115,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
     private void choosePhotoFormGallary() {
 
-        Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(galleryIntent, GALLERY);
-
     }
 
     @Override
@@ -121,49 +124,10 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
         if (resultCode == this.RESULT_CANCELED) { return; }
 
-        if (requestCode == GALLERY && resultCode == RESULT_OK && null != data) {
+        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == RESULT_OK && null != data) {
 
-            ArrayList imageList = new ArrayList<>();
-
-            if (data.getClipData() == null) {
-                Log.i("1. single choice", String.valueOf(data.getData()));
-                imageList.add(String.valueOf(data.getData()));
-            }
-
-            else {
-
-                ClipData clipData = data.getClipData();
-                Log.i("Clipdata", String.valueOf(clipData.getItemCount()));
-
-                if (clipData.getItemCount() > 10) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    dialog = builder.setMessage("선택 사진이 10개를 초과하였습니다.")
-                            .setNegativeButton("확인", null)
-                            .create();
-                    dialog.show();
-                    return;
-
-                } else if (clipData.getItemCount() == 1) {
-                    String datastr = String.valueOf(clipData.getItemAt(0).getUri());
-                    Log.i("2. clipdata choice", String.valueOf(clipData.getItemAt(0).getUri()));
-                    Log.i("2. single choice", clipData.getItemAt(0).getUri().getPath());
-                    imageList.add(datastr);
-
-                } else if (clipData.getItemCount() > 1 && clipData.getItemCount() < 10) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        Log.i("3. single choice", String.valueOf(clipData.getItemAt(i).getUri()));
-                        imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
-                    }
-                }
-            }
-
-                Intent intent = new Intent (getApplicationContext(), Board1_Write_Activity.class);
-                intent.putStringArrayListExtra("imageList", imageList);
-                startActivity(intent);
-            }
-
-            else Toast.makeText(this, "선택을 취소하였습니다.", Toast.LENGTH_SHORT).show();
         }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
