@@ -37,7 +37,7 @@ public class myBeacon extends Application {
 
             @Override
             public void onServiceReady() {
-                beaconManager.startMonitoring(new BeaconRegion("monitored", UUID.fromString("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"), 40001, 15404));
+                beaconManager.startMonitoring(new BeaconRegion("monitored", UUID.fromString("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"), 40001, 16966));
             }
         });
 
@@ -75,7 +75,7 @@ public class myBeacon extends Application {
         Intent notificationIntent = new Intent(getApplicationContext(), PopupActivity.class);
         notificationIntent.putExtra("UUID", "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0");
         notificationIntent.putExtra("Major", "40001");
-        notificationIntent.putExtra("Minor", "15404");
+        notificationIntent.putExtra("Minor", "16966");
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         int requestID = (int) System.currentTimeMillis();
@@ -113,7 +113,7 @@ public class myBeacon extends Application {
         Intent notificationIntent = new Intent(getApplicationContext(), Popup2Activity.class);
         notificationIntent.putExtra("UUID", "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0");
         notificationIntent.putExtra("Major", "40001");
-        notificationIntent.putExtra("Minor", "15404");
+        notificationIntent.putExtra("Minor", "16966");
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         int requestID = (int) System.currentTimeMillis();

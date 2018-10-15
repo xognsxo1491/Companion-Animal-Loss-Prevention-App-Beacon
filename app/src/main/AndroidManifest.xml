@@ -70,6 +70,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <activity android:name=".Sign_editActivity" />
         <activity android:name=".Popup2Activity" android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity android:name=".PopupActivity" android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity

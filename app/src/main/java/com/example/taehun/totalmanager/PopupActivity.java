@@ -48,7 +48,6 @@ public class PopupActivity extends Activity implements BeaconConsumer{
         btn = findViewById(R.id.notification_btn);
         Intent intent = getIntent();
 
-
         strUuid = intent.getStringExtra("UUID");
         strMajor = intent.getStringExtra("Major");
         strminor = intent.getStringExtra("Minor");
