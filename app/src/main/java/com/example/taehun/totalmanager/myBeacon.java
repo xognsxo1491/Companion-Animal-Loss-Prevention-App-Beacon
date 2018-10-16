@@ -253,7 +253,9 @@ public class myBeacon extends Application implements BeaconConsumer{
             editor.putBoolean("findMyBeacon", true);
             editor.commit();
                 for(Beacon beacon : beaconList){
-                    if(beacon.getId1().toString().equals(myBeacons.get(0).getUUID())){
+                    if(beacon.getId1().toString().equals(myBeacons.get(0).getUUID())
+                            && beacon.getId2().toString().equals(myBeacons.get(0).getMajor())
+                            && beacon.getId3().toString().equals(myBeacons.get(0).getMinor())){
                         editor.putBoolean("findMyBeacon", false);
                         editor.commit();
                         if(preferences.getBoolean("BeaconAlram", false)&&((int)beacon.getDistance())<=4){

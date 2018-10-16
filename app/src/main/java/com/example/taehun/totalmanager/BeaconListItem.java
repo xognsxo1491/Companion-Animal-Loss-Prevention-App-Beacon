@@ -1,9 +1,9 @@
 package com.example.taehun.totalmanager;
 
 public class BeaconListItem {
-    String UUID;
-    String major;
-    String minor;
+    private String UUID;
+    private String major;
+    private String minor;
 
     public BeaconListItem(String UUID, String major, String minor) {
         this.UUID = UUID;
