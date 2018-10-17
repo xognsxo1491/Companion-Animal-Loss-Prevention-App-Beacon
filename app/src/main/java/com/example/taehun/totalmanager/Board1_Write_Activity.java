@@ -176,7 +176,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                     break;
 
                 } else { // 공백이 아닐 경우
-                    if (ShowSelectedImage.getDrawable() == null) {
+                    if (true/*ShowSelectedImage.getDrawable() == null*/) {
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
                             @Override
