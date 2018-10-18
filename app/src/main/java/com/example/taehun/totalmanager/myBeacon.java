@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
 
 public class myBeacon extends Application implements BeaconConsumer{
     BeaconManager beaconManager;
@@ -61,10 +62,12 @@ public class myBeacon extends Application implements BeaconConsumer{
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+    long start = System.currentTimeMillis(); //시작하는 시점 계산
+    long end;
+
     @Override
     public void onCreate() {
         super.onCreate();
-
         beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
         beaconManager.bind(this);
@@ -317,7 +320,7 @@ public class myBeacon extends Application implements BeaconConsumer{
         public void handleMessage(Message msg){
 //            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
 //                    preferences.getBoolean("BeaconEmergency", false) +" findMyBeacon "+ preferences.getBoolean("findMyBeacon", false) + " first "+preferences.getBoolean("first", false));
-
+            end = System.currentTimeMillis();
             editor.putBoolean("findMyBeacon", true);
             editor.commit();
                 for (Beacon beacon : beaconList) {
@@ -344,7 +347,7 @@ public class myBeacon extends Application implements BeaconConsumer{
 
                     for (BeaconListItem missingBeacon : missingBeacons) {
 //                        System.out.println("FindBeacons " + beacon.getId1().toString() +" " +beacon.getId2().toString() + " " +beacon.getId3().toString() + "missingBeacon "+ " "+ missingBeacon.getUUID() +" " + missingBeacon.getMajor() + " " + missingBeacon.getMinor());
-                        if (false&&beacon.getId1().toString().equals(missingBeacon.getUUID())
+                        if ((end-start)>60000&&beacon.getId1().toString().equals(missingBeacon.getUUID())
                                 && beacon.getId2().toString().equals(missingBeacon.getMajor())
                                 & beacon.getId3().toString().equals(missingBeacon.getMinor())) {
                             Log.d("비콘", "실종발견");
@@ -372,6 +375,9 @@ public class myBeacon extends Application implements BeaconConsumer{
                             BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                             RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
                             queue.add(beaconFindRequest);
+
+                            start = System.currentTimeMillis();
+                            end = System.currentTimeMillis();
                         }
                     }
                 }
