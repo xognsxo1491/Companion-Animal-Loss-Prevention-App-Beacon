@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -65,6 +67,8 @@ public class myBeacon extends Application implements BeaconConsumer{
     long start = System.currentTimeMillis(); //시작하는 시점 계산
     long end;
 
+    GPSListener gpsListener;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -78,6 +82,7 @@ public class myBeacon extends Application implements BeaconConsumer{
         editor.putBoolean("findMyBeacon", true);
         editor.putBoolean("first", true);
         editor.commit();
+        gpsListener = new GPSListener();
 
         getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
         getMissingBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
@@ -372,7 +377,8 @@ public class myBeacon extends Application implements BeaconConsumer{
                             String major = beacon.getId2().toString();
                             String minor = beacon.getId3().toString();
 
-                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                            startLocationService();
+                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                             RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
                             queue.add(beaconFindRequest);
 
@@ -393,4 +399,25 @@ public class myBeacon extends Application implements BeaconConsumer{
             handler.sendEmptyMessageDelayed(0, 3000);
         }
     };
+    private void startLocationService() {
+        // 위치 관리자 객체 참조
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // 위치 정보를 받을 리스너 생성
+        long minTime = 10000;
+        float minDistance = 0;
+        try {
+            // GPS를 이용한 위치 요청
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
+            // 네트워크를 이용한 위치 요청
+            manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, gpsListener);
+            // 위치 확인이 안되는 경우에도 최근에 확인된 위치 정보 먼저 확인
+            Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastLocation != null) {
+                gpsListener.latitude = lastLocation.getLatitude();
+                gpsListener.longitude = lastLocation.getLongitude();
+            }
+        } catch(SecurityException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

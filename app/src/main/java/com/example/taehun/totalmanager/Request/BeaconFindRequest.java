@@ -11,7 +11,7 @@ public class BeaconFindRequest extends StringRequest {
     final static private String URL = "http://xognsxo1491.cafe24.com/Beacon_Find_notification.php";
     private Map<String, String> parameters;
 
-    public BeaconFindRequest(String uuid, String major, String minor, Response.Listener<String> listener){
+    public BeaconFindRequest(String uuid, String major, String minor, double latitude, double longtitude, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         System.out.println(uuid+" "+major+" "+minor);
         parameters = new HashMap<>();
@@ -19,6 +19,8 @@ public class BeaconFindRequest extends StringRequest {
         parameters.put("UUID",uuid);
         parameters.put("Major", major);
         parameters.put("Minor", minor);
+        parameters.put("Latitude", latitude+"");
+        parameters.put("Longtitude", longtitude+"");
     }
 
     @Override

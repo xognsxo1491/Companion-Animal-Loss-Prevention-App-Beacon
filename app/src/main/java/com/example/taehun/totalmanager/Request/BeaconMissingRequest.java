@@ -11,7 +11,7 @@ public class BeaconMissingRequest extends StringRequest {
     final static private String URL = "http://xognsxo1491.cafe24.com/Beacon_Missing_connect.php";
     private Map<String, String> parameters;
 
-    public BeaconMissingRequest(String userId, String uuid, String major, String minor, Response.Listener<String> listener){
+    public BeaconMissingRequest(String userId, String uuid, String major, String minor, Double latitude, Double longitude, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         System.out.println(userId+" "+uuid+" "+major+" "+minor);
         parameters = new HashMap<>();
@@ -19,6 +19,11 @@ public class BeaconMissingRequest extends StringRequest {
         parameters.put("Uuid",uuid);
         parameters.put("Major", major);
         parameters.put("Minor", minor);
+
+        System.out.println("비콘"+latitude+" " +longitude);
+
+        parameters.put("Latitude", latitude+"");
+        parameters.put("Longtitude", longitude+"");
     }
 
     @Override
