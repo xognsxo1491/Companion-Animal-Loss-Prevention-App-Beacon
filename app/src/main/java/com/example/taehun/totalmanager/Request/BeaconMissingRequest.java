@@ -22,8 +22,10 @@ public class BeaconMissingRequest extends StringRequest {
 
         System.out.println("비콘"+latitude+" " +longitude);
 
-        parameters.put("Latitude", latitude+"");
-        parameters.put("Longtitude", longitude+"");
+        if(latitude!=null||longitude!=null){
+            parameters.put("Latitude", latitude+"");
+            parameters.put("Longtitude", longitude+"");
+        }
     }
 
     @Override
