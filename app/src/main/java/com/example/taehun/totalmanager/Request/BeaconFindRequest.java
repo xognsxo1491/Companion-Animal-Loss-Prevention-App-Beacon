@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class BeaconFindRequest extends StringRequest {
 
-    final static private String URL = "http://xognsxo1491.cafe24.com/Beacon_Find_notification.php";
+    final static private String URL = "http://xognsxo1491.cafe24.com/Treace_Beacon_Update.php";
     private Map<String, String> parameters;
 
     public BeaconFindRequest(String uuid, String major, String minor, double latitude, double longtitude, Response.Listener<String> listener){
