@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
 import com.example.taehun.totalmanager.Request.MypageRequest;
 
 import org.json.JSONException;
@@ -28,7 +29,7 @@ public class Sub2Fragment extends Fragment {
     AlertDialog dialog;
     TextView text_page_id, text_page_email, text_page_beacon;
     SharedPreferences preferences;
-    Button btn_logout, btn_edit;
+    Button btn_logout, btn_edit, btn_beaocn;
 
     public Sub2Fragment() { }
 
@@ -41,6 +42,7 @@ public class Sub2Fragment extends Fragment {
 
         btn_logout = (Button) view.findViewById(R.id.btn_logout);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
+        btn_beaocn = (Button)view.findViewById(R.id.btn_beacon);
 
         preferences = activity.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freelogin키 안에 데이터 불러오기
         final String userid = preferences.getString("Id", null);
@@ -80,7 +82,14 @@ public class Sub2Fragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        btn_beaocn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent notificationIntent = new Intent(getContext(), Popup3Activity.class);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(notificationIntent);
+            }
+        });
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             @Override

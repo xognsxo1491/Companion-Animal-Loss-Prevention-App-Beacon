@@ -31,8 +31,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         Intent intent = getIntent();
-        String str_lat = intent.getStringExtra("Latitude");
-        String str_long = intent.getStringExtra("Longitude");
+        String str_lat = "36.8313192550163";
+        String str_long = "127.17789522576653";
 
         Double latitude = Double.parseDouble(str_lat);
         Double longitude = Double.parseDouble(str_long);

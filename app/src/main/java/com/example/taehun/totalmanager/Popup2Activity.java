@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +29,7 @@ public class Popup2Activity extends Activity {
     String strminor;
     String strUuid;
 
+    GPSListener gpsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,8 @@ public class Popup2Activity extends Activity {
         btn = findViewById(R.id.notification2_btn1);
         btn2 = findViewById(R.id.notification2_btn2);
         Intent intent = getIntent();
+
+        gpsListener = new GPSListener();
 
         strUuid = intent.getStringExtra("UUID");
         strMajor = intent.getStringExtra("Major");
@@ -65,7 +70,8 @@ public class Popup2Activity extends Activity {
                         }
                     };
 
-                    BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                    startLocationService();
+                    BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                     RequestQueue queue = Volley.newRequestQueue(Popup2Activity.this);
                     queue.add(board_write_request);
                     finish();
@@ -78,5 +84,25 @@ public class Popup2Activity extends Activity {
             }
         });
     }
-
+    private void startLocationService() {
+        // 위치 관리자 객체 참조
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // 위치 정보를 받을 리스너 생성
+        long minTime = 10000;
+        float minDistance = 0;
+        try {
+            // GPS를 이용한 위치 요청
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
+            // 네트워크를 이용한 위치 요청
+            manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, gpsListener);
+            // 위치 확인이 안되는 경우에도 최근에 확인된 위치 정보 먼저 확인
+            Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastLocation != null) {
+                gpsListener.latitude = lastLocation.getLatitude();
+                gpsListener.longitude = lastLocation.getLongitude();
+            }
+        } catch(SecurityException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -9,15 +9,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
-import android.preference.Preference;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.taehun.totalmanager.Request.BeaconFindRequest;
+import com.example.taehun.totalmanager.Request.Board1CommentWriteRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -35,9 +43,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
 
 public class myBeacon extends Application implements BeaconConsumer{
     BeaconManager beaconManager;
@@ -47,14 +59,19 @@ public class myBeacon extends Application implements BeaconConsumer{
     String myJSON;
     JSONArray jsonArray;
     ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
+    ArrayList<BeaconListItem> missingBeacons= new ArrayList<>();
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+    long start = System.currentTimeMillis(); //시작하는 시점 계산
+    long end;
+
+    GPSListener gpsListener;
+
     @Override
     public void onCreate() {
         super.onCreate();
-
         beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
         beaconManager.bind(this);
@@ -65,13 +82,15 @@ public class myBeacon extends Application implements BeaconConsumer{
         editor.putBoolean("findMyBeacon", true);
         editor.putBoolean("first", true);
         editor.commit();
+        gpsListener = new GPSListener();
 
-        getData("http://xognsxo1491.cafe24.com/Beacon_connect.php");
+        getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
+        getMissingBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
 //        System.out.println(myBeacons.get(0).getMajor());
         handler.sendEmptyMessage(0);
     }
 
-    public void showNotification(String title, String message, String UUID, String major, String minor) {
+    public void showNearNotification(String title, String message, String UUID, String major, String minor) {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -109,7 +128,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                 .setContentIntent(pendingIntent);
         notificationManager.notify(0, builder.build());
     }
-    public void showNotification2(String title, String message, String UUID, String major, String minor) {
+    public void showFarNotification(String title, String message, String UUID, String major, String minor) {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -167,7 +186,7 @@ public class myBeacon extends Application implements BeaconConsumer{
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
         }catch(RemoteException e){}
     }
-    protected void showList() {  // php 파싱 설정
+    protected void addBeacons(ArrayList<BeaconListItem> beacons) {  // php 파싱 설정
         try {
             JSONObject jsonObject = new JSONObject(myJSON);
             jsonArray = jsonObject.getJSONArray(TAG_RESULT);
@@ -178,7 +197,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                 String major = object.getString(TAG_MAJOR);
                 String minor = object.getString(TAG_Minor);
                 System.out.println("비콘 " + UUID + " " + major + " " +minor);
-                myBeacons.add(new BeaconListItem(UUID, major, minor));
+                beacons.add(new BeaconListItem(UUID, major, minor));
 
             }
 
@@ -186,7 +205,7 @@ public class myBeacon extends Application implements BeaconConsumer{
             e.printStackTrace();
         }
     }
-    public void getData(String url) { // php 파싱관련
+    public void getBeaconsFromDataBase(String url) { // php 파싱관련
 
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
@@ -197,7 +216,6 @@ public class myBeacon extends Application implements BeaconConsumer{
                 String uri = params[0];
                 BufferedReader bufferedReader = null;
 
-                //조금 고민해보기로
                 String postParameter = "Id="+ preference2.getString("Id","");
                 Log.d("Number", postParameter);
 
@@ -238,7 +256,65 @@ public class myBeacon extends Application implements BeaconConsumer{
             @Override
             protected void onPostExecute(String s) { // url 추출
                 myJSON = s;
-                showList();
+                addBeacons(myBeacons);
+            }
+
+        }
+        GetDataJSON getDataJSON = new GetDataJSON();
+        getDataJSON.execute(url);
+    }
+    public void getMissingBeaconsFromDataBase(String url) { // php 파싱관련
+
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                SharedPreferences preference2 = getSharedPreferences("freeLogin",Context.MODE_PRIVATE);
+                String uri = params[0];
+                BufferedReader bufferedReader = null;
+
+                String postParameter = "Missing=true";
+                Log.d("Number", postParameter);
+
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setReadTimeout(5000);
+                    connection.setConnectTimeout(5000);
+                    connection.setRequestMethod("POST");
+                    connection.setDoInput(true);
+                    connection.connect();
+                    OutputStream outputStream = connection.getOutputStream();
+                    outputStream.write(postParameter.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+                    int responseStatusCode = connection.getResponseCode();
+
+                    InputStream inputStream;
+                    if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                        inputStream = connection.getInputStream();
+                    }
+
+                    else{
+                        inputStream = connection.getErrorStream();
+                    }
+                    StringBuilder builder = new StringBuilder();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        builder.append(json + "\n");
+                    }
+                    return builder.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String s) { // url 추출
+                myJSON = s;
+                addBeacons(missingBeacons);
             }
 
         }
@@ -249,43 +325,99 @@ public class myBeacon extends Application implements BeaconConsumer{
         public void handleMessage(Message msg){
 //            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
 //                    preferences.getBoolean("BeaconEmergency", false) +" findMyBeacon "+ preferences.getBoolean("findMyBeacon", false) + " first "+preferences.getBoolean("first", false));
-
+            end = System.currentTimeMillis();
             editor.putBoolean("findMyBeacon", true);
             editor.commit();
-                for(Beacon beacon : beaconList){
-                    if(beacon.getId1().toString().equals(myBeacons.get(0).getUUID())
+                for (Beacon beacon : beaconList) {
+                    if (myBeacons.size()>0&&beacon.getId1().toString().equals(myBeacons.get(0).getUUID())
                             && beacon.getId2().toString().equals(myBeacons.get(0).getMajor())
-                            && beacon.getId3().toString().equals(myBeacons.get(0).getMinor())){
+                            && beacon.getId3().toString().equals(myBeacons.get(0).getMinor())) {
                         editor.putBoolean("findMyBeacon", false);
                         editor.commit();
-                        if(preferences.getBoolean("BeaconAlram", false)&&((int)beacon.getDistance())<=4){
+                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) <= 4) {
                             Log.d("비콘", "가까이 있음");
-                            showNotification("비콘", "10미터 이내에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
+                            showNearNotification("비콘", "10미터 이내에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", false);
                             editor.putBoolean("BeaconEmergency", true);
                             editor.putBoolean("first", true);
                             editor.commit();
-                        }else if(preferences.getBoolean("BeaconEmergency", false)&&(((int)beacon.getDistance())>4)){
+                        } else if (preferences.getBoolean("BeaconEmergency", false) && (((int) beacon.getDistance()) > 4)) {
                             Log.d("비콘", "멀리있음");
-                            showNotification2("비콘", "10미터 밖에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
+                            showFarNotification("비콘", "10미터 밖에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", true);
                             editor.putBoolean("BeaconEmergency", false);
                             editor.commit();
                         }
                     }
+
+                    for (BeaconListItem missingBeacon : missingBeacons) {
+//                        System.out.println("FindBeacons " + beacon.getId1().toString() +" " +beacon.getId2().toString() + " " +beacon.getId3().toString() + "missingBeacon "+ " "+ missingBeacon.getUUID() +" " + missingBeacon.getMajor() + " " + missingBeacon.getMinor());
+                        if ((end-start)>60000&&beacon.getId1().toString().equals(missingBeacon.getUUID())
+                                && beacon.getId2().toString().equals(missingBeacon.getMajor())
+                                & beacon.getId3().toString().equals(missingBeacon.getMinor())) {
+                            Log.d("비콘", "실종발견");
+                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+
+                                        if (success) { // 성공일 경우
+                                            Log.d("비콘", "실종발견");
+                                        }
+
+                                    } catch (JSONException e) { //오류 캐치
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            String UUID = beacon.getId1().toString();
+                            String major = beacon.getId2().toString();
+                            String minor = beacon.getId3().toString();
+
+                            startLocationService();
+                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                            RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
+                            queue.add(beaconFindRequest);
+
+                            start = System.currentTimeMillis();
+                            end = System.currentTimeMillis();
+                        }
+                    }
                 }
-            if(myBeacons.size()>0&&preferences.getBoolean("findMyBeacon", false)&&preferences.getBoolean("first", false)){
-                Log.d("비콘", "감지 안됨");
-                showNotification2("비콘", "10미터 밖에 있음", myBeacons.get(0).getUUID(), myBeacons.get(0).getMajor(), myBeacons.get(0).getMinor());
-                editor.putBoolean("findMyBeacon", false);
-                editor.putBoolean("first", false);
-                editor.putBoolean("BeaconAlram", true);
-                editor.commit();
-            }
-
-
+                if (myBeacons.size() > 0 && preferences.getBoolean("findMyBeacon", false) && preferences.getBoolean("first", false)) {
+                    Log.d("비콘", "감지 안됨");
+                    showFarNotification("비콘", "10미터 밖에 있음", myBeacons.get(0).getUUID(), myBeacons.get(0).getMajor(), myBeacons.get(0).getMinor());
+                    editor.putBoolean("findMyBeacon", false);
+                    editor.putBoolean("first", false);
+                    editor.putBoolean("BeaconAlram", true);
+                    editor.commit();
+                }
             beaconList.clear();
             handler.sendEmptyMessageDelayed(0, 3000);
         }
     };
+    private void startLocationService() {
+        // 위치 관리자 객체 참조
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // 위치 정보를 받을 리스너 생성
+        long minTime = 10000;
+        float minDistance = 0;
+        try {
+            // GPS를 이용한 위치 요청
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
+            // 네트워크를 이용한 위치 요청
+            manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, gpsListener);
+            // 위치 확인이 안되는 경우에도 최근에 확인된 위치 정보 먼저 확인
+            Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastLocation != null) {
+                gpsListener.latitude = lastLocation.getLatitude();
+                gpsListener.longitude = lastLocation.getLongitude();
+            }
+        } catch(SecurityException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
