@@ -23,10 +23,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.PrecomputedText;
@@ -65,17 +68,24 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Board1_Write_Activity extends AppCompatActivity {
 
     private static final int INTENT_REQUEST_GET_IMAGES = 13;
+    private ViewGroup mSelectedImagesContainer;
+
+    private List<String> fileNameList;
+    private List<String> fileDoneList;
+    private Adapter_UploadList adapter_uploadList;
 
     ArrayList<Uri> image_uris = new ArrayList<Uri>();
     ByteArrayOutputStream byteArrayOutputStream;
-    private ViewGroup mSelectedImagesContainer;
+    RecyclerView uploadList;
     AlertDialog dialog;
     String ConvertImage;
+    Bitmap fixBitmap;
     byte[] byteArray;
     Bitmap FixBitmap;
     ImageView ShowSelectedImage;
@@ -85,10 +95,17 @@ public class Board1_Write_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board1_write);
 
-        mSelectedImagesContainer = (ViewGroup) findViewById(R.id.selected_photos_container);
-
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        uploadList = (RecyclerView) findViewById(R.id.recycler_upload_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.write_toolbar);
+
+        fileNameList = new ArrayList<>();
+        adapter_uploadList = new Adapter_UploadList(fileNameList, fileDoneList);
+
+        uploadList.setLayoutManager(new LinearLayoutManager(this));
+        uploadList.setHasFixedSize(true);
+        uploadList.setAdapter(adapter_uploadList);
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("게시글 작성");
@@ -115,6 +132,11 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
     private void choosePhotoFormGallary() {
 
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), INTENT_REQUEST_GET_IMAGES);
     }
 
     @Override
@@ -124,9 +146,64 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
         if (resultCode == this.RESULT_CANCELED) { return; }
 
-        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == RESULT_OK && null != data) {
+        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == RESULT_OK) {
+            if (data.getClipData() != null) {
+
+                int totalItemSelected = data.getClipData().getItemCount();
+
+                for (int i=0; i<totalItemSelected; i++) {
+
+                    try {
+
+                        Uri fileuri = data.getClipData().getItemAt(i).getUri();
+                        String fileName = getFileName(fileuri);
+
+                        fixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileuri);
+                        ShowSelectedImage.setImageBitmap(fixBitmap);
+
+                        fileNameList.add(fileName);
+                        adapter_uploadList.notifyDataSetChanged();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            } else if (data.getData() != null) {
+
+                Toast.makeText(this, "이미지를 선택하였습니다.", Toast.LENGTH_SHORT).show();
+            }
 
         }
+    }
+
+    public String getFileName(Uri uri) {
+
+        String result = null;
+
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        if (result == null) {
+
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+
+            if (cut != 1) {
+                result = result.substring(cut +1);
+            }
+        }
+        return result;
     }
 
     @Override
