@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.coresdk.recognition.packets.Beacon;
 import com.example.taehun.totalmanager.Adapter.Adapter_BeaconSearch;
 import com.example.taehun.totalmanager.MapsActivity;
 import com.example.taehun.totalmanager.R;

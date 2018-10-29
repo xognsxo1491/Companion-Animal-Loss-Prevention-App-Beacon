@@ -8,9 +8,12 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -51,30 +54,30 @@ public class Popup2Activity extends Activity {
             public void onClick(View view) {
                 SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
                 String userId = preferences.getString("Id", null);
-                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
 
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
-                                if (success) { // 성공일 경우
-                                    Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
-                                    startActivity(intent);
-                                }
-
-                            } catch (JSONException e) { //오류 캐치
-                                e.printStackTrace();
+                            if (success) { // 성공일 경우
+                                Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+                                startActivity(intent);
                             }
-                        }
-                    };
 
-                    startLocationService();
-                    BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
-                    RequestQueue queue = Volley.newRequestQueue(Popup2Activity.this);
-                    queue.add(board_write_request);
-                    finish();
+                        } catch (JSONException e) { //오류 캐치
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                startLocationService();
+                BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                RequestQueue queue = Volley.newRequestQueue(Popup2Activity.this);
+                queue.add(board_write_request);
+                finish();
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +104,8 @@ public class Popup2Activity extends Activity {
                 gpsListener.latitude = lastLocation.getLatitude();
                 gpsListener.longitude = lastLocation.getLongitude();
             }
+
+            Toast.makeText(this, Double.toString(gpsListener.latitude), Toast.LENGTH_SHORT).show();
         } catch(SecurityException ex) {
             ex.printStackTrace();
         }

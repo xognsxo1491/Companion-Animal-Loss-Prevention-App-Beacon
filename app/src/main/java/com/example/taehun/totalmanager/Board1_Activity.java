@@ -39,9 +39,10 @@ public class Board1_Activity extends AppCompatActivity {
     private static final String TAG_IMAGE_NAME = "Image_name";
 
     ArrayList<HashMap<String, String>> boardList;
+
+    String myJSON;
     JSONArray jsonArray = null;
     ListView listView;
-    String myJSON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,8 @@ public class Board1_Activity extends AppCompatActivity {
 
         boardList = new ArrayList<HashMap<String, String>>();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.board1_toolbar); // 툴바 설정
         listView = (ListView) findViewById(R.id.image_comment);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.board1_toolbar); // 툴바 설정
 
         getData("http://xognsxo1491.cafe24.com/Board1_list_connect.php"); // 카페24 db 접속 url
 
@@ -65,10 +66,8 @@ public class Board1_Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { // 뒤로가기 버튼 설정
-
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-
         overridePendingTransition(R.anim.layout_left_in, R.anim.layout_right_out);
     }
 
@@ -108,7 +107,6 @@ public class Board1_Activity extends AppCompatActivity {
 
             final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.board1_swipe);
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
                 @Override
                 public void onRefresh() {
                     swipeRefreshLayout.setRefreshing(true);
@@ -116,7 +114,6 @@ public class Board1_Activity extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
                             boardList.clear();
                             getData("http://xognsxo1491.cafe24.com/Board1_list_connect.php");
                             adapter.notifyDataSetChanged();
@@ -130,7 +127,6 @@ public class Board1_Activity extends AppCompatActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // 리스트뷰 안의 아이템 클릭시
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                     Intent intent = new Intent(getApplicationContext(), Board_Comment_Activity.class);
                     intent.putExtra("boardList", boardList.get(position));
 
@@ -229,5 +225,6 @@ public class Board1_Activity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
 
 

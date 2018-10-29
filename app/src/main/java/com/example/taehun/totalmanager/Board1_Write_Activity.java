@@ -73,19 +73,11 @@ import java.util.Locale;
 
 public class Board1_Write_Activity extends AppCompatActivity {
 
-    private static final int INTENT_REQUEST_GET_IMAGES = 13;
-    private ViewGroup mSelectedImagesContainer;
+    private int GALLERY = 1000;
 
-    private List<String> fileNameList;
-    private List<String> fileDoneList;
-    private Adapter_UploadList adapter_uploadList;
-
-    ArrayList<Uri> image_uris = new ArrayList<Uri>();
     ByteArrayOutputStream byteArrayOutputStream;
-    RecyclerView uploadList;
     AlertDialog dialog;
     String ConvertImage;
-    Bitmap fixBitmap;
     byte[] byteArray;
     Bitmap FixBitmap;
     ImageView ShowSelectedImage;
@@ -95,17 +87,9 @@ public class Board1_Write_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board1_write);
 
-        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        uploadList = (RecyclerView) findViewById(R.id.recycler_upload_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.write_toolbar);
-
-        fileNameList = new ArrayList<>();
-        adapter_uploadList = new Adapter_UploadList(fileNameList, fileDoneList);
-
-        uploadList.setLayoutManager(new LinearLayoutManager(this));
-        uploadList.setHasFixedSize(true);
-        uploadList.setAdapter(adapter_uploadList);
-
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        ShowSelectedImage = (ImageView)findViewById(R.id.imageView1);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("게시글 작성");
@@ -124,7 +108,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(Board1_Write_Activity.this, "사진은 최대 10개까지 선택가능합니다.", Toast.LENGTH_LONG).show();
                 choosePhotoFormGallary();
             }
         });
@@ -132,11 +115,9 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
     private void choosePhotoFormGallary() {
 
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), INTENT_REQUEST_GET_IMAGES);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, GALLERY);
+
     }
 
     @Override
@@ -146,64 +127,22 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
         if (resultCode == this.RESULT_CANCELED) { return; }
 
-        if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == RESULT_OK) {
-            if (data.getClipData() != null) {
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                Uri contentURI = data.getData();
 
-                int totalItemSelected = data.getClipData().getItemCount();
+                try {
+                    FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                    ShowSelectedImage.setImageBitmap(FixBitmap);
 
-                for (int i=0; i<totalItemSelected; i++) {
+                } catch (IOException e) {
 
-                    try {
-
-                        Uri fileuri = data.getClipData().getItemAt(i).getUri();
-                        String fileName = getFileName(fileuri);
-
-                        fixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileuri);
-                        ShowSelectedImage.setImageBitmap(fixBitmap);
-
-                        fileNameList.add(fileName);
-                        adapter_uploadList.notifyDataSetChanged();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
 
                 }
-
-            } else if (data.getData() != null) {
-
-                Toast.makeText(this, "이미지를 선택하였습니다.", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
-    public String getFileName(Uri uri) {
-
-        String result = null;
-
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
             }
         }
-
-        if (result == null) {
-
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-
-            if (cut != 1) {
-                result = result.substring(cut +1);
-            }
-        }
-        return result;
     }
 
     @Override
@@ -242,7 +181,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();
-                    break;
 
                 } else if (boardContent.equals("")) { // 내용이 공백일 경우
                     AlertDialog.Builder builder = new AlertDialog.Builder(Board1_Write_Activity.this);
@@ -250,10 +188,9 @@ public class Board1_Write_Activity extends AppCompatActivity {
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();
-                    break;
 
                 } else { // 공백이 아닐 경우
-                    if (true/*ShowSelectedImage.getDrawable() == null*/) {
+                    if (ShowSelectedImage.getDrawable() == null) {
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
                             @Override
@@ -283,7 +220,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
                         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
                         byteArray = byteArrayOutputStream.toByteArray();
                         ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
                         String imageName = Long.toString(System.currentTimeMillis());
 
                         Response.Listener<String> responseListener = new Response.Listener<String>() {

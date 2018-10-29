@@ -66,16 +66,12 @@ public class Adapter_BeaconSearch extends BaseAdapter implements Filterable { //
         TextView text_UUID = (TextView) convertView.findViewById(R.id.text_UUID);
         TextView text_Major = (TextView) convertView.findViewById(R.id.text_Major);
         TextView text_Minor = (TextView) convertView.findViewById(R.id.text_Minor);
-        TextView text_Latitude = (TextView) convertView.findViewById(R.id.text_Latitude);
-        TextView text_Longitude = (TextView) convertView.findViewById(R.id.text_Longitude);
 
         HashMap<String, String> listViewItem = copyList.get(position);
 
         text_UUID.setText(listViewItem.get(TAG_UUID));
         text_Major.setText(listViewItem.get(TAG_Major));
         text_Minor.setText(listViewItem.get(TAG_Minor));
-        text_Latitude.setText(listViewItem.get(TAG_Latitude));
-        text_Longitude.setText(listViewItem.get(TAG_Longitude));
 
         return convertView;
 

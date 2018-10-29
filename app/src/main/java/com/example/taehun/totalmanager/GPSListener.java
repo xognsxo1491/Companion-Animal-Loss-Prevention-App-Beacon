@@ -12,11 +12,11 @@ import android.os.Bundle;
          * 위치 정보가 확인될 때 자동 호출되는 메소드
          */
         double latitude, longitude;
+
         public void onLocationChanged(Location location) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
 
-            String msg = "Latitude : "+ latitude + "\nLongitude:"+ longitude;
         }
 
         public void onProviderDisabled(String provider) {
