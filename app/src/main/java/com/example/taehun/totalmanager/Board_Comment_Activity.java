@@ -37,6 +37,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_BoardComment;
 import com.example.taehun.totalmanager.Request.Board1CommentWriteRequest;
+import com.example.taehun.totalmanager.Request.Board1DeleteCommentRequest;
 import com.example.taehun.totalmanager.Request.Board1DeleteRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -123,10 +124,13 @@ public class Board_Comment_Activity extends AppCompatActivity {
 
         Iterator<String> iterator = hashMap.keySet().iterator(); // 파싱값 별로 데이터 저장
         while (iterator.hasNext()) {
+
             final String key = (String) iterator.next();
+
             if (key.equals("Id")) {
                 text_comment_id.setText(hashMap.get(key));
                 String UserId = preferences.getString("Id", "");
+
                 if (hashMap.get("Id").equals(UserId)) {
                     //findViewById(R.id.nav_delete).setBackgroundResource(R.drawable.baseline_delete_white_24dp);
                     //기본이미지를 비워놓고 글쓴이의 아이디와 현재 접속중인 아이디가 같을 경우 이미지를 넣으려 했는데 findVIewBYid를 못찾음
@@ -145,7 +149,6 @@ public class Board_Comment_Activity extends AppCompatActivity {
             if (key.equals("Image_path")) {
                 if (hashMap.get(key).isEmpty()) {
                     imageView.setVisibility(View.GONE);
-                    break;
                 }
 
                 else {
@@ -215,6 +218,11 @@ public class Board_Comment_Activity extends AppCompatActivity {
                             Board1DeleteRequest board_delete_request = new Board1DeleteRequest(userId, number, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                             RequestQueue queue = Volley.newRequestQueue(Board_Comment_Activity.this);
                             queue.add(board_delete_request);
+
+                            Board1DeleteCommentRequest board1DeleteCommentRequest = new Board1DeleteCommentRequest(userId, number, responseListener);
+                            RequestQueue queue2 = Volley.newRequestQueue(Board_Comment_Activity.this);
+                            queue2.add(board1DeleteCommentRequest);
+
                         } else{
 
 

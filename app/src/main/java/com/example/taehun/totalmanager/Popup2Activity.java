@@ -23,6 +23,8 @@ import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.TimerTask;
+
 public class Popup2Activity extends Activity {
 
     Button btn;
@@ -37,10 +39,13 @@ public class Popup2Activity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup2);
+
         btn = findViewById(R.id.notification2_btn1);
         btn2 = findViewById(R.id.notification2_btn2);
+
         Intent intent = getIntent();
 
         gpsListener = new GPSListener();
@@ -52,6 +57,7 @@ public class Popup2Activity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
                 String userId = preferences.getString("Id", null);
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -74,15 +80,18 @@ public class Popup2Activity extends Activity {
                 };
 
                 startLocationService();
-                BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+
+                BeaconMissingRequest beaconMissingRequest = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                 RequestQueue queue = Volley.newRequestQueue(Popup2Activity.this);
-                queue.add(board_write_request);
+                queue.add(beaconMissingRequest);
+
                 finish();
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 finish();
             }
         });
@@ -93,6 +102,7 @@ public class Popup2Activity extends Activity {
         // 위치 정보를 받을 리스너 생성
         long minTime = 10000;
         float minDistance = 0;
+
         try {
             // GPS를 이용한 위치 요청
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
@@ -100,12 +110,16 @@ public class Popup2Activity extends Activity {
             manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, gpsListener);
             // 위치 확인이 안되는 경우에도 최근에 확인된 위치 정보 먼저 확인
             Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
             if (lastLocation != null) {
                 gpsListener.latitude = lastLocation.getLatitude();
                 gpsListener.longitude = lastLocation.getLongitude();
             }
 
-            Toast.makeText(this, Double.toString(gpsListener.latitude), Toast.LENGTH_SHORT).show();
+            if(gpsListener.latitude == 0.0) {
+                Toast.makeText(this, "위치정보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            }
+
         } catch(SecurityException ex) {
             ex.printStackTrace();
         }

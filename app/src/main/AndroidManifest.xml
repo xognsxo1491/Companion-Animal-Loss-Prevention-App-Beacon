@@ -75,16 +75,21 @@
         <activity
             android:name=".PopupActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity
-            android:name=".BeaconMap.BeacomMapActivity"
-            android:label="@string/title_activity_maps" />
         <activity android:name=".BeaconMap.Beacon1Fragment" />
         <activity android:name=".BeaconMap.Beacon2Fragment" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
         <activity android:name=".BeaconScan.CustomDialog2" />
-        <activity android:name=".Popup3Activity" android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity
+            android:name=".Popup3Activity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".BeaconMapActivity"
+            android:label="@string/title_activity_beacon_map" />
+        <activity android:name=".BoardRegion.BoardRegionActivity" />
+        <activity android:name=".BoardRegion.BoardRegionWriteActivity" />
+        <activity
+            android:name=".BoardRegion.BoardRegionMapActivity"
+            android:label="@string/title_activity_board_region_map" />
+        <activity android:name=".BoardRegion.BoardRegionDialog"></activity>
     </application>
 
 </manifest>

@@ -36,6 +36,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
+            android:textSize="16dp"
             android:background="@drawable/shadow_13713"
             android:hint=" 자유게시판 내 통합검색"
             android:inputType="text"

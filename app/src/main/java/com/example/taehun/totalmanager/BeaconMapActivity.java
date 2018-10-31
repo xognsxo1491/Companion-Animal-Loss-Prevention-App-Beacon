@@ -1,43 +1,39 @@
-package com.example.taehun.totalmanager.BeaconMap;
+package com.example.taehun.totalmanager;
 
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.BottomSheetBehavior;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.telephony.SignalStrength;
-import android.util.Log;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taehun.totalmanager.Adapter.Adapter_BeaconSearch;
-import com.example.taehun.totalmanager.Board1_Activity;
-import com.example.taehun.totalmanager.R;
+import com.example.taehun.totalmanager.BoardRegion.BoardRegionActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +41,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -55,13 +52,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCallback{
+    private GoogleMap mMap;
 
     private static final String TAG_RESULT = "result";
     private static final String TAG_UUID = "UUID";
@@ -70,22 +67,23 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
     private static final String TAG_LATITUDE = "Latitude";
     private static final String TAG_LONGITUDE = "Longitude";
 
-    private BottomSheetBehavior bottomSheetBehavior;
-    private BottomNavigationView bottomNavigationView;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    FloatingActionButton fab_gps, fab_search;
+    ConstraintLayout constraintLayout;
     LocationManager locationManager;
-    FloatingActionButton fab_gps;
+    Adapter_BeaconSearch adapter;
     MarkerOptions markerOptions;
     JSONArray jsonArray = null;
     Animation operatingAnim;
+    ListView listView;
     String myJSON;
     Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_beaconmap);
+        setContentView(R.layout.activity_beacon_map);
 
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
@@ -97,64 +95,65 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
             startActivity(intent);
         }
 
+        constraintLayout = (ConstraintLayout) findViewById(R.id.layout_map);
+        constraintLayout.setTag("확장");
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.beacon_navi);
         fab_gps = (FloatingActionButton) findViewById(R.id.fab_gps);
+        fab_search = (FloatingActionButton) findViewById(R.id.fab_search);
+
+        listView = findViewById(R.id.listview_BeaconSearch);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        final Beacon1Fragment beacon1Fragment = new Beacon1Fragment();
-        final Beacon2Fragment beacon2Fragment = new Beacon2Fragment();
-
-        setFragment(beacon1Fragment); // 앱 접속했을 때 나오는 프레그먼트
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()) { // 메인 액티비티 밑의 네비게이터 버튼
-                    case R.id.navigation_home:
-                        setFragment(beacon1Fragment);
-                        return true;
-
-                    case R.id.navigation_dashboard:
-                        setFragment(beacon2Fragment);
-                        return true;
-
-                }
-                return false;
-            }
-        });
-
-        operatingAnim = AnimationUtils.loadAnimation(BeacomMapActivity.this, R.anim.rotate);
+        operatingAnim = AnimationUtils.loadAnimation(BeaconMapActivity.this, R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
 
-        View bottomSheet = (View) findViewById(R.id.bottom_sheet1);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        adapter = new Adapter_BeaconSearch();
 
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheet.setNestedScrollingEnabled(false);
+        listView.setAdapter(adapter);
+        adapter.getData("http://xognsxo1491.cafe24.com/Beacon_search_connect.php"); // db 접속 url
 
-        bottomSheetBehavior.setPeekHeight(160);
-        bottomSheetBehavior.setHideable(false);
+        final EditText editText_UUID = (EditText) findViewById(R.id.editText_UUID);
 
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-
+        editText_UUID.setOnEditorActionListener(new TextView.OnEditorActionListener() { // 키보드 완료 버튼 눌렀을 시
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) { }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) { }
+                if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    String text = editText_UUID.getText().toString();
+
+                    if (text.equals("")) {
+
+                        imm.hideSoftInputFromWindow(editText_UUID.getWindowToken(), 0);
+                        Toast.makeText(BeaconMapActivity.this, "검색란이 공백입니다.", Toast.LENGTH_SHORT).show();
+
+                    } else { // 아닐경우
+                        imm.hideSoftInputFromWindow(editText_UUID.getWindowToken(), 0);
+
+                        listView.setVisibility(View.VISIBLE);
+                        ((Adapter_BeaconSearch) listView.getAdapter()).getFilter().filter(text);
+                    }
+                }
+                return true;
+            }
         });
     }
 
-    private void setFragment(Fragment fragment) { // 프레그먼트 설정
+    @Override
+    public void onBackPressed() {
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.beacon_frame, fragment);
-        fragmentTransaction.commit();
+        if (constraintLayout.getTag().equals("확장")) {
+            finish();
+        }
+
+        else if (constraintLayout.getTag().equals("축소")) {
+            constraintLayout.setVisibility(View.INVISIBLE);
+            constraintLayout.setTag("확장");
+        }
     }
 
     @Override
@@ -168,6 +167,30 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
 
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
         googleMap.animateCamera(zoom);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String str_Lat = adapter.getBoardList().get(position).get("Latitude");
+                String str_long = adapter.getBoardList().get(position).get("Longitude");
+
+                Double lat = Double.parseDouble(str_Lat);
+                Double lon = Double.parseDouble(str_long);
+
+                LatLng latLng = new LatLng(lat, lon);
+                googleMap.addMarker(new MarkerOptions().position(latLng));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(15);
+                googleMap.animateCamera(cameraUpdate);
+
+                constraintLayout.setVisibility(View.INVISIBLE);
+                constraintLayout.setTag("확장");
+
+            }
+        });
+
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -228,27 +251,48 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
 
-                            TimerTask timerTask = new TimerTask() {
-                                @Override
-                                public void run() {
+                        TimerTask timerTask = new TimerTask() {
+                            @Override
+                            public void run() {
 
-                                        fab_gps.clearAnimation();
-                                        fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
-                                        locationManager.removeUpdates(mLocationListener);
+                                fab_gps.clearAnimation();
+                                fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
+                                locationManager.removeUpdates(mLocationListener);
 
-                                        Snackbar.make(v,"작동하지 않는다면 신호세기를 확인해주세요.",Snackbar.LENGTH_LONG).show();
-                                    }
-                            };
+                                Snackbar.make(v,"작동하지 않는다면 신호세기를 확인해주세요.",Snackbar.LENGTH_LONG).show();
+                            }
+                        };
 
-                            timer = new Timer();
-                            timer.schedule(timerTask, 6500);
+                        timer = new Timer();
+                        timer.schedule(timerTask, 6500);
 
                     }
                 }
             }
         });
-    }
 
+        final Animation animation = new AlphaAnimation(0, 1);
+        animation.setDuration(1000);
+
+        fab_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (constraintLayout.getTag().equals("확장")) {
+                    constraintLayout.setVisibility(View.VISIBLE);
+                    constraintLayout.startAnimation(animation);
+                    constraintLayout.setTag("축소");
+                    return;
+                }
+
+                else if (constraintLayout.getTag().equals("축소")) {
+                    constraintLayout.setVisibility(View.INVISIBLE);
+                    constraintLayout.setTag("확장");
+                    return;
+                }
+            }
+        });
+    }
 
     protected void showList(GoogleMap googleMap) {  // php 파싱 설정
         try {
@@ -275,6 +319,14 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
                         .snippet("Major : "+ major + "  Minor : " +minor);
 
                 googleMap.addMarker(markerOptions);
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+
+                        Intent intent = new Intent(getApplicationContext(), BoardRegionActivity.class);
+                        startActivity(intent);
+                    }
+                });
 
             }
         } catch (JSONException e) {
@@ -286,7 +338,7 @@ public class BeacomMapActivity extends FragmentActivity implements OnMapReadyCal
 
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
-            ProgressDialog progressDialog = new ProgressDialog(BeacomMapActivity.this);
+            ProgressDialog progressDialog = new ProgressDialog(BeaconMapActivity.this);
 
             @Override
             protected void onPreExecute() {

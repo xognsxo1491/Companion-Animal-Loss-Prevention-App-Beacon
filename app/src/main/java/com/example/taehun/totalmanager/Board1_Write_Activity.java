@@ -1,60 +1,31 @@
 package com.example.taehun.totalmanager;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.PrecomputedText;
 import android.util.Base64;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest2;
 
@@ -63,12 +34,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class Board1_Write_Activity extends AppCompatActivity {
@@ -76,11 +43,11 @@ public class Board1_Write_Activity extends AppCompatActivity {
     private int GALLERY = 1000;
 
     ByteArrayOutputStream byteArrayOutputStream;
-    AlertDialog dialog;
+    ImageView ShowSelectedImage;
     String ConvertImage;
+    AlertDialog dialog;
     byte[] byteArray;
     Bitmap FixBitmap;
-    ImageView ShowSelectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +55,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_board1_write);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.write_toolbar);
-        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab_image);
         ShowSelectedImage = (ImageView)findViewById(R.id.imageView1);
 
         setSupportActionBar(toolbar);

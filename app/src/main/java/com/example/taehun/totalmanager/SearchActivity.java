@@ -1,5 +1,6 @@
 package com.example.taehun.totalmanager;
 
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,9 +25,6 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_keyboard_backspace_white_24dp);
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.container); // 뷰페이저를 이용해 드레그시 화면 전환
@@ -36,6 +34,11 @@ public class SearchActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
+        toolbar.setTitle("아이디 / 비밀번호 찾기");
 
     }
 
@@ -69,19 +72,5 @@ public class SearchActivity extends AppCompatActivity {
         public int getCount() {
             return 2;
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-
-            case android.R.id.home: { //마이페이지
-
-                finish();
-                break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
