@@ -83,23 +83,10 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                         @Override
                         public void onInfoWindowClick(Marker marker) {
 
-                            Toast.makeText(BoardRegionMapActivity.this, "클릭", Toast.LENGTH_SHORT).show();
-
-                            geocoder = new Geocoder(getApplicationContext());
-                            List<Address> list = null;
-
-                            try {
-                                list = geocoder.getFromLocation(lat,lon,10);
-
-                                String gps = list.get(0).toString();
-
-                                Intent intent = new Intent(getApplicationContext(), BoardRegionWriteActivity.class);
-                                intent.putExtra("GPS",gps);
-                                startActivity(intent);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Intent intent = new Intent(getApplicationContext(), BoardRegionWriteActivity.class);
+                            intent.putExtra("lat", lat);
+                            intent.putExtra("lon", lon);
+                            startActivity(intent);
 
                         }
                     });

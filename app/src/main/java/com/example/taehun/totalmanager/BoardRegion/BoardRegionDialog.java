@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -17,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -46,30 +49,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class BoardRegionDialog {
-
-    private Context context;
+public class BoardRegionDialog extends Dialog{
 
     public BoardRegionDialog(Context context) {
-        this.context = context;
-    }
-
-    // 호출할 다이얼로그 함수를 정의한다.
-    public void callFunction() {
-
-        // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
-        final Dialog dlg = new Dialog(context);
-
-        // 액티비티의 타이틀바를 숨긴다.
-        dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        dlg.setContentView(R.layout.activity_board_region_dialog);
-
-        // 커스텀 다이얼로그를 노출한다.
-        dlg.show();
-
-        // 커스텀 다이얼로그의 각 위젯들을 정의한다.
-
+        super(context);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);   //다이얼로그의 타이틀바를 없애주는 옵션입니다.
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));  //다이얼로그의 배경을 투명으로 만듭니다.
+        setContentView(R.layout.activity_board_region_dialog);     //다이얼로그에서 사용할 레이아웃입니다.
     }
 }

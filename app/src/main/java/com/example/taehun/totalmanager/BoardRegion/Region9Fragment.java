@@ -38,7 +38,8 @@ public class Region9Fragment extends Fragment {
     private static final String TAG_LATITUDE = "Latitude";
     private static final String TAG_LONGITUDE = "Longitude";
     private static final String TAG_MISSING = "Missing";
-    private static final String TAG_Region = "Region";
+    private static final String TAG_REGION = "Region";
+    private static final String TAG_REGION_NAME = "Region_Name";
     private static final String TAG_TiTIE = "Title";
     private static final String TAG_CONTENT = "Content";
     private static final String TAG_TIME = "Time";
@@ -84,7 +85,8 @@ public class Region9Fragment extends Fragment {
                 String Latitude = object.getString(TAG_LATITUDE);
                 String Longitude = object.getString(TAG_LONGITUDE);
                 String Missing = object.getString(TAG_MISSING);
-                String Region = object.getString(TAG_Region);
+                String Region = object.getString(TAG_REGION);
+                String Region_Name = object.getString(TAG_REGION_NAME);
                 String Title = object.getString(TAG_TiTIE);
                 String Content = object.getString(TAG_CONTENT);
                 String Time = object.getString(TAG_TIME);
@@ -102,7 +104,8 @@ public class Region9Fragment extends Fragment {
                     hashMap.put(TAG_LATITUDE, Latitude);
                     hashMap.put(TAG_LONGITUDE, Longitude);
                     hashMap.put(TAG_MISSING, Missing);
-                    hashMap.put(TAG_Region, Region);
+                    hashMap.put(TAG_REGION, Region);
+                    hashMap.put(TAG_REGION_NAME, Region_Name);
                     hashMap.put(TAG_TiTIE, Title);
                     hashMap.put(TAG_CONTENT, Content);
                     hashMap.put(TAG_TIME, Time);

@@ -126,7 +126,7 @@ public class CustomDialog2 implements BeaconConsumer{
                     if (fab_scan2.getTag().equals("실행")) {
 
                         fab_scan2.setTag("중단");
-                        fab_scan2.setImageResource(R.drawable.baseline_cached_white_24dp);
+                        fab_scan2.setImageResource(R.drawable.baseline_cached_white_48dp);
                         fab_scan2.setAnimation(operatingAnim);
 
                         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));

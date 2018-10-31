@@ -245,7 +245,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
                     if (fab_gps.getTag().equals("실행")) {
 
-                        fab_gps.setImageResource(R.drawable.baseline_cached_white_24dp);
+                        fab_gps.setImageResource(R.drawable.baseline_cached_white_48dp);
                         fab_gps.startAnimation(operatingAnim);
 
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);

@@ -6,7 +6,7 @@
     <item
         android:id="@+id/nav_send"
         android:checked="true"
-        android:icon="@drawable/baseline_send_white_24dp"
+        android:icon="@drawable/baseline_check_circle_outline_white_48dp"
         android:title="작성완료"
         app:showAsAction="always" />
 

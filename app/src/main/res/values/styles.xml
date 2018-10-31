@@ -10,7 +10,7 @@
     </style>
 
     <style name="searchViewStyle" parent="AppTheme">
-        <item name="android:searchIcon">@drawable/baseline_search_white_24dp</item>
+        <item name="android:searchIcon">@drawable/baseline_search_white_48dp</item>
     </style>
 
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
