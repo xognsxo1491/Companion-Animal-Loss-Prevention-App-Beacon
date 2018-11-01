@@ -323,11 +323,13 @@ public class myBeacon extends Application implements BeaconConsumer{
     }
             Handler handler = new Handler(){
         public void handleMessage(Message msg){
-//            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
+            SharedPreferences preferences3 = getSharedPreferences("Scan", getApplicationContext().MODE_PRIVATE);
+            if(preferences3.getBoolean("Scan", false)){
+                //            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
 //                    preferences.getBoolean("BeaconEmergency", false) +" findMyBeacon "+ preferences.getBoolean("findMyBeacon", false) + " first "+preferences.getBoolean("first", false));
-            end = System.currentTimeMillis();
-            editor.putBoolean("findMyBeacon", true);
-            editor.commit();
+                end = System.currentTimeMillis();
+                editor.putBoolean("findMyBeacon", true);
+                editor.commit();
                 for (Beacon beacon : beaconList) {
                     if (myBeacons.size()>0&&beacon.getId1().toString().equals(myBeacons.get(0).getUUID())
                             && beacon.getId2().toString().equals(myBeacons.get(0).getMajor())
@@ -396,8 +398,9 @@ public class myBeacon extends Application implements BeaconConsumer{
                     editor.putBoolean("BeaconAlram", true);
                     editor.commit();
                 }
-            beaconList.clear();
-            handler.sendEmptyMessageDelayed(0, 3000);
+                beaconList.clear();
+                handler.sendEmptyMessageDelayed(0, 3000);
+            }
         }
     };
     private void startLocationService() {
