@@ -1,4 +1,4 @@
-package com.example.taehun.totalmanager;
+package com.example.taehun.totalmanager.BoardRegion;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -8,27 +8,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
-import android.util.Base64;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,28 +28,25 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_BoardComment;
+import com.example.taehun.totalmanager.Board1_Activity;
+import com.example.taehun.totalmanager.BoardCommentItem;
+import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.Board1CommentWriteRequest;
 import com.example.taehun.totalmanager.Request.Board1DeleteCommentRequest;
 import com.example.taehun.totalmanager.Request.Board1DeleteRequest;
+import com.example.taehun.totalmanager.Request.BoardRegionDeleteRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,17 +54,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import cz.msebera.android.httpclient.client.cache.Resource;
-import cz.msebera.android.httpclient.client.utils.URIUtils;
-
-public class Board_Comment_Activity extends AppCompatActivity {
+public class BoardRegionCommentActivity extends AppCompatActivity {
     AlertDialog dialog;
     HashMap<String, String> hashMap;
     SharedPreferences preferences;
     EditText edit_comment_content;
 
+    TextView text_comment_id, text_uuid, text_major, text_minor, text_comment_time, text_comment_title, text_comment_content;
     ArrayList<BoardCommentItem> commentItemList;
     Adapter_BoardComment boardCommentAdapter;
     ImageView imageView;
@@ -90,19 +75,22 @@ public class Board_Comment_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board_comment);
+        setContentView(R.layout.activity_board_region_comment);
 
-        View header = getLayoutInflater().inflate(R.layout.listview_header, null, false);
+        View header = getLayoutInflater().inflate(R.layout.listview_header_region, null, false);
 
         edit_comment_content = (EditText) findViewById(R.id.comentText);
         ListView listView = (ListView) findViewById(R.id.comment_list);
 
         listView.addHeaderView(header);
 
-        TextView text_comment_id = (TextView) header.findViewById(R.id.text_comment_id);
-        TextView text_comment_time = (TextView) header.findViewById(R.id.text_comment_time);
-        TextView text_comment_title = (TextView) header.findViewById(R.id.text_comment_title);
-        TextView text_comment_content = (TextView) header.findViewById(R.id.text_comment_content);
+        text_comment_id = (TextView) header.findViewById(R.id.text_comment_id);
+        text_uuid = (TextView) header.findViewById(R.id.text_uuid);
+        text_major = (TextView) header.findViewById(R.id.text_major);
+        text_minor = (TextView) header.findViewById(R.id.text_minor);
+        text_comment_time = (TextView) header.findViewById(R.id.text_comment_time);
+        text_comment_title = (TextView) header.findViewById(R.id.text_comment_title);
+        text_comment_content = (TextView) header.findViewById(R.id.text_comment_content);
 
         imageView = (ImageView) header.findViewById(R.id.image_comment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_comment);
@@ -112,9 +100,6 @@ public class Board_Comment_Activity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("게시글 보기");
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_keyboard_backspace_white_24dp);
 
         preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
 
@@ -127,15 +112,17 @@ public class Board_Comment_Activity extends AppCompatActivity {
 
             final String key = (String) iterator.next();
 
-            if (key.equals("Id")) {
+            if (key.equals("Id"))
                 text_comment_id.setText(hashMap.get(key));
-                String UserId = preferences.getString("Id", "");
 
-                if (hashMap.get("Id").equals(UserId)) {
-                    //findViewById(R.id.nav_delete).setBackgroundResource(R.drawable.baseline_delete_white_24dp);
-                    //기본이미지를 비워놓고 글쓴이의 아이디와 현재 접속중인 아이디가 같을 경우 이미지를 넣으려 했는데 findVIewBYid를 못찾음
-                }
-            }
+            if (key.equals("UUID"))
+                text_uuid.setText(hashMap.get(key));
+
+            if (key.equals("Major"))
+                text_major.setText(hashMap.get(key));
+
+            if (key.equals("Minor"))
+                text_minor.setText(hashMap.get(key));
 
             if (key.equals("Time"))
                 text_comment_time.setText(hashMap.get(key));
@@ -146,23 +133,23 @@ public class Board_Comment_Activity extends AppCompatActivity {
             if (key.equals("Content"))
                 text_comment_content.setText(hashMap.get(key));
 
-            if (key.equals("Image_path")) {
+            if (key.equals("Image_Path")) {
                 if (hashMap.get(key).isEmpty()) {
                     imageView.setVisibility(View.GONE);
                 }
 
                 else {
-                    new DownloadImageTask((ImageView) imageView)
-                            .execute(hashMap.get(key));
+                    new DownloadImageTask((ImageView) imageView).execute(hashMap.get(key));
                 }
             }
         }
+
         getData("http://xognsxo1491.cafe24.com/Board1_coment_connect.php");
 
         listView.setAdapter(boardCommentAdapter); // 리스트뷰 어댑터 셋팅
         setListViewHeightBasedOnChildren(listView);
-
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { // 삭제 버튼 추가
         getMenuInflater().inflate(R.menu.delete, menu);
@@ -193,7 +180,7 @@ public class Board_Comment_Activity extends AppCompatActivity {
                                         boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
                                         if (success) { // 성공일 경우
-                                            Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+                                            Intent intent = new Intent(getApplicationContext(), BoardRegionActivity.class);
                                             startActivity(intent);
                                             overridePendingTransition(R.anim.layout_left_in, R.anim.layout_right_out);
                                         }
@@ -207,22 +194,21 @@ public class Board_Comment_Activity extends AppCompatActivity {
                             String userId = hashMap.get("Id");
                             String number = hashMap.get("Number");
 
-                            Board1DeleteRequest board_delete_request = new Board1DeleteRequest(userId, number, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
-                            RequestQueue queue = Volley.newRequestQueue(Board_Comment_Activity.this);
-                            queue.add(board_delete_request);
+                            BoardRegionDeleteRequest boardRegionDeleteRequest = new BoardRegionDeleteRequest(userId, number, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                            RequestQueue queue = Volley.newRequestQueue(BoardRegionCommentActivity.this);
+                            queue.add(boardRegionDeleteRequest);
 
                             Board1DeleteCommentRequest board1DeleteCommentRequest = new Board1DeleteCommentRequest(userId, number, responseListener);
-                            RequestQueue queue2 = Volley.newRequestQueue(Board_Comment_Activity.this);
+                            RequestQueue queue2 = Volley.newRequestQueue(BoardRegionCommentActivity.this);
                             queue2.add(board1DeleteCommentRequest);
 
                         } else{
-
-
                             //아이콘을 나타났다 사라졌다 하게 하는 대신 차선책으로 안내메세지를 띄움. 향후 수정예정
-                            Toast.makeText(Board_Comment_Activity.this, "글쓴이가 아닙니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BoardRegionCommentActivity.this, "글쓴이가 아닙니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
                 dialog = builder.setMessage("정말 게시물을 삭제하시겠습니까?")
                         .setPositiveButton("취소", null)
                         .create();
@@ -230,10 +216,6 @@ public class Board_Comment_Activity extends AppCompatActivity {
 
                 break;
             }
-
-            case android.R.id.home:
-                finish();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -273,7 +255,7 @@ public class Board_Comment_Activity extends AppCompatActivity {
             String commentTime = dateFormat.format(new Date()); // 시간 설정 포맷
 
             Board1CommentWriteRequest board_comment_request = new Board1CommentWriteRequest(number, id, content, commentTime, responseListener, FirebaseInstanceId.getInstance().getToken()); // 입력 값을 넣기 위한 request 클래스 참조
-            RequestQueue queue = Volley.newRequestQueue(Board_Comment_Activity.this);
+                RequestQueue queue = Volley.newRequestQueue(BoardRegionCommentActivity.this);
             queue.add(board_comment_request);
 
             getData("http://xognsxo1491.cafe24.com/Board1_coment_connect.php");
@@ -384,7 +366,7 @@ public class Board_Comment_Activity extends AppCompatActivity {
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
-        ProgressDialog progressDialog = new ProgressDialog(Board_Comment_Activity.this);
+        ProgressDialog progressDialog = new ProgressDialog(BoardRegionCommentActivity.this);
 
         public DownloadImageTask(ImageView bmImage) {
             this.bmImage = bmImage;

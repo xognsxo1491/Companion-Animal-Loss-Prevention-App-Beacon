@@ -145,7 +145,7 @@ public class Region1Fragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // 리스트뷰 안의 아이템 클릭시
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getActivity(), Board_Comment_Activity.class);
+                    Intent intent = new Intent(getActivity(), BoardRegionCommentActivity.class);
                     intent.putExtra("boardList", boardList.get(position));
 
                     startActivity(intent);

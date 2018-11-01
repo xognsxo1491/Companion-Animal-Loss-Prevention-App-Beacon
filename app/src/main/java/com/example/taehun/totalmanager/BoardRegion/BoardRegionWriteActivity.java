@@ -36,6 +36,7 @@ import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest2;
 import com.example.taehun.totalmanager.Request.BoardRegionRequest;
+import com.example.taehun.totalmanager.Request.BoardRegionRequest2;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +52,9 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
     private int GALLERY = 1000;
 
+    TextView text_gps, text_uuid, text_major, text_minor;
     ByteArrayOutputStream byteArrayOutputStream;
     FloatingActionButton fab_blue, fab_image;
-    TextView text_gps, text_uuid, text_major, text_minor;
     ImageView showSelectedImage;
     Double lat, lon;
     String ConvertImage;
@@ -82,13 +83,13 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
         lat = intent.getExtras().getDouble("lat");
         lon = intent.getExtras().getDouble("lon");
 
-        geocoder = new Geocoder(getApplicationContext());
-        List<Address> list = null;
-
         text_gps = (TextView) findViewById(R.id.text_gps);
         text_uuid = (TextView) findViewById(R.id.text_uuid);
         text_major = (TextView) findViewById(R.id.text_major);
         text_minor = (TextView) findViewById(R.id.text_minor);
+
+        geocoder = new Geocoder(getApplicationContext());
+        List<Address> list = null;
 
         try {
             list = geocoder.getFromLocation(lat,lon,10);
@@ -114,7 +115,6 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
                 BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionWriteActivity.this);
                 boardRegionDialog.show();
-
             }
         });
 
@@ -128,11 +128,17 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), BoardRegionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.layout_left_in, R.anim.layout_right_out);
+    }
+
     private void choosePhotoFormGallary() {
 
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
-
     }
 
     @Override
@@ -154,7 +160,6 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
-
                 }
             }
         }
@@ -175,7 +180,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                 final EditText edit_title = (EditText) findViewById(R.id.edit_title);
                 final EditText edit_content = (EditText) findViewById(R.id.edit_content);
 
-                Long now = System.currentTimeMillis();
+                Double now = (Math.random() *1000000);
 
                 String uuid = text_uuid.getText().toString();
                 String major = text_major.getText().toString();
@@ -232,7 +237,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                                     boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
                                     if (success) { // 성공일 경우
-                                        Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+                                        Intent intent = new Intent(getApplicationContext(), BoardRegionActivity.class);
                                         startActivity(intent);
                                     }
 
@@ -263,7 +268,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                                     boolean success = jsonObject.getBoolean("success");
 
                                     if (success) { // 성공일 경우
-                                        Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+                                        Intent intent = new Intent(getApplicationContext(),  BoardRegionActivity.class);
                                         startActivity(intent);
                                     }
 
@@ -274,9 +279,9 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
                         };
 
-                        Board1WriteRequest2 board_write_request = new Board1WriteRequest2(userId, boardTitle, boardContent, boardTime, ConvertImage, imageName, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                        BoardRegionRequest2 boardRegionRequest2 = new BoardRegionRequest2(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, ConvertImage, imageName, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                        queue.add(board_write_request);
+                        queue.add(boardRegionRequest2);
                     }
                     break;
                 }

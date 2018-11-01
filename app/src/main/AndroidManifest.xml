@@ -89,7 +89,8 @@
         <activity
             android:name=".BoardRegion.BoardRegionMapActivity"
             android:label="@string/title_activity_board_region_map" />
-        <activity android:name=".BoardRegion.BoardRegionDialog"></activity>
+        <activity android:name=".BoardRegion.BoardRegionDialog" />
+        <activity android:name=".BoardRegion.BoardRegionCommentActivity"></activity>
     </application>
 
 </manifest>
