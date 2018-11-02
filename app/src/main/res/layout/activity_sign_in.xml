@@ -40,17 +40,6 @@
             android:hint="Password"
             android:inputType="textPassword" />
 
-        <CheckBox
-            android:id="@+id/check_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingBottom="8dp"
-            android:theme="@style/checkboxBlue"
-            android:text="자동 로그인  "
-            tools:layout_editor_absoluteX="24dp"
-            tools:layout_editor_absoluteY="462dp" />
-
         <Button
             android:id="@+id/btn_sign_in"
             android:layout_width="match_parent"

@@ -145,6 +145,7 @@ public class CustomDialog implements BeaconConsumer{
 
                                         SharedPreferences preferences = context.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
                                         String userId = preferences.getString("Id", null);
+                                        Toast.makeText(context, userId, Toast.LENGTH_SHORT).show();
 
                                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
@@ -167,9 +168,9 @@ public class CustomDialog implements BeaconConsumer{
                                             }
                                         };
 
-                                        BeaconWriteRequest board_delete_request = new BeaconWriteRequest(userId, uuid, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                                        BeaconWriteRequest beaconWriteRequest = new BeaconWriteRequest(userId, uuid, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                                         RequestQueue queue = Volley.newRequestQueue(context);
-                                        queue.add(board_delete_request);
+                                        queue.add(beaconWriteRequest);
                                     }
                                 })
                                 .create();

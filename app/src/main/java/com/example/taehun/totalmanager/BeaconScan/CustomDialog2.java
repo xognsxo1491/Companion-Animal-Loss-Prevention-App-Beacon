@@ -31,6 +31,7 @@ import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
 import com.example.taehun.totalmanager.MainActivity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
+import com.example.taehun.totalmanager.Sign_InActivity;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -93,8 +94,9 @@ public class CustomDialog2 implements BeaconConsumer{
             @Override
             public void onCancel(DialogInterface dialog) {
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), Sign_InActivity.class);
                 getApplicationContext().startActivity(intent);
+
             }
         });
 
@@ -103,7 +105,7 @@ public class CustomDialog2 implements BeaconConsumer{
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), Sign_InActivity.class);
                 getApplicationContext().startActivity(intent);
             }
         });

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Sign_InActivity extends AppCompatActivity {
+
+    String login_id,login_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +37,17 @@ public class Sign_InActivity extends AppCompatActivity {
         final Button btn_sign_in = (Button) findViewById(R.id.btn_sign_in);
         final Button btn_sign_up = (Button) findViewById(R.id.btn_sign_up);
         Button btn_search  = (Button)findViewById(R.id.btn_search);
-        CheckBox checkBox = (CheckBox)findViewById(R.id.check_login);
 
         SharedPreferences preferences = getSharedPreferences("freeLogin",Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
         final SharedPreferences.Editor editor = preferences.edit();
+
+        login_id = preferences.getString("Id","");
+        login_password = preferences.getString("Password","");
+
+        if (login_id != "" && login_password != "") {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
 
         btn_sign_in.setOnClickListener(new View.OnClickListener() {  // 로그인 버튼 클릭시
             @Override
@@ -55,7 +65,7 @@ public class Sign_InActivity extends AppCompatActivity {
                             boolean success = jsonObject.getBoolean("success");
 
                             if (success) { // 일치했을 경우
-                                Intent intent = new Intent(Sign_InActivity.this, MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 editor.putString("Id", userid);
                                 editor.putString("Password",userpw);
                                 editor.commit();
@@ -81,36 +91,6 @@ public class Sign_InActivity extends AppCompatActivity {
             }
         });
 
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // 자동로그인 버튼 체크시
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if(isChecked) {
-                    String freeId = user_id.getText().toString();
-                    String freePassword = user_password.getText().toString();
-
-                    editor.putString("Id",freeId);
-                    editor.putString("Password",freePassword);
-                    editor.putBoolean("Auto_Login_enabled", true);
-                    editor.commit();
-                }
-
-                else {
-                    editor.remove("Id");
-                    editor.remove("Password");
-                    editor.remove("Auto_Login_enabled");
-                    editor.clear();
-                    editor.commit();
-                }
-            }
-        });
-
-        if(preferences.getBoolean("Auto_Login_enabled",false)){ //아이디 저장하기 버튼 켜져있을 경우 데이터 값 넘김
-            user_id.setText(preferences.getString("Id",""));
-            user_password.setText(preferences.getString("Password",""));
-            checkBox.setChecked(true);
-        }
-
         btn_sign_up.setOnClickListener(new View.OnClickListener() { // 회원가입 버튼
             @Override
             public void onClick(View v) {
@@ -126,6 +106,11 @@ public class Sign_InActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() { // 뒤로가기 버튼 설정
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override

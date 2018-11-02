@@ -1,5 +1,6 @@
 package com.example.taehun.totalmanager.BoardRegion;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -21,6 +22,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +46,7 @@ import com.example.taehun.totalmanager.BeaconScan.BeaconItem;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 import com.example.taehun.totalmanager.Request.Search1Request;
+import com.example.taehun.totalmanager.Sign_InActivity;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -96,6 +99,13 @@ public class BoardRegionDialog {
 
         listView.setAdapter(adapter);
         adapter.getData("http://xognsxo1491.cafe24.com/Board_Region_List_connect.php"); // db 접속 url
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
     }
 }
