@@ -64,18 +64,19 @@ public class Popup2Activity extends Activity {
 
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
-
-                            if (success) { // 성공일 경우
-                                Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
-                                startActivity(intent);
-                            }
-
-                        } catch (JSONException e) { //오류 캐치
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+//
+//                            if (success) { // 성공일 경우
+//                                Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+//                                startActivity(intent);
+//                            }
+//
+//                        } catch (JSONException e) { //오류 캐치
+//                            e.printStackTrace();
+//                        }
+                        //방법이 없어서 일단 주석처리
                     }
                 };
 
