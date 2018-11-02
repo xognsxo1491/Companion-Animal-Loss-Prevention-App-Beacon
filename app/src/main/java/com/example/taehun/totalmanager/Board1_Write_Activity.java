@@ -106,7 +106,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
-
                 }
             }
         }

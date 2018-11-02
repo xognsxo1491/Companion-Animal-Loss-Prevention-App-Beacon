@@ -27,6 +27,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
+import com.example.taehun.totalmanager.BeaconListItem;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 
@@ -117,7 +118,8 @@ public class CustomDialog implements BeaconConsumer{
                         fab_scan.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
                         fab_scan.clearAnimation();
 
-                        beaconManager.unbind(CustomDialog.this);
+                            beaconManager.unbind(CustomDialog.this);
+
                     }
                 }
 

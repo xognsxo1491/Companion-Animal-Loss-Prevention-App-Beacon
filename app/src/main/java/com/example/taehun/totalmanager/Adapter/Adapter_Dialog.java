@@ -18,8 +18,6 @@ public class Adapter_Dialog extends BaseAdapter {
     ArrayList<BeaconItem> itemArrayList;
     TextView text_uuid,text_distance,text_major,text_minor;
 
-
-
     public Adapter_Dialog(Context context, ArrayList<BeaconItem> list_itemArrayList) {
         this.context = context;
         this.itemArrayList = list_itemArrayList;

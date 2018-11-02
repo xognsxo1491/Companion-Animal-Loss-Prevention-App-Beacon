@@ -114,7 +114,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionWriteActivity.this);
-                boardRegionDialog.show();
+                boardRegionDialog.callFunction(null);
             }
         });
 
@@ -180,7 +180,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                 final EditText edit_title = (EditText) findViewById(R.id.edit_title);
                 final EditText edit_content = (EditText) findViewById(R.id.edit_content);
 
-                Double now = (Math.random() *1000000);
+                Double now = (Math.random() *1000000000);
 
                 String uuid = text_uuid.getText().toString();
                 String major = text_major.getText().toString();
