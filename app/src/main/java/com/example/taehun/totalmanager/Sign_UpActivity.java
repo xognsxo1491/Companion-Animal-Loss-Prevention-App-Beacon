@@ -1,6 +1,7 @@
 package com.example.taehun.totalmanager;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
@@ -217,6 +218,13 @@ public class Sign_UpActivity extends AppCompatActivity {
                             boolean success = jsonObject.getBoolean("success");
 
                             if (success) {
+
+                                SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("Id", id);
+                                editor.putString("Password", password);
+                                editor.commit();
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Sign_UpActivity.this);
                                 dialog = builder.setMessage("회원등록이 완료되었습니다.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {

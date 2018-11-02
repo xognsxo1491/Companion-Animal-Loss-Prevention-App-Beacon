@@ -69,34 +69,34 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
             @Override
             public void onLocationChanged(Location location) {
 
-                    final Double lat = location.getLatitude();
-                    final Double lon = location.getLongitude();
+                final Double lat = location.getLatitude();
+                final Double lon = location.getLongitude();
 
-                    LatLng mylocation = new LatLng(lat, lon);
+                LatLng mylocation = new LatLng(lat, lon);
 
-                    markerOptions = new MarkerOptions();
-                    markerOptions.position(new LatLng(lat, lon))
-                            .title("현재위치");
+                markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(lat, lon))
+                        .title("현재위치");
 
-                    googleMap.addMarker(markerOptions);
-                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
+                googleMap.addMarker(markerOptions);
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
 
-                            Intent intent = new Intent(getApplicationContext(), BoardRegionWriteActivity.class);
-                            intent.putExtra("lat", lat);
-                            intent.putExtra("lon", lon);
-                            startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext(), BoardRegionWriteActivity.class);
+                        intent.putExtra("lat", lat);
+                        intent.putExtra("lon", lon);
+                        startActivity(intent);
 
-                        }
-                    });
+                    }
+                });
 
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
-                    googleMap.animateCamera(zoom);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
+                googleMap.animateCamera(zoom);
 
-                    fab_gps.clearAnimation();
-                    fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
+                fab_gps.clearAnimation();
+                fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
 
             }
 
