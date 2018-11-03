@@ -324,6 +324,7 @@ public class myBeacon extends Application implements BeaconConsumer{
             Handler handler = new Handler(){
         public void handleMessage(Message msg){
             SharedPreferences preferences3 = getSharedPreferences("Scan", getApplicationContext().MODE_PRIVATE);
+            Log.d("비콘", "스캔 작동중");
             if(preferences3.getBoolean("Scan", false)){
                 //            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
 //                    preferences.getBoolean("BeaconEmergency", false) +" findMyBeacon "+ preferences.getBoolean("findMyBeacon", false) + " first "+preferences.getBoolean("first", false));
@@ -399,8 +400,8 @@ public class myBeacon extends Application implements BeaconConsumer{
                     editor.commit();
                 }
                 beaconList.clear();
-                handler.sendEmptyMessageDelayed(0, 3000);
             }
+            handler.sendEmptyMessageDelayed(0, 3000);
         }
     };
     private void startLocationService() {

@@ -52,31 +52,37 @@ public class Popup3Activity extends  Activity {
             public void onClick(View view) {
                 SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
                 String userId = preferences.getString("Id", null);
-                String strUuid = missingMyBeacons.get(0).getUUID();
-                String strMajor = missingMyBeacons.get(0).getMajor();
-                String strminor = missingMyBeacons.get(0).getMinor();
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
 
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+                String strUuid;
+                String strminor;
+                String strMajor;
+                if(missingMyBeacons.size()>0){
+                    strUuid = missingMyBeacons.get(0).getUUID();
+                    strMajor = missingMyBeacons.get(0).getMajor();
+                    strminor= missingMyBeacons.get(0).getMinor();
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
 
-                            if (success) { // 성공일 경우
-                                Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
-                                startActivity(intent);
-                            }
-
-                        } catch (JSONException e) { //오류 캐치
-                            e.printStackTrace();
+                        @Override
+                        public void onResponse(String response) {
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//                                boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+//
+//                                if (success) { // 성공일 경우
+//                                    Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+//                                    startActivity(intent);
+//                                }
+//
+//                            } catch (JSONException e) { //오류 캐치
+//                                e.printStackTrace();
+//                            }  버그 해결방법을 찾지 못해서 코드 자체를 지웠음
                         }
-                    }
-                };
+                    };
 
-                BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, null, null, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
-                RequestQueue queue = Volley.newRequestQueue(Popup3Activity.this);
-                queue.add(board_write_request);
+                    BeaconMissingRequest board_write_request = new BeaconMissingRequest(userId, strUuid, strMajor, strminor, null, null, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                    RequestQueue queue = Volley.newRequestQueue(Popup3Activity.this);
+                    queue.add(board_write_request);
+                }
                 finish();
             }
         });
