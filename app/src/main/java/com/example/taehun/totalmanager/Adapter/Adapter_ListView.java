@@ -35,6 +35,7 @@ public class Adapter_ListView extends BaseAdapter implements Filterable { // 어
     private static final String TAG_TIME = "Time";
     private static final String TAG_RESULT = "result";
     private static final String TAG_NUMBER = "Number";
+    private static final String TAG_IMAGE_PATH = "Image_path";
 
     String myJSON;
     JSONArray jsonArray = null;
@@ -113,6 +114,7 @@ public class Adapter_ListView extends BaseAdapter implements Filterable { // 어
                 String content = object.getString(TAG_CONTENT);
                 String time = object.getString(TAG_TIME);
                 String number = object.getString(TAG_NUMBER);
+                String image_path = object.getString(TAG_IMAGE_PATH);
 
                 HashMap<String, String> item = new HashMap<String, String>();
                 item.put(TAG_ID, id);
@@ -120,6 +122,7 @@ public class Adapter_ListView extends BaseAdapter implements Filterable { // 어
                 item.put(TAG_CONTENT, content);
                 item.put(TAG_TIME, time);
                 item.put(TAG_NUMBER, number);
+                item.put(TAG_IMAGE_PATH, image_path);
 
                 copyList.add(item);
 

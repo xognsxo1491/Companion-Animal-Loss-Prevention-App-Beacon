@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.example.taehun.totalmanager.Board1_Activity;
 import com.example.taehun.totalmanager.Board_Comment_Activity;

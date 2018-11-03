@@ -83,10 +83,8 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                     @Override
                     public void onInfoWindowClick(Marker marker) {
 
-                        Intent intent = new Intent(getApplicationContext(), BoardRegionWriteActivity.class);
-                        intent.putExtra("lat", lat);
-                        intent.putExtra("lon", lon);
-                        startActivity(intent);
+                        BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionMapActivity.this);
+                        boardRegionDialog.callFunction(lat,lon);
 
                     }
                 });

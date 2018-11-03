@@ -1,59 +1,28 @@
 package com.example.taehun.totalmanager.BoardRegion;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Message;
-import android.os.RemoteException;
-import android.provider.Settings;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-import com.example.taehun.totalmanager.Adapter.Adapter_BeaconSearch;
-import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
-import com.example.taehun.totalmanager.Adapter.Adapter_Dialog_Region;
 import com.example.taehun.totalmanager.BeaconScan.BeaconItem;
+import com.example.taehun.totalmanager.Board1_Activity;
+import com.example.taehun.totalmanager.Board_Comment_Activity;
 import com.example.taehun.totalmanager.R;
-import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
-import com.example.taehun.totalmanager.Request.Search1Request;
 import com.example.taehun.totalmanager.Sign_InActivity;
 
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.RangeNotifier;
-import org.altbeacon.beacon.Region;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,27 +32,35 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 public class BoardRegionDialog {
 
-    private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
     private Context context;
 
-    Adapter_Dialog_Region adapter;
+    private static final String TAG_ID = "Id";
+    private static final String TAG_UUID = "UUID";
+    private static final String TAG_MAJOR = "Major";
+    private static final String TAG_MINOR = "Minor";
+    private static final String TAG_MISSING = "Missing";
+    private static final String TAG_RESULT = "result";
+
+    ArrayList<HashMap<String, String>> boardList;
+    JSONArray jsonArray = null;
     ListView listView;
+    String myJSON;
+    Double lat, lon;
+    Dialog dlg;
 
     public BoardRegionDialog(Context context) {
         this.context = context;
     }
 
     // 호출할 다이얼로그 함수를 정의한다.
-    public void callFunction(final TextView main_label) {
+    public void callFunction(Double key_lat, Double key_lon) {
 
         // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
-        final Dialog dlg = new Dialog(context);
+        dlg = new Dialog(context);
 
         // 액티비티의 타이틀바를 숨긴다.
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -94,18 +71,132 @@ public class BoardRegionDialog {
         // 커스텀 다이얼로그를 노출한다..
         dlg.show();
 
+        boardList = new ArrayList<HashMap<String, String>>();
         listView = (ListView) dlg.findViewById(R.id.beacon_list);
-        adapter = new Adapter_Dialog_Region(context);
 
-        listView.setAdapter(adapter);
-        adapter.getData("http://xognsxo1491.cafe24.com/Board_Region_List_connect.php"); // db 접속 url
+        lat = key_lat;
+        lon = key_lon;
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        getData("http://xognsxo1491.cafe24.com/Board_Region_List_connect.php");
 
+    }
+
+    protected void showList() {  // php 파싱 설정
+        try {
+            JSONObject jsonObject = new JSONObject(myJSON);
+            jsonArray = jsonObject.getJSONArray(TAG_RESULT);
+
+            SharedPreferences preferences = context.getSharedPreferences("freeLogin",Context.MODE_PRIVATE);
+            String key_id = preferences.getString("Id","");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                String id = object.getString(TAG_ID);
+                String uuid = object.getString(TAG_UUID);
+                String major = object.getString(TAG_MAJOR);
+                String minor = object.getString(TAG_MINOR);
+                String missing = object.getString(TAG_MISSING);
+
+                if (key_id.equals(id)) {
+
+                    HashMap<String, String> hashMap = new HashMap<String, String>();
+                    hashMap.put(TAG_UUID, uuid);
+                    hashMap.put(TAG_MAJOR, major);
+                    hashMap.put(TAG_MINOR, minor);
+                    hashMap.put(TAG_MISSING, missing);
+
+                    boardList.add(hashMap);
+                }
             }
-        });
 
+            final BaseAdapter adapter = new SimpleAdapter(context, boardList, R.layout.listview_dialog_region, new String[]{TAG_UUID, TAG_MAJOR, TAG_MINOR, TAG_MISSING},
+                    new int[]{R.id.text_scan_uuid, R.id.text_scan_major, R.id.text_scan_minor, R.id.text_scan_missing}); // 리스트뷰의 어댑터 속성
+
+            adapter.getCount();
+
+            dlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+
+                    HashMap<String, String> hashMap = new HashMap<String, String>();
+                    hashMap.put(TAG_UUID,"");
+                    hashMap.put(TAG_MAJOR,"");
+                    hashMap.put(TAG_MINOR,"");
+
+                    Intent intent = new Intent(context, BoardRegionWriteActivity.class);
+                    intent.putExtra("boardList", hashMap);
+                    intent.putExtra("lat",lat);
+                    intent.putExtra("lon",lon);
+                    context.startActivity(intent);
+
+                }
+            });
+
+            listView.setAdapter(adapter); // 리스트뷰 어댑터 셋팅
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // 리스트뷰 안의 아이템 클릭시
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Intent intent = new Intent(context, BoardRegionWriteActivity.class);
+                    intent.putExtra("boardList", boardList.get(position));
+                    intent.putExtra("lat",lat);
+                    intent.putExtra("lon",lon);
+
+                    context.startActivity(intent);
+                }
+            });
+
+        } catch (JSONException e) { // 오류 캐치
+            e.printStackTrace();
+        }
+    }
+
+    public void getData(String url) { // php 파싱관련
+
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            ProgressDialog progressDialog = new ProgressDialog(context);
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog.setMessage("불러오는 중입니다.");
+                progressDialog.show();
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) { // url 추출
+                progressDialog.dismiss();
+                myJSON = s;
+                showList();
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+                BufferedReader bufferedReader = null;
+
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    StringBuilder builder = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        builder.append(json + "\n");
+                    }
+                    return builder.toString().trim();
+
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }
+        GetDataJSON getDataJSON = new GetDataJSON();
+        getDataJSON.execute(url);
     }
 }

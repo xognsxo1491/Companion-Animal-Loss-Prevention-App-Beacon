@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
 import com.example.taehun.totalmanager.Board1_Activity;
 import com.example.taehun.totalmanager.Board1_Write_Activity;
+import com.example.taehun.totalmanager.Board_Comment_Activity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest2;
@@ -45,6 +46,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,12 +55,13 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
     private int GALLERY = 1000;
 
-    TextView text_gps, text_uuid, text_major, text_minor;
+    TextView text_gps, text_uuid, text_major, text_minor, text_form_uuid, text_form_major, text_form_minor;
+    String ConvertImage, key_uuid, key_major, key_minor;
     ByteArrayOutputStream byteArrayOutputStream;
     FloatingActionButton fab_blue, fab_image;
+    HashMap<String, String> hashMap;
     ImageView showSelectedImage;
     Double lat, lon;
-    String ConvertImage;
     AlertDialog dialog;
     Geocoder geocoder;
     byte[] byteArray;
@@ -69,8 +73,9 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_board_region_write);
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if ( Build.VERSION.SDK_INT != Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{android.Manifest.permission.CAMERA}, 5); }
+            if (Build.VERSION.SDK_INT != Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.CAMERA}, 5);
+            }
         }
 
         Intent intent = getIntent();
@@ -88,35 +93,67 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
         text_major = (TextView) findViewById(R.id.text_major);
         text_minor = (TextView) findViewById(R.id.text_minor);
 
+        text_form_uuid = (TextView) findViewById(R.id.text_form_uuid);
+        text_form_major = (TextView) findViewById(R.id.text_form_major);
+        text_form_minor = (TextView) findViewById(R.id.text_form_minor);
+
+        byteArrayOutputStream = new ByteArrayOutputStream();
+
         geocoder = new Geocoder(getApplicationContext());
         List<Address> list = null;
 
         try {
-            list = geocoder.getFromLocation(lat,lon,10);
+            list = geocoder.getFromLocation(lat, lon, 10);
 
             String gps = list.get(0).toString();
             String[] cut = gps.split(" ");
 
-            text_gps.setText(cut[1] +" "+ cut[2] + " " + cut[3]+ " " + cut[4]);
+            text_gps.setText(cut[1] + " " + cut[2] + " " + cut[3] + " " + cut[4]);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        hashMap = (HashMap<String, String>) intent.getSerializableExtra("boardList");
 
-        byteArrayOutputStream = new ByteArrayOutputStream();
+        Iterator<String> iterator = hashMap.keySet().iterator(); // 파싱값 별로 데이터 저장
+        while (iterator.hasNext()) {
+
+            final String key = (String) iterator.next();
+
+            if (key.equals("UUID")) {
+                text_uuid.setText(hashMap.get(key));
+
+                if(hashMap.get(key).equals("")) {
+
+                    text_uuid.setVisibility(View.GONE);
+                    text_form_uuid.setVisibility(View.GONE);
+                }
+            }
+
+            if (key.equals("Major")) {
+                text_major.setText(hashMap.get(key));
+
+                if (hashMap.get(key).equals("")) {
+
+                    text_major.setVisibility(View.GONE);
+                    text_form_major.setVisibility(View.GONE);
+                }
+            }
+
+            if (key.equals("Minor")) {
+                text_minor.setText(hashMap.get(key));
+
+                if (hashMap.get(key).equals("")) {
+
+                    text_minor.setVisibility(View.GONE);
+                    text_form_minor.setVisibility(View.GONE);
+
+                }
+            }
+        }
 
         showSelectedImage = (ImageView) findViewById(R.id.imageView1);
-
-        fab_blue = (FloatingActionButton) findViewById(R.id.fab_blue);
-        fab_blue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionWriteActivity.this);
-                boardRegionDialog.callFunction(null);
-            }
-        });
 
         fab_image = (FloatingActionButton) findViewById(R.id.fab_image);
         fab_image.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +192,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                 try {
                     FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     showSelectedImage.setImageBitmap(FixBitmap);
+                    showSelectedImage.setVisibility(View.VISIBLE);
 
                 } catch (IOException e) {
 
@@ -218,6 +256,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();
+                    break;
 
                 } else if (boardContent.equals("")) { // 내용이 공백일 경우
                     AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionWriteActivity.this);
@@ -225,6 +264,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();
+                    break;
 
                 } else { // 공백이 아닐 경우
                     if (showSelectedImage.getDrawable() == null) {
@@ -257,7 +297,6 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
                         byteArray = byteArrayOutputStream.toByteArray();
                         ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                        String imageName = Long.toString(System.currentTimeMillis());
 
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
@@ -279,7 +318,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
                         };
 
-                        BoardRegionRequest2 boardRegionRequest2 = new BoardRegionRequest2(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, ConvertImage, imageName, responseListener);
+                        BoardRegionRequest2 boardRegionRequest2 = new BoardRegionRequest2(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, ConvertImage, str_now, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                         queue.add(boardRegionRequest2);
                     }

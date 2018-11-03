@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.taehun.totalmanager.Adapter.Adapter_BeaconSearch;
 import com.example.taehun.totalmanager.BoardRegion.BoardRegionActivity;
+import com.example.taehun.totalmanager.BoardRegion.BoardRegionCommentActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -52,7 +53,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,15 +63,26 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private GoogleMap mMap;
 
-    private static final String TAG_RESULT = "result";
+    private static final String TAG_ID = "Id";
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
-    private static final String TAG_Minor = "Minor";
+    private static final String TAG_MINOR = "Minor";
     private static final String TAG_LATITUDE = "Latitude";
     private static final String TAG_LONGITUDE = "Longitude";
+    private static final String TAG_MISSING = "Missing";
+    private static final String TAG_REGION = "Region";
+    private static final String TAG_REGION_NAME = "Region_Name";
+    private static final String TAG_TiTIE = "Title";
+    private static final String TAG_CONTENT = "Content";
+    private static final String TAG_TIME = "Time";
+    private static final String TAG_RESULT = "result";
+    private static final String TAG_NUMBER = "Number";
+    private static final String TAG_IMAGE_PATH = "Image_Path";
+    private static final String TAG_IMAGE_NAME = "Image_Name";
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    ArrayList<HashMap<String, String>> boardList;
     FloatingActionButton fab_gps, fab_search;
     ConstraintLayout constraintLayout;
     LocationManager locationManager;
@@ -95,6 +109,8 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
             startActivity(intent);
         }
 
+        boardList = new ArrayList<HashMap<String, String>>();
+
         constraintLayout = (ConstraintLayout) findViewById(R.id.layout_map);
         constraintLayout.setTag("확장");
 
@@ -113,7 +129,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
         adapter = new Adapter_BeaconSearch();
 
         listView.setAdapter(adapter);
-        adapter.getData("http://xognsxo1491.cafe24.com/Beacon_search_connect.php"); // db 접속 url
+        adapter.getData("http://xognsxo1491.cafe24.com/Board_Region_connect.php"); // db 접속 url
 
         final EditText editText_UUID = (EditText) findViewById(R.id.editText_UUID);
 
@@ -161,11 +177,11 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
         final LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-        LatLng SANGMYUNG = new LatLng(36.833584, 127.179176);
+        LatLng latLng = new LatLng(36.397201, 127.852390);
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SANGMYUNG));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(7);
         googleMap.animateCamera(zoom);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -198,7 +214,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION , Manifest.permission.ACCESS_FINE_LOCATION} , 1);
         }
 
-        getData("http://xognsxo1491.cafe24.com/Beacon_search_connect.php", googleMap);
+        getData("http://xognsxo1491.cafe24.com/Board_Region_connect.php", googleMap);
 
         fab_gps.setTag("실행");
 
@@ -301,34 +317,67 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
             HashMap<String, String> hashMap = new HashMap<>();
 
-            for (int i = 0; i < jsonArray.length(); i++) {
+            int i;
+
+            for (i = 0; i < jsonArray.length(); i++) {
                 JSONObject object = jsonArray.getJSONObject(i);
 
-                String uuid = object.getString(TAG_UUID);
-                String major = object.getString(TAG_MAJOR);
-                String minor  = object.getString(TAG_Minor);
+                String Id = object.getString(TAG_ID);
+                String UUID = object.getString(TAG_UUID);
+                String Major = object.getString(TAG_MAJOR);
+                String Minor = object.getString(TAG_MINOR);
                 String str_lat = object.getString(TAG_LATITUDE);
                 String str_long = object.getString(TAG_LONGITUDE);
+                String Missing = object.getString(TAG_MISSING);
+                String Region = object.getString(TAG_REGION);
+                String Region_Name = object.getString(TAG_REGION_NAME);
+                String Title = object.getString(TAG_TiTIE);
+                String Content = object.getString(TAG_CONTENT);
+                String Time = object.getString(TAG_TIME);
+                final String number = object.getString(TAG_NUMBER);
+                String Image_Path = object.getString(TAG_IMAGE_PATH);
+                String Image_Name = object.getString(TAG_IMAGE_NAME);
+
+                HashMap<String, String> hashMap2 = new HashMap<String, String>();
+                hashMap.put(TAG_ID, Id);
+                hashMap.put(TAG_UUID, UUID);
+                hashMap.put(TAG_MAJOR, Major);
+                hashMap.put(TAG_MINOR, Minor);
+                hashMap.put(TAG_LATITUDE, str_lat);
+                hashMap.put(TAG_LONGITUDE, str_long);
+                hashMap.put(TAG_MISSING, Missing);
+                hashMap.put(TAG_REGION, Region);
+                hashMap.put(TAG_REGION_NAME, Region_Name);
+                hashMap.put(TAG_TiTIE, Title);
+                hashMap.put(TAG_CONTENT, Content);
+                hashMap.put(TAG_TIME, Time);
+                hashMap.put(TAG_NUMBER, number);
+                hashMap.put(TAG_IMAGE_PATH, Image_Path);
+                hashMap.put(TAG_IMAGE_NAME, Image_Name);
+
+                boardList.add(hashMap);
 
                 Double lat =  Double.parseDouble(str_lat);
                 Double lon = Double.parseDouble(str_long);
 
                 markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(lat, lon))
-                        .title(uuid)
-                        .snippet("Major : "+ major + "  Minor : " +minor);
+                        .title(Title)
+                        .snippet("Major : "+ Major + "  Minor : " +Minor);
 
                 googleMap.addMarker(markerOptions);
-                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-
-                        Intent intent = new Intent(getApplicationContext(), BoardRegionActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
             }
+
+
+            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+
+                    Intent intent = new Intent(getApplicationContext(), BoardRegionCommentActivity.class);
+                    intent.putExtra("boardList", boardList.get(0));
+                    startActivity(intent);
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }

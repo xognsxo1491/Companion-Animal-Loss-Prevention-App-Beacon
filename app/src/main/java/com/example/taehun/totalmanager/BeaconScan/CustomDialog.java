@@ -145,7 +145,6 @@ public class CustomDialog implements BeaconConsumer{
 
                                         SharedPreferences preferences = context.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
                                         String userId = preferences.getString("Id", null);
-                                        Toast.makeText(context, userId, Toast.LENGTH_SHORT).show();
 
                                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
@@ -158,6 +157,7 @@ public class CustomDialog implements BeaconConsumer{
 
                                                     if (success) { // 성공일 경우
                                                         Toast.makeText(context, "비콘 등록에 성공하였습니다", Toast.LENGTH_SHORT).show();
+
                                                     }else {
                                                         Toast.makeText(context, "비콘 등록에 실패하였습니다", Toast.LENGTH_SHORT).show();
                                                     }
@@ -177,10 +177,8 @@ public class CustomDialog implements BeaconConsumer{
                         dialog.show();
                     }
                 });
-
             }
         });
-
     }
 
     @Override

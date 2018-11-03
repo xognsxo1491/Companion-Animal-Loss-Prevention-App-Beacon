@@ -31,30 +31,30 @@
             <ImageView
                 android:id="@+id/imageView1"
                 android:layout_width="0dp"
-                android:layout_height="500px"
+                android:layout_height="750px"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:scaleType="fitXY"
-                android:visibility="visible"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_content" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/edit_content"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:hint="내용\n"
                 android:maxLines="15"
                 android:textSize="15dp"
                 android:theme="@style/EditTextStyle"
+                app:layout_constraintBottom_toTopOf="@+id/imageView1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView16" />
+                app:layout_constraintTop_toBottomOf="@+id/text_form_major" />
 
             <EditText
                 android:id="@+id/edit_title"
@@ -72,32 +72,35 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/text_form_uuid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                android:text="UUID :  "
+                android:text="UUID : "
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/text_form_major"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:text="Major : "
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                app:layout_constraintTop_toBottomOf="@+id/text_form_uuid" />
 
             <TextView
-                android:id="@+id/textView18"
+                android:id="@+id/text_form_minor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Minor"
+                android:text="Minor : "
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/text_minor"
                 app:layout_constraintTop_toBottomOf="@+id/text_uuid" />
 
@@ -105,10 +108,9 @@
                 android:id="@+id/text_uuid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintStart_toEndOf="@+id/text_form_uuid"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
@@ -117,8 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/textView16"
+                app:layout_constraintStart_toEndOf="@+id/text_form_major"
                 app:layout_constraintTop_toBottomOf="@+id/text_uuid" />
 
             <TextView
@@ -127,7 +128,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="100dp"
                 android:layout_marginTop="8dp"
-                android:text="textView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_uuid" />
 
@@ -175,17 +175,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_photo_white_24dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_blue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/fab_image"
-        app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
 
 </android.support.constraint.ConstraintLayout>

@@ -84,7 +84,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
 
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
-
     }
 
     @Override
@@ -101,6 +100,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                 try {
                     FixBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     ShowSelectedImage.setImageBitmap(FixBitmap);
+                    ShowSelectedImage.setVisibility(View.VISIBLE);
 
                 } catch (IOException e) {
 
@@ -147,6 +147,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();
+                    break;
 
                 } else if (boardContent.equals("")) { // 내용이 공백일 경우
                     AlertDialog.Builder builder = new AlertDialog.Builder(Board1_Write_Activity.this);
@@ -154,6 +155,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                             .setNegativeButton("확인", null)
                             .create();
                     dialog.show();
+                    break;
 
                 } else { // 공백이 아닐 경우
                     if (ShowSelectedImage.getDrawable() == null) {
