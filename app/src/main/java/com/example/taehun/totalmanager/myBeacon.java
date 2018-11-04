@@ -337,7 +337,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                             && beacon.getId3().toString().equals(myBeacons.get(0).getMinor())) {
                         editor.putBoolean("findMyBeacon", false);
                         editor.commit();
-                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) <= 4) {
+                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) <= 20) {
                             Log.d("비콘", "가까이 있음");
                             showNearNotification("비콘", "10미터 이내에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", false);
