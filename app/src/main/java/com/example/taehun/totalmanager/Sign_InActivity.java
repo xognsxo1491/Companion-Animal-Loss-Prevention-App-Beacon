@@ -3,9 +3,11 @@ package com.example.taehun.totalmanager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,14 +20,22 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Request.SignInRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Sign_InActivity extends AppCompatActivity {
 
     String login_id,login_password;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +53,8 @@ public class Sign_InActivity extends AppCompatActivity {
 
         login_id = preferences.getString("Id","");
         login_password = preferences.getString("Password","");
+        String token = FirebaseInstanceId.getInstance().getToken();
 
-        if (login_id != "" && login_password != "") {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-        }
 
         btn_sign_in.setOnClickListener(new View.OnClickListener() {  // 로그인 버튼 클릭시
             @Override
