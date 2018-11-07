@@ -36,12 +36,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="비콘 맵" />
-
+        <Button
+            android:id="@+id/btn_beaconMaps"
+            android:text="비콘 발견"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <Button
             android:id="@+id/btn_beacondialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="비콘 스캔" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

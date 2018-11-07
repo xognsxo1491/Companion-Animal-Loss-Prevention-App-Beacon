@@ -14,4 +14,5 @@
     <string name="title_activity_beacon_map">Map</string>
     <string name="title_activity_becon_region">BeconRegionActivity</string>
     <string name="title_activity_board_region_map">Map</string>
+    <string name="title_activity_find_maps">Map</string>
 </resources>

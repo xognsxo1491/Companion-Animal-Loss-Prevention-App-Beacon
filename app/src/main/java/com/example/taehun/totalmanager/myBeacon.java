@@ -58,12 +58,12 @@ public class myBeacon extends Application implements BeaconConsumer{
     SharedPreferences.Editor editor;
     String myJSON;
     JSONArray jsonArray;
-    ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
-    ArrayList<BeaconListItem> missingBeacons= new ArrayList<>();
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+    ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
+    ArrayList<BeaconListItem> missingBeacons= new ArrayList<>();
     long start = System.currentTimeMillis(); //시작하는 시점 계산
     long end;
 
@@ -379,9 +379,9 @@ public class myBeacon extends Application implements BeaconConsumer{
                             String UUID = beacon.getId1().toString();
                             String major = beacon.getId2().toString();
                             String minor = beacon.getId3().toString();
-
+                            SharedPreferences preference2 = getSharedPreferences("freeLogin",Context.MODE_PRIVATE);
                             startLocationService();
-                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(preference2.getString("Id", ""), UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                             RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
                             queue.add(beaconFindRequest);
 

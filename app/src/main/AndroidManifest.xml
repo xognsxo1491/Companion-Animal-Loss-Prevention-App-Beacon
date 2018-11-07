@@ -90,7 +90,10 @@
             android:name=".BoardRegion.BoardRegionMapActivity"
             android:label="@string/title_activity_board_region_map" />
         <activity android:name=".BoardRegion.BoardRegionDialog" />
-        <activity android:name=".BoardRegion.BoardRegionCommentActivity"></activity>
+        <activity android:name=".BoardRegion.BoardRegionCommentActivity" />
+        <activity
+            android:name=".BoardRegion.FindMapsActivity"
+            android:label="@string/title_activity_find_maps"></activity>
     </application>
 
 </manifest>
