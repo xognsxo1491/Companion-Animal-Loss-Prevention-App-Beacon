@@ -83,6 +83,10 @@ public class FindMapsActivity extends FragmentActivity implements OnMapReadyCall
                 final Double lat = gpsListener.latitude;
                 final Double lon = gpsListener.longitude;
                 LatLng sydney = new LatLng(lat, lon);
+
+                mMap.clear();
+                getData("http://xognsxo1491.cafe24.com/Treace_Beacon_connect.php");
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                 CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
                 mMap.animateCamera(zoom);
