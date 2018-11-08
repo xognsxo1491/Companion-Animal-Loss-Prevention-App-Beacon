@@ -2,12 +2,21 @@ package com.example.taehun.totalmanager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +30,33 @@ import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
 import com.example.taehun.totalmanager.Request.MypageRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 import static com.estimote.coresdk.common.config.EstimoteSDK.getApplicationContext;
 
 public class Sub2Fragment extends Fragment {
-
+    String myJSON;
+    JSONArray jsonArray;
+    ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
     AlertDialog dialog;
     TextView text_page_id, text_page_email, text_page_beacon;
     SharedPreferences preferences;
-    Button btn_logout, btn_edit, btn_beaocn, btn_scan;
+    Button btn_logout, btn_edit, btn_beaocn, btn_scan, btn_missing;
     SharedPreferences preferences2;
+    private static final String TAG_UUID = "UUID";
+    private static final String TAG_MAJOR = "Major";
+    private static final String TAG_Minor = "Minor";
+    private static final String TAG_RESULT = "result";
     public Sub2Fragment() { }
 
     @Override
@@ -42,13 +66,14 @@ public class Sub2Fragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sub2, container, false);
         final Activity activity = getActivity();
 
+
         btn_logout = (Button) view.findViewById(R.id.btn_logout);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
         btn_beaocn = (Button)view.findViewById(R.id.btn_beacon);
         btn_scan = (Button)view.findViewById(R.id.btn_scan);
-
+        btn_missing =(Button)view.findViewById(R.id.btn_missing);
         preferences = activity.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freelogin키 안에 데이터 불러오기
-
+        getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
         if (preferences2.getBoolean("Scan", false)){
             btn_scan.setText("비콘스캔 끄기");
         }else {
@@ -115,6 +140,18 @@ public class Sub2Fragment extends Fragment {
                 }
             }
         });
+        btn_missing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent notificationIntent = new Intent(getContext(), Popup2Activity.class);
+                notificationIntent.putExtra("UUID", myBeacons.get(0).getUUID());
+                notificationIntent.putExtra("Major", myBeacons.get(0).getMajor());
+                notificationIntent.putExtra("Minor", myBeacons.get(0).getMinor());
+
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(notificationIntent);
+            }
+        });
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             @Override
@@ -145,5 +182,82 @@ public class Sub2Fragment extends Fragment {
         queue.add(mypageRequest);
 
         return view;
+    }
+    public void getBeaconsFromDataBase(String url) { // php 파싱관련
+
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+
+                String uri = params[0];
+                BufferedReader bufferedReader = null;
+
+                String postParameter = "Id="+ preferences.getString("Id","");
+                Log.d("Number", postParameter);
+
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setReadTimeout(5000);
+                    connection.setConnectTimeout(5000);
+                    connection.setRequestMethod("POST");
+                    connection.setDoInput(true);
+                    connection.connect();
+                    OutputStream outputStream = connection.getOutputStream();
+                    outputStream.write(postParameter.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+                    int responseStatusCode = connection.getResponseCode();
+
+                    InputStream inputStream;
+                    if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                        inputStream = connection.getInputStream();
+                    }
+
+                    else{
+                        inputStream = connection.getErrorStream();
+                    }
+                    StringBuilder builder = new StringBuilder();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        builder.append(json + "\n");
+                    }
+                    return builder.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String s) { // url 추출
+                myJSON = s;
+                addBeacons(myBeacons);
+            }
+
+        }
+        GetDataJSON getDataJSON = new GetDataJSON();
+        getDataJSON.execute(url);
+    }
+    protected void addBeacons(ArrayList<BeaconListItem> beacons) {  // php 파싱 설정
+        try {
+            JSONObject jsonObject = new JSONObject(myJSON);
+            jsonArray = jsonObject.getJSONArray(TAG_RESULT);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                String UUID = object.getString(TAG_UUID);
+                String major = object.getString(TAG_MAJOR);
+                String minor = object.getString(TAG_Minor);
+                System.out.println("비콘 " + UUID + " " + major + " " +minor);
+                beacons.add(new BeaconListItem(UUID, major, minor));
+
+            }
+
+        } catch (JSONException e) { // 오류 캐치
+            e.printStackTrace();
+        }
     }
 }

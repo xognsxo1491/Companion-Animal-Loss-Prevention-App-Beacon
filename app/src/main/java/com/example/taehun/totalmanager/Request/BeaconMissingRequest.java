@@ -13,7 +13,6 @@ public class BeaconMissingRequest extends StringRequest {
 
     public BeaconMissingRequest(String userId, String uuid, String major, String minor, Double latitude, Double longitude, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
-        System.out.println(userId+" "+uuid+" "+major+" "+minor);
         parameters = new HashMap<>();
         parameters.put("Id",userId);
         parameters.put("Uuid",uuid);

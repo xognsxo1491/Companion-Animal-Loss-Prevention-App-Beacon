@@ -53,7 +53,7 @@ public class Popup2Activity extends Activity {
         strUuid = intent.getStringExtra("UUID");
         strMajor = intent.getStringExtra("Major");
         strminor = intent.getStringExtra("Minor");
-
+        System.out.println(strUuid +" + " + strMajor + " + " + strminor);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
