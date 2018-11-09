@@ -36,6 +36,7 @@ import java.net.URL;
 public class Sign_InActivity extends AppCompatActivity {
 
     String login_id,login_password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +54,11 @@ public class Sign_InActivity extends AppCompatActivity {
 
         login_id = preferences.getString("Id","");
         login_password = preferences.getString("Password","");
-        String token = FirebaseInstanceId.getInstance().getToken();
 
+        if (login_id != "" && login_password != "") {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
 
         btn_sign_in.setOnClickListener(new View.OnClickListener() {  // 로그인 버튼 클릭시
             @Override
@@ -117,7 +121,7 @@ public class Sign_InActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { // 뒤로가기 버튼 설정
-        finishAffinity();
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override

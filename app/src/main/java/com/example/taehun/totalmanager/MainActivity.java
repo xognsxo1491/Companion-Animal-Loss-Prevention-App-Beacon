@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     String login_id,login_password;
     private BottomNavigationView bottomNavigationView;
     private MainFragment mainFragment;
-    private Sub1Fragment sub1Fragment;
     private Sub2Fragment sub2Fragment;
     private long time= 0;
     String myJSON;
@@ -64,15 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_nav);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("위피펫");
-
         mainFragment = new MainFragment(); // 메인 엑티비티 안의 프레그먼트 설정
-        sub1Fragment = new Sub1Fragment();
         sub2Fragment = new Sub2Fragment();
-
 
         setFragment(mainFragment); // 앱 접속했을 때 나오는 프레그먼트
         SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
@@ -94,10 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) { // 메인 액티비티 밑의 네비게이터 버튼
                     case R.id.navigation_home:
                         setFragment(mainFragment);
-                        return true;
-
-                    case R.id.navigation_dashboard:
-                        setFragment(sub1Fragment);
                         return true;
 
                     case R.id.navigation_notifications:

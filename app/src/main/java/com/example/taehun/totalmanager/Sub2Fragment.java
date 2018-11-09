@@ -42,17 +42,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.estimote.coresdk.common.config.EstimoteSDK.getApplicationContext;
-
 public class Sub2Fragment extends Fragment {
+
     String myJSON;
     JSONArray jsonArray;
     ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
     AlertDialog dialog;
-    TextView text_page_id, text_page_email, text_page_beacon;
+    TextView text_page_id, text_page_email;
     SharedPreferences preferences;
-    Button btn_logout, btn_edit, btn_beaocn, btn_scan, btn_missing;
-    SharedPreferences preferences2;
+    Button btn_logout, btn_edit, btn_beaocn, btn_missing;
+
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
@@ -62,23 +61,19 @@ public class Sub2Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        preferences2 = getContext().getSharedPreferences("Scan", getContext().MODE_PRIVATE);
+
         final View view = inflater.inflate(R.layout.fragment_sub2, container, false);
         final Activity activity = getActivity();
-
 
         btn_logout = (Button) view.findViewById(R.id.btn_logout);
         btn_edit = (Button) view.findViewById(R.id.btn_edit);
         btn_beaocn = (Button)view.findViewById(R.id.btn_beacon);
-        btn_scan = (Button)view.findViewById(R.id.btn_scan);
         btn_missing =(Button)view.findViewById(R.id.btn_missing);
+
         preferences = activity.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freelogin키 안에 데이터 불러오기
+
         getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
-        if (preferences2.getBoolean("Scan", false)){
-            btn_scan.setText("비콘스캔 끄기");
-        }else {
-            btn_scan.setText("비콘스캔 켜기");
-        }
+
         final String userid = preferences.getString("Id", null);
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +112,7 @@ public class Sub2Fragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         btn_beaocn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,26 +121,12 @@ public class Sub2Fragment extends Fragment {
                 startActivity(notificationIntent);
             }
         });
-        btn_scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(preferences2.getBoolean("Scan", false)){
-                    SharedPreferences.Editor editor = preferences2.edit();
-                    editor.putBoolean("Scan", false);
-                    editor.commit();
-                    btn_scan.setText("비콘스캔 켜기");
-                }else{
-                    SharedPreferences.Editor editor = preferences2.edit();
-                    editor.putBoolean("Scan", true);
-                    editor.commit();
-                    btn_scan.setText("비콘스캔 끄기");
-                }
-            }
-        });
+
         btn_missing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent notificationIntent = new Intent(getContext(), Popup2Activity.class);
+
                 notificationIntent.putExtra("UUID", myBeacons.get(0).getUUID());
                 notificationIntent.putExtra("Major", myBeacons.get(0).getMajor());
                 notificationIntent.putExtra("Minor", myBeacons.get(0).getMinor());
@@ -153,6 +135,7 @@ public class Sub2Fragment extends Fragment {
                 startActivity(notificationIntent);
             }
         });
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             @Override
@@ -178,6 +161,7 @@ public class Sub2Fragment extends Fragment {
                 }
             }
         };
+
         MypageRequest mypageRequest = new MypageRequest(userid, responseListener); // 입력값 넣기 위해서
         RequestQueue queue = Volley.newRequestQueue(activity);
         queue.add(mypageRequest);
@@ -191,7 +175,6 @@ public class Sub2Fragment extends Fragment {
             @Override
             protected String doInBackground(String... params) {
 
-
                 String uri = params[0];
                 BufferedReader bufferedReader = null;
 
@@ -201,11 +184,13 @@ public class Sub2Fragment extends Fragment {
                 try {
                     URL url = new URL(uri);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
                     connection.setReadTimeout(5000);
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
                     connection.setDoInput(true);
                     connection.connect();
+
                     OutputStream outputStream = connection.getOutputStream();
                     outputStream.write(postParameter.getBytes("UTF-8"));
                     outputStream.flush();
@@ -220,13 +205,17 @@ public class Sub2Fragment extends Fragment {
                     else{
                         inputStream = connection.getErrorStream();
                     }
+
                     StringBuilder builder = new StringBuilder();
                     bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
                     String json;
                     while ((json = bufferedReader.readLine()) != null) {
                         builder.append(json + "\n");
                     }
+
                     return builder.toString().trim();
+
                 } catch (Exception e) {
                     return null;
                 }

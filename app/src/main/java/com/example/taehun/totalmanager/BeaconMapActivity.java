@@ -101,14 +101,6 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-            Toast.makeText(this, "GPS가 켜져있어야 해당 기능을 사용할 수 있습니다.", Toast.LENGTH_LONG).show();
-
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
-
         boardList = new ArrayList<HashMap<String, String>>();
 
         constraintLayout = (ConstraintLayout) findViewById(R.id.layout_map);

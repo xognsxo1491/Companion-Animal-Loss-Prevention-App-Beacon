@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">#797878</item>
+        <item name="android:statusBarColor">@color/toolbarBlue</item>
     </style>
 
     <style name="searchViewStyle" parent="AppTheme">
@@ -23,7 +23,7 @@
 
     <style name="toolbarStyle" parent="AppTheme">
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:background">@color/toolbarBlue</item>
+        <item name="android:background">@drawable/gradation4</item>
     </style>
 
     <style name="toolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

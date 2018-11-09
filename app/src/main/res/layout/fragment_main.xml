@@ -7,50 +7,199 @@
     android:layout_height="match_parent"
     tools:context=".MainFragment">
 
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:shadowColor="#8f8f8f"
+        android:shadowDx="5.0"
+        android:shadowDy="5.0"
+        android:shadowRadius="5.0"
+        android:text="W E F Y P E T"
+        android:textColor="@color/toolbarBlue"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
+        android:id="@+id/linearLayout6"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradation"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Dash Board"
+            android:textColor="#ffffff"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <Button
+                android:id="@+id/btn_board"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:drawableTop="@drawable/baseline_assessment_white_48dp"
+                android:text="자유 게시판"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+            <Button
+                android:id="@+id/btn_board2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:drawableTop="@drawable/baseline_assignment_late_white_48dp"
+                android:text="실종정보 게시판"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_board"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradation2"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Google Map"
+            android:textColor="#ffffff"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_maps"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:drawableTop="@drawable/baseline_pets_white_48dp"
+                android:text="전국 실종현황 지도"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_beaconMaps"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:drawableTop="@drawable/baseline_visibility_white_48dp"
+                android:text="내 실종비콘 위치"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="96dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradation3"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/btn_board"
+        <TextView
+            android:id="@+id/textView20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="자유 게시판"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Beacon"
+            android:textColor="#ffffff"
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_board2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="실종 게시판" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_maps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-<<<<<<< HEAD
-            android:text="실종 맵" />
-=======
-            android:text="비콘 맵" />
-        <Button
-            android:id="@+id/btn_beaconMaps"
-            android:text="비콘 발견"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btn_beacondialog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="비콘 스캔" />
->>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
+            <Button
+                android:id="@+id/btn_beacon_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:drawableTop="@drawable/baseline_bluetooth_searching_white_48dp"
+                android:text="비콘 등록하기"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:drawableTop="@drawable/baseline_bluetooth_disabled_white_48dp"
+                android:text="비콘 해제하기"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/switch_beacon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="비콘 스캔 off"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

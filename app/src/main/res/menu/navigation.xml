@@ -7,11 +7,6 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/baseline_settings_bluetooth_black_18dp"
-        android:title="Beacon" />
-
-    <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/baseline_person_black_24dp"
         android:title="MyPage" />
