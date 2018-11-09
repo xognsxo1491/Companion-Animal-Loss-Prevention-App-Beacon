@@ -13,13 +13,16 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ import com.example.taehun.totalmanager.MainActivity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 import com.example.taehun.totalmanager.Sign_InActivity;
+import com.example.taehun.totalmanager.Sign_UpActivity;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -57,6 +61,7 @@ public class CustomDialog2 implements BeaconConsumer{
     FloatingActionButton fab_scan2;
     Adapter_Dialog adapterDialog;
     Animation operatingAnim;
+    ImageView image_cach;
     Button btn_ok;
 
     public CustomDialog2(Context context) {
@@ -82,21 +87,55 @@ public class CustomDialog2 implements BeaconConsumer{
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
         listView2 = (ListView) dlg.findViewById(R.id.beacon_list2);
         adapterDialog = new Adapter_Dialog(context, listViewBeacon);
-        listView2.setAdapter(adapterDialog);
+        image_cach = (ImageView) dlg.findViewById(R.id.image_cach);
 
-        operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        operatingAnim.setInterpolator(new LinearInterpolator());
+        listView2.setAdapter(adapterDialog);
 
         fab_scan2 = (FloatingActionButton) dlg.findViewById(R.id.fab_scan2);
         fab_scan2.setTag("실행");
+
+        operatingAnim = AnimationUtils.loadAnimation(context, R.anim.rotate);
+        operatingAnim.setInterpolator(new LinearInterpolator());
 
         dlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
 
-                Intent intent = new Intent(getApplicationContext(), Sign_InActivity.class);
-                getApplicationContext().startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("알림").setMessage("회원가입을 마치시겠습니까?");
 
+                builder.setPositiveButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        CustomDialog2 customDialog2  = new CustomDialog2(context);
+                        // 커스텀 다이얼로그를 호출한다.
+                        // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
+                        customDialog2.callFunction(null);
+
+                    }
+                });
+
+                builder.setNegativeButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent intent = new Intent(getApplicationContext(), Sign_InActivity.class);
+                        getApplicationContext().startActivity(intent);
+                    }
+                });
+
+                builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                        if (keyCode == KeyEvent.KEYCODE_BACK) { return true; }
+
+                        return false;
+                    }
+                });
+
+                builder.show();
             }
         });
 
@@ -127,20 +166,20 @@ public class CustomDialog2 implements BeaconConsumer{
 
                     if (fab_scan2.getTag().equals("실행")) {
 
+                        final Animation animation = new AlphaAnimation(1, 0);
+                        animation.setDuration(1000);
+
                         fab_scan2.setTag("중단");
-                        fab_scan2.setImageResource(R.drawable.baseline_cached_white_48dp);
-                        fab_scan2.setAnimation(operatingAnim);
+                        fab_scan2.setAnimation(animation);
+
+                        image_cach.setAnimation(operatingAnim);
+                        image_cach.setVisibility(View.VISIBLE);
+
+                        fab_scan2.setVisibility(View.INVISIBLE);
 
                         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
                         beaconManager.bind(CustomDialog2.this);
 
-                    } else if (fab_scan2.getTag().equals("중단")) {
-
-                        fab_scan2.setTag("실행");
-                        fab_scan2.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
-                        fab_scan2.clearAnimation();
-
-                        beaconManager.unbind(CustomDialog2.this);
                     }
                 }
 
@@ -178,9 +217,9 @@ public class CustomDialog2 implements BeaconConsumer{
                                                     boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
                                                     if (success) { // 성공일 경우
-                                                        Toast.makeText(context, "비콘 등록에 성공하였습니다", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, "비콘 등록에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                                                     }else {
-                                                        Toast.makeText(context, "비콘 등록에 실패하였습니다", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, "이미 등록된 비콘입니다.", Toast.LENGTH_SHORT).show();
                                                     }
 
                                                 } catch (JSONException e) { //오류 캐치
@@ -195,17 +234,14 @@ public class CustomDialog2 implements BeaconConsumer{
 
                                         editor.clear();
                                         editor.commit();
-
                                     }
                                 })
                                 .create();
                         dialog.show();
                     }
                 });
-
             }
         });
-
     }
 
     @Override
@@ -243,8 +279,6 @@ public class CustomDialog2 implements BeaconConsumer{
     public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
         return false;
     }
-
-
 
     Handler handler = new Handler(){
         public void handleMessage(Message msg){

@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:text="비콘 등록"
         android:textColor="@color/colorDeepBlue"
         android:textStyle="bold"
@@ -70,5 +70,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/beacon_list2"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_play_arrow_white_24dp" />
+
+    <ImageView
+        android:id="@+id/image_cach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_cached_black_24dp" />
 
 </android.support.constraint.ConstraintLayout>

@@ -174,7 +174,7 @@ public class BoardRegionActivity extends AppCompatActivity {
 
             case R.id.nav_search: {
 
-                Intent intent = new Intent(getApplicationContext(), Board1_Search_Activity.class);
+                Intent intent = new Intent(getApplicationContext(), BoardRegionSearchActivity.class);
                 startActivity(intent);
                 break;
             }

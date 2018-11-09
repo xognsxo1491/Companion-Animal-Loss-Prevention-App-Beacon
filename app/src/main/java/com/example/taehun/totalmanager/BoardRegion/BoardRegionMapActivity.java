@@ -1,5 +1,7 @@
 package com.example.taehun.totalmanager.BoardRegion;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -13,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -43,7 +46,6 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
     FloatingActionButton fab_gps;
     MarkerOptions markerOptions;
     Animation operatingAnim;
-    Geocoder geocoder;
     Timer timer;
 
     @Override
@@ -65,9 +67,16 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
     public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
 
+        LatLng latLng = new LatLng(36.397201, 127.852390);
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(7);
+        googleMap.animateCamera(zoom);
+
         final LocationListener mLocationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onLocationChanged(final Location location) {
 
                 final Double lat = location.getLatitude();
                 final Double lon = location.getLongitude();
@@ -76,16 +85,41 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
 
                 markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(lat, lon))
-                        .title("현재위치");
+                        .title("현재위치")
+                        .snippet("클릭시 위치가 선택됩니다.");
 
                 googleMap.addMarker(markerOptions);
                 googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
 
-                        BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionMapActivity.this);
-                        boardRegionDialog.callFunction(lat,lon);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionMapActivity.this);
+                        builder.setTitle("실종 위치 선택")
+                                .setMessage("해당 위치로 선택하시겠습니까?");
 
+                        builder.setPositiveButton("아니요",null);
+
+                        builder.setNegativeButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionMapActivity.this);
+                                boardRegionDialog.callFunction(lat, lon);
+                            }
+                        });
+
+                        builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                            @Override
+                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.dismiss();
+                                    return true;
+                                }
+                                return false;
+                            }
+                        });
+                        builder.show();
                     }
                 });
 
@@ -96,7 +130,55 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                 fab_gps.clearAnimation();
                 fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
 
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+
+                        final Double lat = latLng.latitude;
+                        final Double lon = latLng.longitude;
+
+                        markerOptions.position(new LatLng(lat, lon))
+                                .title("현재위치")
+                                .snippet("클릭시 위치가 선택됩니다.");
+
+                        googleMap.addMarker(markerOptions);
+                        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionMapActivity.this);
+                                builder.setTitle("실종 위치 선택")
+                                        .setMessage("해당 위치로 선택하시겠습니까?");
+
+                                builder.setPositiveButton("아니요",null);
+
+                                builder.setNegativeButton("예", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionMapActivity.this);
+                                        boardRegionDialog.callFunction(lat, lon);
+                                    }
+                                });
+
+                                builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                                    @Override
+                                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss();
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
+                    }
+                });
             }
+
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) { }

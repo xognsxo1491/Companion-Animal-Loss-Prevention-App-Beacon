@@ -21,7 +21,6 @@ public class MainFragment extends Fragment {
 
         Button btn_board = (Button) view.findViewById(R.id.btn_board);
         Button btn_board2 = (Button) view.findViewById(R.id.btn_board2);
-        Button btn_beacondialog = (Button)  view.findViewById(R.id.btn_beacondialog);
         Button btn_maps = (Button)  view.findViewById(R.id.btn_maps);
 
         btn_board.setOnClickListener(new View.OnClickListener() {
@@ -47,15 +46,6 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), BeaconMapActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        btn_beacondialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CustomDialog customDialog = new CustomDialog(getContext());
-                customDialog.callFunction(null);
             }
         });
 

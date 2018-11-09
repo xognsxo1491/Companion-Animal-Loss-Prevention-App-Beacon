@@ -15,10 +15,12 @@ import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
 import com.example.taehun.totalmanager.BeaconListItem;
+import com.example.taehun.totalmanager.BeaconMapActivity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 
@@ -55,6 +58,7 @@ public class CustomDialog implements BeaconConsumer{
     FloatingActionButton fab_scan;
     Adapter_Dialog adapterDialog;
     Animation operatingAnim;
+    ImageView image_cach;
 
     public CustomDialog(Context context) {
         this.context = context;
@@ -78,11 +82,13 @@ public class CustomDialog implements BeaconConsumer{
 
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
         listView = (ListView) dlg.findViewById(R.id.beacon_list);
+        image_cach = (ImageView) dlg.findViewById(R.id.image_cach);
+
+        operatingAnim = AnimationUtils.loadAnimation(context, R.anim.rotate);
+        operatingAnim.setInterpolator(new LinearInterpolator());
+
         adapterDialog = new Adapter_Dialog(context, listViewBeacon);
         listView.setAdapter(adapterDialog);
-
-        operatingAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        operatingAnim.setInterpolator(new LinearInterpolator());
 
         fab_scan = (FloatingActionButton) dlg.findViewById(R.id.fab_scan);
         fab_scan.setTag("실행");
@@ -105,20 +111,19 @@ public class CustomDialog implements BeaconConsumer{
 
                     if (fab_scan.getTag().equals("실행")) {
 
+                        final Animation animation = new AlphaAnimation(1, 0);
+                        animation.setDuration(1000);
+
                         fab_scan.setTag("중단");
-                        fab_scan.setImageResource(R.drawable.baseline_cached_white_48dp);
-                        fab_scan.setAnimation(operatingAnim);
+                        fab_scan.setAnimation(animation);
+
+                        image_cach.setAnimation(operatingAnim);
+                        image_cach.setVisibility(View.VISIBLE);
+
+                        fab_scan.setVisibility(View.INVISIBLE);
 
                         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
                         beaconManager.bind(CustomDialog.this);
-
-                    } else if (fab_scan.getTag().equals("중단")) {
-
-                        fab_scan.setTag("실행");
-                        fab_scan.setImageResource(R.drawable.baseline_play_arrow_white_24dp);
-                        fab_scan.clearAnimation();
-
-                            beaconManager.unbind(CustomDialog.this);
 
                     }
                 }
@@ -159,7 +164,7 @@ public class CustomDialog implements BeaconConsumer{
                                                         Toast.makeText(context, "비콘 등록에 성공하였습니다", Toast.LENGTH_SHORT).show();
 
                                                     }else {
-                                                        Toast.makeText(context, "비콘 등록에 실패하였습니다", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, "이미 등록된 비콘입니다.", Toast.LENGTH_SHORT).show();
                                                     }
 
                                                 } catch (JSONException e) { //오류 캐치

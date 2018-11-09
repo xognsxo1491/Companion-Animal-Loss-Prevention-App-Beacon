@@ -8,8 +8,8 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="Sub1" />
+        android:icon="@drawable/baseline_settings_bluetooth_black_18dp"
+        android:title="Beacon" />
 
     <item
         android:id="@+id/navigation_notifications"

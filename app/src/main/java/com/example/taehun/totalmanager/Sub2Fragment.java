@@ -71,6 +71,7 @@ public class Sub2Fragment extends Fragment {
                                 SharedPreferences preferences = activity.getSharedPreferences("freeLogin", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.clear();
+                                editor.remove("Id");
                                 editor.commit();
 
                                 startActivity(intent);
