@@ -58,12 +58,12 @@ public class myBeacon extends Application implements BeaconConsumer{
     SharedPreferences.Editor editor;
     String myJSON;
     JSONArray jsonArray;
-    ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
-    ArrayList<BeaconListItem> missingBeacons= new ArrayList<>();
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+    ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
+    ArrayList<BeaconListItem> missingBeacons= new ArrayList<>();
     long start = System.currentTimeMillis(); //시작하는 시점 계산
     long end;
 
@@ -337,14 +337,14 @@ public class myBeacon extends Application implements BeaconConsumer{
                             && beacon.getId3().toString().equals(myBeacons.get(0).getMinor())) {
                         editor.putBoolean("findMyBeacon", false);
                         editor.commit();
-                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) <= 4) {
+                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) <= 20) {
                             Log.d("비콘", "가까이 있음");
                             showNearNotification("비콘", "10미터 이내에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", false);
                             editor.putBoolean("BeaconEmergency", true);
                             editor.putBoolean("first", true);
                             editor.commit();
-                        } else if (preferences.getBoolean("BeaconEmergency", false) && (((int) beacon.getDistance()) > 4)) {
+                        } else if (preferences.getBoolean("BeaconEmergency", false) && (((int) beacon.getDistance()) > 20)) {
                             Log.d("비콘", "멀리있음");
                             showFarNotification("비콘", "10미터 밖에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", true);
@@ -379,9 +379,9 @@ public class myBeacon extends Application implements BeaconConsumer{
                             String UUID = beacon.getId1().toString();
                             String major = beacon.getId2().toString();
                             String minor = beacon.getId3().toString();
-
+                            SharedPreferences preference2 = getSharedPreferences("freeLogin",Context.MODE_PRIVATE);
                             startLocationService();
-                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(preference2.getString("Id", ""), UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                             RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
                             queue.add(beaconFindRequest);
 

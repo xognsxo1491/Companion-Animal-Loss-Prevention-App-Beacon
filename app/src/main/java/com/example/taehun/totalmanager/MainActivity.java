@@ -1,7 +1,11 @@
 package com.example.taehun.totalmanager;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -10,18 +14,41 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
+import com.example.taehun.totalmanager.Request.TokenChangeRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class MainActivity extends AppCompatActivity {
+    String login_id,login_password;
     private BottomNavigationView bottomNavigationView;
     private MainFragment mainFragment;
     private Sub1Fragment sub1Fragment;
     private Sub2Fragment sub2Fragment;
     private long time= 0;
-
+    String myJSON;
+    JSONArray jsonArray;
+    String token;
+    private static final String TAG_RESULT = "result";
+    String TAG_TOKEN = "Token";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,7 +73,19 @@ public class MainActivity extends AppCompatActivity {
         sub1Fragment = new Sub1Fragment();
         sub2Fragment = new Sub2Fragment();
 
+
         setFragment(mainFragment); // 앱 접속했을 때 나오는 프레그먼트
+        SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
+        final SharedPreferences.Editor editor = preferences.edit();
+        login_id = preferences.getString("Id","");
+        login_password = preferences.getString("Password","");
+        token = FirebaseInstanceId.getInstance().getToken();
+        if(!login_id.equals("")&&!login_password.equals("")){
+            getTokenFromDataBase("http://xognsxo1491.cafe24.com/Token_connect.php");
+        }
+        System.out.println("Token 1 " + token);
+
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -100,5 +139,104 @@ public class MainActivity extends AppCompatActivity {
         }else if(System.currentTimeMillis()-time<2000){
             finishAffinity();
         }
+    }
+    public void getTokenFromDataBase(String url) { // php 파싱관련
+
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                SharedPreferences preference = getSharedPreferences("freeLogin",Context.MODE_PRIVATE);
+                String uri = params[0];
+                BufferedReader bufferedReader = null;
+
+                String postParameter = "Id="+ preference.getString("Id","");
+                Log.d("Number", postParameter);
+
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setReadTimeout(5000);
+                    connection.setConnectTimeout(5000);
+                    connection.setRequestMethod("POST");
+                    connection.setDoInput(true);
+                    connection.connect();
+                    OutputStream outputStream = connection.getOutputStream();
+                    outputStream.write(postParameter.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+                    int responseStatusCode = connection.getResponseCode();
+
+                    InputStream inputStream;
+                    if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                        inputStream = connection.getInputStream();
+                    }
+
+                    else{
+                        inputStream = connection.getErrorStream();
+                    }
+                    StringBuilder builder = new StringBuilder();
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        builder.append(json + "\n");
+                    }
+                    return builder.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String s) { // url 추출
+                myJSON = s;
+                try {
+                    JSONObject jsonObject = new JSONObject(myJSON);
+                    jsonArray = jsonObject.getJSONArray(TAG_RESULT);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        String tokenFromDatabase = object.getString(TAG_TOKEN);
+                        if(!tokenFromDatabase.equals(token)){
+                            Log.d("토큰", "변경");
+                            changeToken();
+                        }
+                    }
+
+                } catch (JSONException e) { // 오류 캐치
+                    e.printStackTrace();
+                }
+                changeToken();
+            }
+        }
+        GetDataJSON getDataJSON = new GetDataJSON();
+        getDataJSON.execute(url);
+    }
+    public void changeToken(){
+        SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
+        String userId = preferences.getString("Id", null);
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+//
+//                            if (success) { // 성공일 경우
+//                                Log.d("토큰", "변경성공");
+//                            }
+//
+//                        } catch (JSONException e) { //오류 캐치
+//                            e.printStackTrace();
+//                        }
+                //방법이 없어서 일단 주석처리
+            }
+        };
+
+        TokenChangeRequest tokenChangeRequest = new TokenChangeRequest(userId, token, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(tokenChangeRequest);
     }
 }

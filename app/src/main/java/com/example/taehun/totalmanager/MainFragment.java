@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
 import com.example.taehun.totalmanager.BoardRegion.BoardRegionActivity;
+import com.example.taehun.totalmanager.BoardRegion.FindMapsActivity;
 
 public class MainFragment extends Fragment {
 
@@ -22,7 +23,7 @@ public class MainFragment extends Fragment {
         Button btn_board = (Button) view.findViewById(R.id.btn_board);
         Button btn_board2 = (Button) view.findViewById(R.id.btn_board2);
         Button btn_maps = (Button)  view.findViewById(R.id.btn_maps);
-
+        Button btnFindmMaps = (Button) view.findViewById(R.id.btn_beaconMaps);
         btn_board.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,6 +50,24 @@ public class MainFragment extends Fragment {
             }
         });
 
+<<<<<<< HEAD
+=======
+        btn_beacondialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CustomDialog customDialog = new CustomDialog(getContext());
+                customDialog.callFunction(null);
+            }
+        });
+        btnFindmMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FindMapsActivity.class);
+                startActivity(intent);
+            }
+        });
+>>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
         return view;
     }
 

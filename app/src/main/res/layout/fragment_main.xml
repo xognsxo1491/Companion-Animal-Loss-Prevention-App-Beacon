@@ -35,7 +35,21 @@
             android:id="@+id/btn_maps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:text="실종 맵" />
+=======
+            android:text="비콘 맵" />
+        <Button
+            android:id="@+id/btn_beaconMaps"
+            android:text="비콘 발견"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_beacondialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="비콘 스캔" />
+>>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
 
     </LinearLayout>
 

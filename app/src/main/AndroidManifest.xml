@@ -91,7 +91,13 @@
             android:label="@string/title_activity_board_region_map" />
         <activity android:name=".BoardRegion.BoardRegionDialog" />
         <activity android:name=".BoardRegion.BoardRegionCommentActivity" />
+<<<<<<< HEAD
         <activity android:name=".BoardRegion.BoardRegionSearchActivity"></activity>
+=======
+        <activity
+            android:name=".BoardRegion.FindMapsActivity"
+            android:label="@string/title_activity_find_maps"></activity>
+>>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
     </application>
 
 </manifest>
