@@ -99,33 +99,40 @@ public class Sub2Fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(),Sign_editActivity.class);
-                intent.putExtra("id", userid);
-                startActivity(intent);
+                    Intent intent = new Intent(getActivity(),Sign_editActivity.class);
+                    intent.putExtra("id", userid);
+                    startActivity(intent);
             }
         });
 
         btn_beaocn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent notificationIntent = new Intent(getContext(), Popup3Activity.class);
-                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(notificationIntent);
+                if(myBeacons.size()>0){
+                    Intent notificationIntent = new Intent(getContext(), Popup3Activity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(notificationIntent);
+                }else {
+                    Toast.makeText(activity, "등록된 비콘이 없습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         btn_missing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent notificationIntent = new Intent(getContext(), Popup2Activity.class);
+                if(myBeacons.size()>0){
+                    Intent notificationIntent = new Intent(getContext(), Popup2Activity.class);
 
-                notificationIntent.putExtra("UUID", myBeacons.get(0).getUUID());
-                notificationIntent.putExtra("Major", myBeacons.get(0).getMajor());
-                notificationIntent.putExtra("Minor", myBeacons.get(0).getMinor());
+                    notificationIntent.putExtra("UUID", myBeacons.get(0).getUUID());
+                    notificationIntent.putExtra("Major", myBeacons.get(0).getMajor());
+                    notificationIntent.putExtra("Minor", myBeacons.get(0).getMinor());
 
-                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(notificationIntent);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(notificationIntent);
+                }else{
+                    Toast.makeText(activity, "등록된 비콘이 없습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
