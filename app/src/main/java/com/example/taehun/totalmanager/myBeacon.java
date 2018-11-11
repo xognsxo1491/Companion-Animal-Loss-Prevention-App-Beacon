@@ -52,18 +52,22 @@ import java.util.Locale;
 import java.util.Timer;
 
 public class myBeacon extends Application implements BeaconConsumer{
-    BeaconManager beaconManager;
-    private List<Beacon> beaconList = new ArrayList<>();
-    SharedPreferences preferences;// 자동 로그인 데이터 저장
-    SharedPreferences.Editor editor;
-    String myJSON;
-    JSONArray jsonArray;
+
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+
+    private List<Beacon> beaconList = new ArrayList<>();
+
     ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
     ArrayList<BeaconListItem> missingBeacons= new ArrayList<>();
+    SharedPreferences preferences;// 자동 로그인 데이터 저장
+    SharedPreferences.Editor editor;
+    BeaconManager beaconManager;
+    JSONArray jsonArray;
+    String myJSON;
+
     long start = System.currentTimeMillis(); //시작하는 시점 계산
     long end;
 
@@ -72,27 +76,32 @@ public class myBeacon extends Application implements BeaconConsumer{
     @Override
     public void onCreate() {
         super.onCreate();
+
         beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
         beaconManager.bind(this);
+
         preferences = getSharedPreferences("Beacon",getApplicationContext().MODE_PRIVATE);
         editor = preferences.edit();
+
         editor.putBoolean("BeaconAlram", true);
         editor.putBoolean("BeaconEmergency", true);
         editor.putBoolean("findMyBeacon", true);
         editor.putBoolean("first", true);
         editor.commit();
+
         gpsListener = new GPSListener();
 
         getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
         getMissingBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
-//        System.out.println(myBeacons.get(0).getMajor());
+
         handler.sendEmptyMessage(0);
     }
 
     public void showNearNotification(String title, String message, String UUID, String major, String minor) {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(title, message, importance);
@@ -116,9 +125,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                 .setDefaults(Notification.DEFAULT_ALL) // 알림, 사운드 진동 설정
                 .setAutoCancel(true) // 알림 터치시 반응 후 삭제
 
-                .setSound(RingtoneManager
-
-                        .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 
                 .setSmallIcon(android.R.drawable.btn_star)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
@@ -126,13 +133,17 @@ public class myBeacon extends Application implements BeaconConsumer{
                 .setBadgeIconType(android.R.drawable.ic_dialog_info)
 
                 .setContentIntent(pendingIntent);
+
         notificationManager.notify(0, builder.build());
     }
     public void showFarNotification(String title, String message, String UUID, String major, String minor) {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
             int importance = NotificationManager.IMPORTANCE_HIGH;
+
             NotificationChannel mChannel = new NotificationChannel(title, message, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
@@ -140,6 +151,7 @@ public class myBeacon extends Application implements BeaconConsumer{
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), title);
 
         Intent notificationIntent = new Intent(getApplicationContext(), Popup2Activity.class);
+
         notificationIntent.putExtra("UUID", UUID);
         notificationIntent.putExtra("Major", major);
         notificationIntent.putExtra("Minor", minor);
@@ -184,18 +196,22 @@ public class myBeacon extends Application implements BeaconConsumer{
         });
         try{
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-        }catch(RemoteException e){}
+        } catch(RemoteException e){}
     }
+
     protected void addBeacons(ArrayList<BeaconListItem> beacons) {  // php 파싱 설정
         try {
             JSONObject jsonObject = new JSONObject(myJSON);
             jsonArray = jsonObject.getJSONArray(TAG_RESULT);
 
             for (int i = 0; i < jsonArray.length(); i++) {
+
                 JSONObject object = jsonArray.getJSONObject(i);
+
                 String UUID = object.getString(TAG_UUID);
                 String major = object.getString(TAG_MAJOR);
                 String minor = object.getString(TAG_Minor);
+
                 System.out.println("비콘 " + UUID + " " + major + " " +minor);
                 beacons.add(new BeaconListItem(UUID, major, minor));
 
@@ -221,19 +237,23 @@ public class myBeacon extends Application implements BeaconConsumer{
 
                 try {
                     URL url = new URL(uri);
+
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setReadTimeout(5000);
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
                     connection.setDoInput(true);
                     connection.connect();
+
                     OutputStream outputStream = connection.getOutputStream();
                     outputStream.write(postParameter.getBytes("UTF-8"));
                     outputStream.flush();
                     outputStream.close();
+
                     int responseStatusCode = connection.getResponseCode();
 
                     InputStream inputStream;
+
                     if(responseStatusCode == HttpURLConnection.HTTP_OK) {
                         inputStream = connection.getInputStream();
                     }
@@ -241,13 +261,16 @@ public class myBeacon extends Application implements BeaconConsumer{
                     else{
                         inputStream = connection.getErrorStream();
                     }
+
                     StringBuilder builder = new StringBuilder();
                     bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
                     String json;
+
                     while ((json = bufferedReader.readLine()) != null) {
                         builder.append(json + "\n");
-                    }
-                    return builder.toString().trim();
+                    } return builder.toString().trim();
+
                 } catch (Exception e) {
                     return null;
                 }
@@ -280,6 +303,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                 try {
                     URL url = new URL(uri);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
                     connection.setReadTimeout(5000);
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
@@ -289,9 +313,11 @@ public class myBeacon extends Application implements BeaconConsumer{
                     outputStream.write(postParameter.getBytes("UTF-8"));
                     outputStream.flush();
                     outputStream.close();
+
                     int responseStatusCode = connection.getResponseCode();
 
                     InputStream inputStream;
+
                     if(responseStatusCode == HttpURLConnection.HTTP_OK) {
                         inputStream = connection.getInputStream();
                     }
@@ -321,10 +347,12 @@ public class myBeacon extends Application implements BeaconConsumer{
         GetDataJSON getDataJSON = new GetDataJSON();
         getDataJSON.execute(url);
     }
-            Handler handler = new Handler(){
-        public void handleMessage(Message msg){
+            Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+
             SharedPreferences preferences3 = getSharedPreferences("Scan", getApplicationContext().MODE_PRIVATE);
             Log.d("비콘", "스캔 작동중");
+
             if(preferences3.getBoolean("Scan", false)){
                 //            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
 //                    preferences.getBoolean("BeaconEmergency", false) +" findMyBeacon "+ preferences.getBoolean("findMyBeacon", false) + " first "+preferences.getBoolean("first", false));

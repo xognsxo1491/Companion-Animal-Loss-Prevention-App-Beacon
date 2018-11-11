@@ -31,11 +31,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
-import com.example.taehun.totalmanager.MainActivity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 import com.example.taehun.totalmanager.Sign_InActivity;
-import com.example.taehun.totalmanager.Sign_UpActivity;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -50,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomDialog2 implements BeaconConsumer{
+public class SignUpBeaconDialog implements BeaconConsumer{
 
     private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
     private List<Beacon> beaconList = new ArrayList<>();
@@ -64,7 +62,7 @@ public class CustomDialog2 implements BeaconConsumer{
     ImageView image_cach;
     Button btn_ok;
 
-    public CustomDialog2(Context context) {
+    public SignUpBeaconDialog(Context context) {
         this.context = context;
     }
 
@@ -108,10 +106,10 @@ public class CustomDialog2 implements BeaconConsumer{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        CustomDialog2 customDialog2  = new CustomDialog2(context);
+                        SignUpBeaconDialog signUpBeaconDialog = new SignUpBeaconDialog(context);
                         // 커스텀 다이얼로그를 호출한다.
                         // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-                        customDialog2.callFunction(null);
+                        signUpBeaconDialog.callFunction(null);
 
                     }
                 });
@@ -178,7 +176,7 @@ public class CustomDialog2 implements BeaconConsumer{
                         fab_scan2.setVisibility(View.INVISIBLE);
 
                         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-                        beaconManager.bind(CustomDialog2.this);
+                        beaconManager.bind(SignUpBeaconDialog.this);
 
                     }
                 }

@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.taehun.totalmanager.BeaconScan.CustomDialog2;
+import com.example.taehun.totalmanager.BeaconScan.SignUpBeaconDialog;
 import com.example.taehun.totalmanager.Request.DuplicateRequest;
 import com.example.taehun.totalmanager.Request.SignUpRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -231,10 +230,10 @@ public class Sign_UpActivity extends AppCompatActivity {
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                CustomDialog2 customDialog2  = new CustomDialog2(Sign_UpActivity.this);
+                                                SignUpBeaconDialog signUpBeaconDialog = new SignUpBeaconDialog(Sign_UpActivity.this);
                                                 // 커스텀 다이얼로그를 호출한다.
                                                 // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-                                                customDialog2.callFunction(null);
+                                                signUpBeaconDialog.callFunction(null);
                                             }
                                         })
                                         .setCancelable(false)

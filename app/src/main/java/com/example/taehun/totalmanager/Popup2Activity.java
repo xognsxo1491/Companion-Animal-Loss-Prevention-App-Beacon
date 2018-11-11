@@ -27,14 +27,9 @@ import java.util.TimerTask;
 
 public class Popup2Activity extends Activity {
 
-    Button btn;
-    Button btn2;
-
-    String strMajor;
-    String strminor;
-    String strUuid;
-
+    String strMajor,strminor,strUuid;
     GPSListener gpsListener;
+    Button btn,btn2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +48,9 @@ public class Popup2Activity extends Activity {
         strUuid = intent.getStringExtra("UUID");
         strMajor = intent.getStringExtra("Major");
         strminor = intent.getStringExtra("Minor");
+
         System.out.println(strUuid +" + " + strMajor + " + " + strminor);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,10 +112,19 @@ public class Popup2Activity extends Activity {
             if (lastLocation != null) {
                 gpsListener.latitude = lastLocation.getLatitude();
                 gpsListener.longitude = lastLocation.getLongitude();
+
+                Toast.makeText(this, "간편 실종등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
             }
 
             if(gpsListener.latitude == 0.0) {
-                Toast.makeText(this, "위치정보 불러오기에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getApplicationContext(), BeaconMissingActivity.class);
+                intent.putExtra("UUID", strUuid);
+                intent.putExtra("Major", strMajor);
+                intent.putExtra("Minor", strminor);
+                startActivity(intent);
+
+                Toast.makeText(this, "위치정보를 받아올 수 없습니다.\n 직접 선택해주세요", Toast.LENGTH_LONG).show();
             }
 
         } catch(SecurityException ex) {

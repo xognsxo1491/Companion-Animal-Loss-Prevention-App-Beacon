@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
+import com.example.taehun.totalmanager.BeaconScan.RegistBeaconDialog;
+import com.example.taehun.totalmanager.BeaconScan.UnRegistBeaconDialog;
 import com.example.taehun.totalmanager.BoardRegion.BoardRegionActivity;
-import com.example.taehun.totalmanager.BoardRegion.FindMapsActivity;
 
 public class MainFragment extends Fragment {
 
@@ -31,12 +31,12 @@ public class MainFragment extends Fragment {
 
         if (preferences2.getBoolean("Scan", false)){
 
-            switch_beacon.setText("비콘스캔 on");
+            switch_beacon.setText("내 비콘스캔 on");
             switch_beacon.setChecked(true);
 
         } else {
 
-            switch_beacon.setText("비콘스캔 off");
+            switch_beacon.setText("내 비콘스캔 off");
             switch_beacon.setChecked(false);
         }
 
@@ -45,6 +45,7 @@ public class MainFragment extends Fragment {
         Button btn_maps = (Button)  view.findViewById(R.id.btn_maps);
         Button btnFindmMaps = (Button) view.findViewById(R.id.btn_beaconMaps);
         Button btn_beacon_dialog = (Button) view.findViewById(R.id.btn_beacon_dialog);
+        Button btn_unregist = (Button) view.findViewById(R.id.btn_unregist);
 
         btn_board.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,10 +85,21 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                CustomDialog customDialog = new CustomDialog(getContext());
+                RegistBeaconDialog registBeaconDialog = new RegistBeaconDialog(getContext());
                 // 커스텀 다이얼로그를 호출한다.
                 // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-                customDialog.callFunction(null);
+                registBeaconDialog.callFunction(null);
+            }
+        });
+
+        btn_unregist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                UnRegistBeaconDialog unregistBeaconDialog = new UnRegistBeaconDialog(getContext());
+                // 커스텀 다이얼로그를 호출한다.
+                // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
+                unregistBeaconDialog.callFunction();
             }
         });
 
@@ -95,19 +107,19 @@ public class MainFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (switch_beacon.getText().toString().equals("비콘스캔 off")) {
+                if (switch_beacon.getText().toString().equals("내 비콘스캔 off")) {
 
                     SharedPreferences.Editor editor = preferences2.edit();
                     editor.putBoolean("Scan", true);
                     editor.commit();
-                    switch_beacon.setText("비콘스캔 on");
+                    switch_beacon.setText("내 비콘스캔 on");
                 }
                 else {
 
                     SharedPreferences.Editor editor = preferences2.edit();
                     editor.putBoolean("Scan", false);
                     editor.commit();
-                    switch_beacon.setText("비콘스캔 off");
+                    switch_beacon.setText("내 비콘스캔 off");
                 }
             }
         });

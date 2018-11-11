@@ -121,7 +121,7 @@ public class Sign_InActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { // 뒤로가기 버튼 설정
-        android.os.Process.killProcess(android.os.Process.myPid());
+        finishAffinity();
     }
 
     @Override

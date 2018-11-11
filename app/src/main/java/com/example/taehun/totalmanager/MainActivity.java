@@ -1,13 +1,17 @@
 package com.example.taehun.totalmanager;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,15 +21,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.estimote.internal_plugins_api.scanning.BluetoothScanner;
 import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
 import com.example.taehun.totalmanager.Request.TokenChangeRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.altbeacon.beacon.BeaconManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,21 +45,30 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-    String login_id,login_password;
+
+    private static final String TAG_RESULT = "result";
     private BottomNavigationView bottomNavigationView;
     private MainFragment mainFragment;
     private Sub2Fragment sub2Fragment;
     private long time= 0;
-    String myJSON;
-    JSONArray jsonArray;
-    String token;
-    private static final String TAG_RESULT = "result";
+
+    BluetoothAdapter bluetoothAdapter;
+    String login_id,login_password;
     String TAG_TOKEN = "Token";
+    JSONArray jsonArray;
+    String myJSON;
+    String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        View view = (View) findViewById(R.id.activity_main);
+
+        LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED||
@@ -61,23 +77,35 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA} , 1);
         }
 
+        /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            Toast.makeText(this, "GPS를 켜주셔야 원활한 서비스 이용이 가능합니다.", Toast.LENGTH_SHORT).show();
+            Intent gpsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(gpsIntent);
+        }  */
+
+        if (!bluetoothAdapter.isEnabled()) {
+            Snackbar.make(view,"원활한 서비스를 위해 블루투스가 자동으로 실행되었습니다.",Snackbar.LENGTH_LONG).show();
+            bluetoothAdapter.enable();
+        }
+
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_nav);
 
         mainFragment = new MainFragment(); // 메인 엑티비티 안의 프레그먼트 설정
         sub2Fragment = new Sub2Fragment();
 
         setFragment(mainFragment); // 앱 접속했을 때 나오는 프레그먼트
+
         SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
         final SharedPreferences.Editor editor = preferences.edit();
+
         login_id = preferences.getString("Id","");
         login_password = preferences.getString("Password","");
         token = FirebaseInstanceId.getInstance().getToken();
-        if(!login_id.equals("")&&!login_password.equals("")){
-            getTokenFromDataBase("http://xognsxo1491.cafe24.com/Token_connect.php");
-        }
+
+        if(!login_id.equals("")&&!login_password.equals("")) { getTokenFromDataBase("http://xognsxo1491.cafe24.com/Token_connect.php"); }
+
         System.out.println("Token 1 " + token);
-
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -121,10 +149,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override // 뒤로가기 버튼 2번 클릭시 종료
     public void onBackPressed(){
+
         if(System.currentTimeMillis()-time>=2000){
+
             time=System.currentTimeMillis();
             Toast.makeText(getApplicationContext(),"뒤로 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show();
+
         }else if(System.currentTimeMillis()-time<2000){
+
             finishAffinity();
         }
     }

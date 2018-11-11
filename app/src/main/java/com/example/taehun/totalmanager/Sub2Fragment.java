@@ -2,20 +2,13 @@ package com.example.taehun.totalmanager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +20,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.taehun.totalmanager.BeaconScan.CustomDialog;
 import com.example.taehun.totalmanager.Request.MypageRequest;
 
 import org.json.JSONArray;
@@ -44,13 +36,13 @@ import java.util.ArrayList;
 
 public class Sub2Fragment extends Fragment {
 
-    String myJSON;
-    JSONArray jsonArray;
     ArrayList<BeaconListItem> myBeacons = new ArrayList<>();
-    AlertDialog dialog;
+    Button btn_logout, btn_edit, btn_beaocn, btn_missing;
     TextView text_page_id, text_page_email;
     SharedPreferences preferences;
-    Button btn_logout, btn_edit, btn_beaocn, btn_missing;
+    JSONArray jsonArray;
+    AlertDialog dialog;
+    String myJSON;
 
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
@@ -116,6 +108,7 @@ public class Sub2Fragment extends Fragment {
         btn_beaocn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent notificationIntent = new Intent(getContext(), Popup3Activity.class);
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(notificationIntent);

@@ -29,8 +29,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
-import com.example.taehun.totalmanager.BeaconListItem;
-import com.example.taehun.totalmanager.BeaconMapActivity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 
@@ -47,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomDialog implements BeaconConsumer{
+public class RegistBeaconDialog implements BeaconConsumer{
 
     private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
     private List<Beacon> beaconList = new ArrayList<>();
@@ -60,7 +58,7 @@ public class CustomDialog implements BeaconConsumer{
     Animation operatingAnim;
     ImageView image_cach;
 
-    public CustomDialog(Context context) {
+    public RegistBeaconDialog(Context context) {
         this.context = context;
     }
 
@@ -123,7 +121,7 @@ public class CustomDialog implements BeaconConsumer{
                         fab_scan.setVisibility(View.INVISIBLE);
 
                         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215, i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
-                        beaconManager.bind(CustomDialog.this);
+                        beaconManager.bind(RegistBeaconDialog.this);
 
                     }
                 }

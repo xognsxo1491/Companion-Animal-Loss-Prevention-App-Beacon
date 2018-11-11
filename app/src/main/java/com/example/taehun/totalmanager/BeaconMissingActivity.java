@@ -1,19 +1,20 @@
-package com.example.taehun.totalmanager.BoardRegion;
+package com.example.taehun.totalmanager;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,8 +23,12 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.example.taehun.totalmanager.BeaconMapActivity;
-import com.example.taehun.totalmanager.R;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.taehun.totalmanager.BoardRegion.BoardRegionDialog;
+import com.example.taehun.totalmanager.BoardRegion.BoardRegionMapActivity;
+import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,39 +38,44 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BoardRegionMapActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    private GoogleMap mMap;
+public class BeaconMissingActivity extends FragmentActivity implements OnMapReadyCallback {
 
     LocationManager locationManager;
     FloatingActionButton fab_gps;
     MarkerOptions markerOptions;
+    String id, uuid, major, minor;
     Animation operatingAnim;
     Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board_region_map);
+        setContentView(R.layout.activity_find_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        fab_gps = (FloatingActionButton) findViewById(R.id.fab_gps);
+        fab_gps = (FloatingActionButton) findViewById(R.id.fab_afm);
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-        operatingAnim = AnimationUtils.loadAnimation(BoardRegionMapActivity.this, R.anim.rotate);
+        operatingAnim = AnimationUtils.loadAnimation(BeaconMissingActivity.this, R.anim.rotate);
         operatingAnim.setInterpolator(new LinearInterpolator());
     }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        mMap = googleMap;
+
+        Intent intent = getIntent();
+
+        uuid = intent.getStringExtra("UUID");
+        major = intent.getStringExtra("Major");
+        minor = intent.getStringExtra("Minor");
+
+        SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
+        id = preferences.getString("Id", null);
 
         try {
             Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -115,7 +125,7 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                     @Override
                     public void onInfoWindowClick(Marker marker) {
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionMapActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BeaconMissingActivity.this);
                         builder.setTitle("실종 위치 선택")
                                 .setMessage("해당 위치로 선택하시겠습니까?");
 
@@ -125,8 +135,19 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionMapActivity.this);
-                                boardRegionDialog.callFunction(lat, lon);
+                                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+
+                                    }
+                                };
+
+                                BeaconMissingRequest beaconMissingRequest = new BeaconMissingRequest(id, uuid, major, minor, lat, lon, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                                RequestQueue queue = Volley.newRequestQueue(BeaconMissingActivity.this);
+                                queue.add(beaconMissingRequest);
+
+                                Toast.makeText(BeaconMissingActivity.this, "간편 실종등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         });
 
@@ -168,7 +189,7 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                             @Override
                             public void onInfoWindowClick(Marker marker) {
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionMapActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BeaconMissingActivity.this);
                                 builder.setTitle("실종 위치 선택")
                                         .setMessage("해당 위치로 선택하시겠습니까?");
 
@@ -178,8 +199,19 @@ public class BoardRegionMapActivity extends FragmentActivity implements OnMapRea
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
-                                        BoardRegionDialog boardRegionDialog = new BoardRegionDialog(BoardRegionMapActivity.this);
-                                        boardRegionDialog.callFunction(lat, lon);
+                                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+
+                                            }
+                                        };
+
+                                        BeaconMissingRequest beaconMissingRequest = new BeaconMissingRequest(id, uuid, major, minor, lat, lon, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                                        RequestQueue queue = Volley.newRequestQueue(BeaconMissingActivity.this);
+                                        queue.add(beaconMissingRequest);
+
+                                        Toast.makeText(BeaconMissingActivity.this, "간편 실종등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                        finish();
                                     }
                                 });
 

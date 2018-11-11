@@ -169,12 +169,34 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
         final LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-        LatLng latLng = new LatLng(36.397201, 127.852390);
+        try {
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            if (lastLocation != null) {
 
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(7);
-        googleMap.animateCamera(zoom);
+                Double lat = lastLocation.getLatitude();
+                Double lon = lastLocation.getLongitude();
+
+                LatLng latLng = new LatLng(lat,lon);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(7);
+                googleMap.animateCamera(zoom);
+            } else {
+
+                LatLng latLng = new LatLng(36.397201, 127.852390);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(7);
+                googleMap.animateCamera(zoom);
+
+            }
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -199,13 +221,6 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION , Manifest.permission.ACCESS_FINE_LOCATION} , 1);
-        }
-
         getData("http://xognsxo1491.cafe24.com/Board_Region_connect.php", googleMap);
 
         fab_gps.setTag("실행");
@@ -225,7 +240,6 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 fab_gps.clearAnimation();
                 fab_gps.setImageResource(R.drawable.baseline_my_location_white_24dp);
-
             }
 
             @Override
@@ -253,11 +267,17 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
                     if (fab_gps.getTag().equals("실행")) {
 
-                        fab_gps.setImageResource(R.drawable.baseline_cached_white_48dp);
+                        fab_gps.setImageResource(R.drawable.baseline_cached_white_24dp);
                         fab_gps.startAnimation(operatingAnim);
 
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+                        try {
+
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, mLocationListener);
+                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, mLocationListener);
+
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        }
 
                         TimerTask timerTask = new TimerTask() {
                             @Override
@@ -273,6 +293,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
                         timer = new Timer();
                         timer.schedule(timerTask, 6500);
+
 
                     }
                 }

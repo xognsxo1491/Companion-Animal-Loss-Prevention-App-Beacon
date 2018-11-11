@@ -72,12 +72,13 @@
         <activity
             android:name=".Popup2Activity"
             android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity android:name=".BeaconMissingActivity" />
         <activity
             android:name=".PopupActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".BeaconMap.Beacon1Fragment" />
         <activity android:name=".BeaconMap.Beacon2Fragment" />
-        <activity android:name=".BeaconScan.CustomDialog2" />
+        <activity android:name=".BeaconScan.SignUpBeaconDialog" />
         <activity
             android:name=".Popup3Activity"
             android:theme="@style/Theme.AppCompat.Dialog" />
@@ -91,13 +92,13 @@
             android:label="@string/title_activity_board_region_map" />
         <activity android:name=".BoardRegion.BoardRegionDialog" />
         <activity android:name=".BoardRegion.BoardRegionCommentActivity" />
-
-        <activity android:name=".BoardRegion.BoardRegionSearchActivity"></activity>
-=======
+        <activity android:name=".BoardRegion.BoardRegionSearchActivity" />
+        =======
         <activity
-            android:name=".BoardRegion.FindMapsActivity"
-            android:label="@string/title_activity_find_maps"></activity>
->>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
+            android:name=".FindMapsActivity"
+            android:label="@string/title_activity_find_maps" />
+        >>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
+        <activity android:name=".BeaconScan.UnRegistBeaconDialog"></activity>
     </application>
 
 </manifest>
