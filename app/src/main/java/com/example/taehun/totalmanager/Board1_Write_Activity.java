@@ -61,9 +61,6 @@ public class Board1_Write_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("게시글 작성");
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 추가
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_keyboard_backspace_white_24dp);
-
         byteArrayOutputStream = new ByteArrayOutputStream();
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -217,11 +214,8 @@ public class Board1_Write_Activity extends AppCompatActivity {
                     break;
                 }
             }
-
-            case android.R.id.home: // 뒤로가기 버튼
-                finish();
-                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

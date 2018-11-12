@@ -364,7 +364,9 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
 
         listView.requestLayout();
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
         ImageView bmImage;
         ProgressDialog progressDialog = new ProgressDialog(BoardRegionCommentActivity.this);
 
@@ -379,7 +381,7 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
+                Log.e("파일 읽기 에러", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;
