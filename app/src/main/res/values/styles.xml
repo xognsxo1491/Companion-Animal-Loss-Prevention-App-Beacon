@@ -14,7 +14,7 @@
     </style>
 
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
-        <item name="android:colorControlActivated">@color/nameBlue</item>
+        <item name="android:colorControlActivated">@color/toolbarBlue</item>
     </style>
 
     <style name="checkboxBlue" parent="Theme.AppCompat.Light">
@@ -23,7 +23,7 @@
 
     <style name="toolbarStyle" parent="AppTheme">
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:background">@drawable/gradation4</item>
+        <item name="android:background">@color/toolbarBlue</item>
     </style>
 
     <style name="toolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

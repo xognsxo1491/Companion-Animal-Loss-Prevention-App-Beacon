@@ -5,13 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     tools:context=".MypageActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradation4"
+        android:background="@drawable/gradation_main_color"
+        android:elevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,6 +39,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/baseline_perm_contact_calendar_white_36dp"
+                android:elevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,6 +55,10 @@
                 android:paddingLeft="8dp"
                 android:textStyle="bold"
                 android:textColor="#ffffff"
+                android:shadowColor="#8f8f8f"
+                android:shadowDx="5.0"
+                android:shadowDy="5.0"
+                android:shadowRadius="5.0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -67,6 +74,10 @@
                 android:paddingLeft="4dp"
                 android:paddingTop="8dp"
                 android:textColor="#ffffff"
+                android:shadowColor="#8f8f8f"
+                android:shadowDx="5.0"
+                android:shadowDy="5.0"
+                android:shadowRadius="5.0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,14 +87,15 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout10"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/round_7dp"
+        android:elevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
@@ -92,37 +104,58 @@
             android:id="@+id/textView16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="내 개인정보 관리"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:shadowColor="#8f8f8f"
+            android:shadowDx="5.0"
+            android:shadowDy="5.0"
+            android:shadowRadius="5.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="로그아웃"
-            android:textColor="#ffffff"
-            android:background="@drawable/layout_round2"
-            android:layout_marginBottom="8dp"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
         <Button
             android:id="@+id/btn_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="회원정보 수정"
-            android:textColor="#ffffff"
-            android:background="@drawable/layout_round2"/>
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:background="@drawable/round_7dp"
+        android:elevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
@@ -131,27 +164,47 @@
             android:id="@+id/textView18"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="내 비콘 관리"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:shadowColor="#8f8f8f"
+            android:shadowDx="5.0"
+            android:shadowDy="5.0"
+            android:shadowRadius="5.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_missing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/layout_round2"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="실종신고"
-            android:textColor="#ffffff"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
         <Button
             android:id="@+id/btn_beacon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/layout_round2"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="실종신고 해제"
-            android:textColor="#ffffff"/>
-    </LinearLayout>
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_missing" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

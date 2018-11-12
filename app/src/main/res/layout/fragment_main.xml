@@ -1,205 +1,394 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainFragment">
+    android:background="#efefef">
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:shadowColor="#8f8f8f"
-        android:shadowDx="5.0"
-        android:shadowDy="5.0"
-        android:shadowRadius="5.0"
-        android:text="W E F Y P E T"
-        android:textColor="@color/toolbarBlue"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout6"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout19"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradation"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+        android:background="@drawable/gradation_main_color"
+        android:elevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/textView28"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:shadowColor="#8f8f8f"
+            android:shadowDx="5.0"
+            android:shadowDy="5.0"
+            android:shadowRadius="5.0"
+            android:text="WEFY PET"
+            android:textColor="#ffffff"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/switch_beacon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/switch_beacon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="내 스캔비콘 off"
+            android:shadowColor="#8f8f8f"
+            android:shadowDx="5.0"
+            android:shadowDy="5.0"
+            android:shadowRadius="5.0"
+            android:textStyle="bold"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout19"
+        app:layout_constraintVertical_bias="0.705">
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="Dash Board"
-            android:textColor="#ffffff"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/round_7dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout19">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
-
-            <Button
-                android:id="@+id/btn_board"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout18"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:drawableTop="@drawable/baseline_assessment_white_48dp"
-                android:text="자유 게시판"
-                android:textColor="#ffffff"
+                android:background="@drawable/gradation_circle2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout17"
+                app:layout_constraintVertical_bias="0.0">
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_bluetooth_disabled_white_36dp" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout17"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/gradation_circle2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView27">
+
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_bluetooth_searching_white_36dp" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout16"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/gradation_circle3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout14">
+
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_visibility_white_36dp" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout14"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/gradation_circle3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView26">
+
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_pets_white_36dp" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout13"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/gradation_circle1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout11">
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_assignment_late_white_36dp" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout7"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="#aeaeae"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout16">
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout5"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="#aeaeae"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout13">
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:shadowColor="#8f8f8f"
+                android:shadowDx="5.0"
+                android:shadowDy="5.0"
+                android:shadowRadius="5.0"
+                android:text="Dash Board"
+                android:textSize="16dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-            <Button
-                android:id="@+id/btn_board2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:drawableTop="@drawable/baseline_assignment_late_white_48dp"
-                android:text="실종정보 게시판"
-                android:textColor="#ffffff"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_board"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/gradation2"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="Google Map"
-            android:textColor="#ffffff"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/btn_maps"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:drawableTop="@drawable/baseline_pets_white_48dp"
-                android:text="전국 실종현황 지도"
-                android:textColor="#ffffff"
-                android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/btn_beaconMaps"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:drawableTop="@drawable/baseline_visibility_white_48dp"
-                android:text="내 실종비콘 위치"
-                android:textColor="#ffffff"
+                android:id="@+id/btn_board"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="자유 게시판"
                 android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="96dp" />
-        </LinearLayout>
-    </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout11"
+                app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/gradation3"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+            <Button
+                android:id="@+id/btn_board2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:text="실종정보 게시판"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout13"
+                app:layout_constraintTop_toBottomOf="@+id/btn_board" />
 
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="Beacon"
-            android:textColor="#ffffff"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:shadowColor="#8f8f8f"
+                android:shadowDx="5.0"
+                android:shadowDy="5.0"
+                android:shadowRadius="5.0"
+                android:text="Google Map"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_maps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="전국 실종현황 지도"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout14"
+                app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
+            <Button
+                android:id="@+id/btn_beaconMaps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:text="내 실종비콘 위치"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout16"
+                app:layout_constraintTop_toBottomOf="@+id/btn_maps" />
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:shadowColor="#8f8f8f"
+                android:shadowDx="5.0"
+                android:shadowDy="5.0"
+                android:shadowRadius="5.0"
+                android:text="Beacon"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
 
             <Button
                 android:id="@+id/btn_beacon_dialog"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:drawableTop="@drawable/baseline_bluetooth_searching_white_48dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:text="비콘 등록하기"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout17"
+                app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
             <Button
                 android:id="@+id/btn_unregist"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:drawableTop="@drawable/baseline_bluetooth_disabled_white_48dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
                 android:text="비콘 해제하기"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/constraintLayout18"
+                app:layout_constraintTop_toBottomOf="@+id/btn_beacon_dialog" />
 
-    <Switch
-        android:id="@+id/switch_beacon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="내 비콘 스캔 off"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/constraintLayout11"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/gradation_circle1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView23">
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_assessment_white_36dp" />
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
