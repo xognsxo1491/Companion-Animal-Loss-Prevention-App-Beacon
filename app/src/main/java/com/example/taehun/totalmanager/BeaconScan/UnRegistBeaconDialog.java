@@ -2,6 +2,7 @@ package com.example.taehun.totalmanager.BeaconScan;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
 import com.example.taehun.totalmanager.BeaconListItem;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconUnRegistRequest;
+import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 import com.example.taehun.totalmanager.Request.Search1Request;
 
 import org.json.JSONArray;
@@ -40,16 +43,20 @@ import java.util.HashMap;
 public class UnRegistBeaconDialog {
 
     private Context context;
+
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+
     ArrayList<BeaconItem> myBeacons = new ArrayList<>();
+    Adapter_Dialog adapterDialog;
     JSONArray jsonArray = null;
+    ListView listView;
+    AlertDialog dialog;
     String myJSON;
     Dialog dlg;
-    ListView listView;
-    Adapter_Dialog adapterDialog;
+
     public UnRegistBeaconDialog(Context context) {
         this.context = context;
     }
@@ -68,9 +75,66 @@ public class UnRegistBeaconDialog {
         listView = (ListView) dlg.findViewById(R.id.beacon_list);
         // 커스텀 다이얼로그를 노출한다..
         dlg.show();
+
         adapterDialog = new Adapter_Dialog(context, myBeacons);
         listView.setAdapter(adapterDialog);
+
         getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String uuid = adapterDialog.getItem(position).getUuid();
+                String major = adapterDialog.getItem(position).getMajor();
+                String minor = adapterDialog.getItem(position).getMinor();
+
+                SharedPreferences preferences = context.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
+                String userId = preferences.getString("Id", null);
+
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(final String response) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("해당 비콘을 해제하겠습니까?")
+                                .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(response);
+
+                                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+
+                                            if (success) { // 성공일 경우
+                                                Toast.makeText(context, "비콘 등록을 해제하였습니다..", Toast.LENGTH_SHORT).show();
+
+                                                myBeacons.clear();
+                                                getBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
+                                                adapterDialog.notifyDataSetChanged();
+
+                                            }else {
+                                                Toast.makeText(context, "비콘 해제에 실패하였습니다..", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        } catch (JSONException e) { //오류 캐치
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                });
+
+                        builder.setPositiveButton("취소",null);
+                        builder.show();
+                    }
+                };
+
+                BeaconUnRegistRequest beaconUnRegistRequest = new BeaconUnRegistRequest(userId, uuid, major, minor, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                RequestQueue queue = Volley.newRequestQueue(context);
+                queue.add(beaconUnRegistRequest);
+            }
+        });
 }
     public void getBeaconsFromDataBase(String url) { // php 파싱관련
 
