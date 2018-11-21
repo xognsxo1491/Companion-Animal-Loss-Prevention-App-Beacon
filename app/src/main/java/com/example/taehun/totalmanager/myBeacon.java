@@ -184,7 +184,6 @@ public class myBeacon extends Application implements BeaconConsumer{
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-
                 if (collection.size() > 0) {
 
                     beaconList.clear();
@@ -357,22 +356,22 @@ public class myBeacon extends Application implements BeaconConsumer{
                 //            System.out.println("BeaconAlram "+preferences.getBoolean("findMyBeacon", false) +" BeaconEmergency "+
 //                    preferences.getBoolean("BeaconEmergency", false) +" findMyBeacon "+ preferences.getBoolean("findMyBeacon", false) + " first "+preferences.getBoolean("first", false));
                 end = System.currentTimeMillis();
-                editor.putBoolean("findMyBeacon", true);
+//                editor.putBoolean("findMyBeacon", true);
                 editor.commit();
                 for (Beacon beacon : beaconList) {
                     if (myBeacons.size()>0&&beacon.getId1().toString().equals(myBeacons.get(0).getUUID())
                             && beacon.getId2().toString().equals(myBeacons.get(0).getMajor())
                             && beacon.getId3().toString().equals(myBeacons.get(0).getMinor())) {
-                        editor.putBoolean("findMyBeacon", false);
+//                        editor.putBoolean("findMyBeacon", false);
                         editor.commit();
-                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) <= 20) {
+                        if (preferences.getBoolean("BeaconAlram", false) && ((int) beacon.getDistance()) < 10) {
                             Log.d("비콘", "가까이 있음");
                             showNearNotification("비콘", "10미터 이내에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", false);
                             editor.putBoolean("BeaconEmergency", true);
-                            editor.putBoolean("first", true);
+//                            editor.putBoolean("first", true);
                             editor.commit();
-                        } else if (preferences.getBoolean("BeaconEmergency", false) && (((int) beacon.getDistance()) > 20)) {
+                        } else if (preferences.getBoolean("BeaconEmergency", false) && (((int) beacon.getDistance()) >= 10)) {
                             Log.d("비콘", "멀리있음");
                             showFarNotification("비콘", "10미터 밖에 있음", beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString());
                             editor.putBoolean("BeaconAlram", true);
@@ -380,7 +379,6 @@ public class myBeacon extends Application implements BeaconConsumer{
                             editor.commit();
                         }
                     }
-
                     for (BeaconListItem missingBeacon : missingBeacons) {
 //                        System.out.println("FindBeacons " + beacon.getId1().toString() +" " +beacon.getId2().toString() + " " +beacon.getId3().toString() + "missingBeacon "+ " "+ missingBeacon.getUUID() +" " + missingBeacon.getMajor() + " " + missingBeacon.getMinor());
                         if ((end-start)>60000&&beacon.getId1().toString().equals(missingBeacon.getUUID())
@@ -428,6 +426,12 @@ public class myBeacon extends Application implements BeaconConsumer{
 //                    editor.commit();
 //                }
                 beaconList.clear();
+            }
+            if (preferences.getBoolean("BeaconTreaceOn", false)){
+                Log.d("비콘", "재탐색");
+                onBeaconServiceConnect();
+                editor.putBoolean("BeaconTreaceOn", false);
+                editor.commit();
             }
             handler.sendEmptyMessageDelayed(0, 3000);
         }

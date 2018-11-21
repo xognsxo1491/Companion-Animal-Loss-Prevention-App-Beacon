@@ -13,6 +13,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
@@ -31,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
+import com.example.taehun.totalmanager.Sign_InActivity;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -52,7 +54,8 @@ public class RegistBeaconDialog implements BeaconConsumer{
     private BeaconManager beaconManager;
     private ListView listView;
     private Context context;
-
+    SharedPreferences preferences;// 자동 로그인 데이터 저장
+    SharedPreferences.Editor editor;
     FloatingActionButton fab_scan;
     Adapter_Dialog adapterDialog;
     Animation operatingAnim;
@@ -77,7 +80,8 @@ public class RegistBeaconDialog implements BeaconConsumer{
         // 커스텀 다이얼로그를 노출한다..
         beaconManager = BeaconManager.getInstanceForApplication(context);
         dlg.show();
-
+        preferences = context.getSharedPreferences("Beacon",getApplicationContext().MODE_PRIVATE);
+        editor = preferences.edit();
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
         listView = (ListView) dlg.findViewById(R.id.beacon_list);
         image_cach = (ImageView) dlg.findViewById(R.id.image_cach);
@@ -90,7 +94,13 @@ public class RegistBeaconDialog implements BeaconConsumer{
 
         fab_scan = (FloatingActionButton) dlg.findViewById(R.id.fab_scan);
         fab_scan.setTag("실행");
-
+        dlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                editor.putBoolean("BeaconTreaceOn", true);
+                editor.commit();
+            }
+        });
         fab_scan.setOnClickListener(new View.OnClickListener() {
 
             @Override
