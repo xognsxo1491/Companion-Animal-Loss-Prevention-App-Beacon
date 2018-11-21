@@ -418,15 +418,15 @@ public class myBeacon extends Application implements BeaconConsumer{
                         }
                     }
                 }
-
-                if (myBeacons.size() > 0 && preferences.getBoolean("findMyBeacon", false) && preferences.getBoolean("first", false)) {
-                    Log.d("비콘", "감지 안됨");
-                    showFarNotification("비콘", "10미터 밖에 있음", myBeacons.get(0).getUUID(), myBeacons.get(0).getMajor(), myBeacons.get(0).getMinor());
-                    editor.putBoolean("findMyBeacon", false);
-                    editor.putBoolean("first", false);
-                    editor.putBoolean("BeaconAlram", true);
-                    editor.commit();
-                }
+//
+//                if (myBeacons.size() > 0 && preferences.getBoolean("findMyBeacon", false) && preferences.getBoolean("first", false)) {
+//                    Log.d("비콘", "감지 안됨");
+//                    showFarNotification("비콘", "10미터 밖에 있음", myBeacons.get(0).getUUID(), myBeacons.get(0).getMajor(), myBeacons.get(0).getMinor());
+//                    editor.putBoolean("findMyBeacon", false);
+//                    editor.putBoolean("first", false);
+//                    editor.putBoolean("BeaconAlram", true);
+//                    editor.commit();
+//                }
                 beaconList.clear();
             }
             handler.sendEmptyMessageDelayed(0, 3000);
