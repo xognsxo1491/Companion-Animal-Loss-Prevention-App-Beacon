@@ -29,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.R;
+import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
 import com.example.taehun.totalmanager.Request.BoardRegionRequest;
 import com.example.taehun.totalmanager.Request.BoardRegionRequest2;
 
@@ -48,7 +49,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
     private int GALLERY = 1000;
 
-    TextView text_gps, text_uuid, text_major, text_minor, text_form_uuid, text_form_major, text_form_minor;
+    TextView text_gps, text_uuid, text_major, text_minor, text_form_uuid, text_form_major, text_form_minor, edit_dname, edit_dkind;
     String ConvertImage, key_uuid, key_major, key_minor;
     ByteArrayOutputStream byteArrayOutputStream;
     FloatingActionButton fab_blue, fab_image;
@@ -85,6 +86,9 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
         text_uuid = (TextView) findViewById(R.id.text_uuid);
         text_major = (TextView) findViewById(R.id.text_major);
         text_minor = (TextView) findViewById(R.id.text_minor);
+
+        edit_dname = (EditText) findViewById(R.id.edit_dName);
+        edit_dkind = (EditText) findViewById(R.id.edit_dKind);
 
         text_form_uuid = (TextView) findViewById(R.id.text_form_uuid);
         text_form_major = (TextView) findViewById(R.id.text_form_major);
@@ -218,6 +222,8 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                 String minor = text_minor.getText().toString();
                 String str_lat = String.valueOf(lat);
                 String str_lon = String.valueOf(lon);
+                String boarddName = edit_dname.getText().toString();
+                String boarddKind = edit_dkind.getText().toString();
                 String missing = "1";
                 String Region = null;
                 String Region_name = text_gps.getText().toString();
@@ -259,6 +265,22 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                     dialog.show();
                     break;
 
+                } else if (boarddName.equals("")) { // 내용이 공백일 경우
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionWriteActivity.this);
+                    dialog = builder.setMessage("반려동물 이름을 입력하지 않았습니다.")
+                            .setNegativeButton("확인", null)
+                            .create();
+                    dialog.show();
+                    break;
+
+                } else if (boarddKind.equals("")) { // 내용이 공백일 경우
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BoardRegionWriteActivity.this);
+                    dialog = builder.setMessage("반려동물 종류을 입력하지 않았습니다.")
+                            .setNegativeButton("확인", null)
+                            .create();
+                    dialog.show();
+                    break;
+
                 } else { // 공백이 아닐 경우
                     if (showSelectedImage.getDrawable() == null) {
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -283,6 +305,11 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                         BoardRegionRequest boardRegionRequest = new BoardRegionRequest(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                         RequestQueue queue = Volley.newRequestQueue(BoardRegionWriteActivity.this);
                         queue.add(boardRegionRequest);
+
+                        if (!uuid.equals("")) {
+                            BeaconMissingRequest beaconMissingRequest = new BeaconMissingRequest(userId, uuid, major, minor, lat, lon, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                            queue.add(beaconMissingRequest);
+                        }
                     }
 
                     else {

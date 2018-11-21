@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,36 +31,42 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Popup3Activity extends  Activity {
-    Button btn1;
-    Button btn2;
-    String myJSON;
-    JSONArray jsonArray;
-    ArrayList<BeaconListItem> missingMyBeacons= new ArrayList<>();
+
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_Minor = "Minor";
     private static final String TAG_RESULT = "result";
+
+    ArrayList<BeaconListItem> missingMyBeacons= new ArrayList<>();
+    JSONArray jsonArray;
+    Button btn1, btn2;
+    String myJSON;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup3);
+
         btn1 = findViewById(R.id.Popup3_btn1);
         btn2 = findViewById(R.id.Popup3_btn2);
+
         getMissingBeaconsFromDataBase("http://xognsxo1491.cafe24.com/Beacon_connect.php");
+
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences preferences = getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
                 String userId = preferences.getString("Id", null);
 
-                String strUuid;
-                String strminor;
-                String strMajor;
+                String strUuid, strminor, strMajor;
+
                 if(missingMyBeacons.size()>0){
                     strUuid = missingMyBeacons.get(0).getUUID();
                     strMajor = missingMyBeacons.get(0).getMajor();
                     strminor= missingMyBeacons.get(0).getMinor();
+
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
 
                         @Override
@@ -84,8 +91,10 @@ public class Popup3Activity extends  Activity {
                     queue.add(board_write_request);
                 }
                 finish();
+                Toast.makeText(Popup3Activity.this, "실종해제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
+
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +102,7 @@ public class Popup3Activity extends  Activity {
             }
         });
     }
+
     public void getMissingBeaconsFromDataBase(String url) { // php 파싱관련
 
         class GetDataJSON extends AsyncTask<String, Void, String> {
@@ -111,34 +121,40 @@ public class Popup3Activity extends  Activity {
                 try {
                     URL url = new URL(uri);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
                     connection.setReadTimeout(5000);
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
                     connection.setDoInput(true);
                     connection.connect();
+
                     OutputStream outputStream = connection.getOutputStream();
                     outputStream.write(postParameter.getBytes("UTF-8"));
                     outputStream.flush();
                     outputStream.write(postParameter2.getBytes("UTF-8"));
                     outputStream.flush();
                     outputStream.close();
+
                     int responseStatusCode = connection.getResponseCode();
 
                     InputStream inputStream;
+
                     if(responseStatusCode == HttpURLConnection.HTTP_OK) {
                         inputStream = connection.getInputStream();
-                    }
 
-                    else{
+                    } else{
                         inputStream = connection.getErrorStream();
                     }
+
                     StringBuilder builder = new StringBuilder();
                     bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
                     String json;
                     while ((json = bufferedReader.readLine()) != null) {
                         builder.append(json + "\n");
                     }
                     return builder.toString().trim();
+
                 } catch (Exception e) {
                     return null;
                 }
@@ -151,6 +167,7 @@ public class Popup3Activity extends  Activity {
             }
 
         }
+
         GetDataJSON getDataJSON = new GetDataJSON();
         getDataJSON.execute(url);
     }
@@ -164,9 +181,9 @@ public class Popup3Activity extends  Activity {
                 String UUID = object.getString(TAG_UUID);
                 String major = object.getString(TAG_MAJOR);
                 String minor = object.getString(TAG_Minor);
+
                 System.out.println("비콘 " + UUID + " " + major + " " +minor);
                 beacons.add(new BeaconListItem(UUID, major, minor));
-
             }
 
         } catch (JSONException e) { // 오류 캐치
