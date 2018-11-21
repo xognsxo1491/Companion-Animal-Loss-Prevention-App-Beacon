@@ -2,6 +2,7 @@ package com.example.taehun.totalmanager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,11 +31,18 @@ public class PopupActivity extends Activity implements BeaconConsumer{
     Button btn;
     BeaconManager beaconManager;
     private List<Beacon> beaconList = new ArrayList<>();
-
+    SharedPreferences preferences;// 자동 로그인 데이터 저장
+    SharedPreferences.Editor editor;
     String strMajor;
     String strminor;
     String strUuid;
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        editor.putBoolean("BeaconTreaceOn", true);
+        editor.commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +55,8 @@ public class PopupActivity extends Activity implements BeaconConsumer{
         distance = findViewById(R.id.notification_distance);
         btn = findViewById(R.id.notification_btn);
         Intent intent = getIntent();
-
+        preferences = getSharedPreferences("Beacon",getApplicationContext().MODE_PRIVATE);
+        editor = preferences.edit();
         strUuid = intent.getStringExtra("UUID");
         strMajor = intent.getStringExtra("Major");
         strminor = intent.getStringExtra("Minor");
@@ -59,6 +68,8 @@ public class PopupActivity extends Activity implements BeaconConsumer{
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editor.putBoolean("BeaconTreaceOn", true);
+                editor.commit();
                 finish();
             }
         });
