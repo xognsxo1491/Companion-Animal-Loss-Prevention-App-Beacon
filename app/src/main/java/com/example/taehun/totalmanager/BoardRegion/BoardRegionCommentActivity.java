@@ -60,7 +60,7 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
     SharedPreferences preferences;
     EditText edit_comment_content;
 
-    TextView text_comment_id, text_uuid, text_major, text_minor, text_comment_time, text_comment_title, text_comment_content;
+    TextView text_comment_id, text_uuid, text_major, text_minor, text_comment_time, text_comment_title, text_comment_content, text_form_uuid, text_form_major, text_form_minor;
     ArrayList<BoardCommentItem> commentItemList;
     Adapter_BoardComment boardCommentAdapter;
     ImageView imageView;
@@ -88,6 +88,9 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
         text_uuid = (TextView) header.findViewById(R.id.text_uuid);
         text_major = (TextView) header.findViewById(R.id.text_major);
         text_minor = (TextView) header.findViewById(R.id.text_minor);
+        text_form_uuid = (TextView) header.findViewById(R.id.text_form_uuid);
+        text_form_major = (TextView) header.findViewById(R.id.text_form_major);
+        text_form_minor = (TextView) header.findViewById(R.id.text_form_minor);
         text_comment_time = (TextView) header.findViewById(R.id.text_comment_time);
         text_comment_title = (TextView) header.findViewById(R.id.text_comment_title);
         text_comment_content = (TextView) header.findViewById(R.id.text_comment_content);
@@ -115,14 +118,35 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
             if (key.equals("Id"))
                 text_comment_id.setText(hashMap.get(key));
 
-            if (key.equals("UUID"))
-                text_uuid.setText(hashMap.get(key));
+            if (key.equals("UUID")) {
 
-            if (key.equals("Major"))
-                text_major.setText(hashMap.get(key));
+                if (!hashMap.get(key).equals("")) {
 
-            if (key.equals("Minor"))
-                text_minor.setText(hashMap.get(key));
+                    text_uuid.setText(hashMap.get(key));
+                    text_form_uuid.setVisibility(View.VISIBLE);
+                    text_uuid.setVisibility(View.VISIBLE);
+                }
+            }
+
+            if (key.equals("Major")) {
+
+                if (!hashMap.get(key).equals("")) {
+
+                    text_major.setText(hashMap.get(key));
+                    text_form_major.setVisibility(View.VISIBLE);
+                    text_major.setVisibility(View.VISIBLE);
+                }
+            }
+
+            if (key.equals("Minor")) {
+
+                if (!hashMap.get(key).equals("")) {
+
+                    text_minor.setText(hashMap.get(key));
+                    text_form_minor.setVisibility(View.VISIBLE);
+                    text_minor.setVisibility(View.VISIBLE);
+                }
+            }
 
             if (key.equals("Time"))
                 text_comment_time.setText(hashMap.get(key));

@@ -34,7 +34,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.3.2'
     implementation 'com.squareup.okhttp3:okhttp:3.8.0'
-    implementation 'com.estimote:proximity-sdk:1.0.3'
+    implementation 'com.estimote:sdk:0.11.1@aar'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.clj.fastble:FastBleLib:2.3.2'

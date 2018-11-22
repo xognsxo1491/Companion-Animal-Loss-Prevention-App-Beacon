@@ -18,6 +18,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.android.volley.RequestQueue;
@@ -193,6 +194,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                 }
             }
         });
+
         try{
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
         } catch(RemoteException e){}
@@ -346,7 +348,7 @@ public class myBeacon extends Application implements BeaconConsumer{
         GetDataJSON getDataJSON = new GetDataJSON();
         getDataJSON.execute(url);
     }
-            Handler handler = new Handler() {
+    Handler handler = new Handler() {
         public void handleMessage(Message msg) {
 
             SharedPreferences preferences3 = getSharedPreferences("Scan", getApplicationContext().MODE_PRIVATE);
@@ -385,31 +387,38 @@ public class myBeacon extends Application implements BeaconConsumer{
                                 && beacon.getId2().toString().equals(missingBeacon.getMajor())
                                 & beacon.getId3().toString().equals(missingBeacon.getMinor())) {
                             Log.d("비콘", "실종발견");
-                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            Log.d( "latitube : ",String.valueOf(gpsListener.latitude));
 
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(response);
-                                        boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+                            Double dou = 0.0;
 
-                                        if (success) { // 성공일 경우
-                                            Log.d("비콘", "실종발견");
+                            if (!dou.equals(gpsListener.latitude)) {
+                                Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(response);
+                                            boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
+
+                                            if (success) { // 성공일 경우
+                                                Log.d("비콘", "실종발견");
+                                            }
+
+                                        } catch (JSONException e) { //오류 캐치
+                                            e.printStackTrace();
                                         }
-
-                                    } catch (JSONException e) { //오류 캐치
-                                        e.printStackTrace();
                                     }
-                                }
-                            };
-                            String UUID = beacon.getId1().toString();
-                            String major = beacon.getId2().toString();
-                            String minor = beacon.getId3().toString();
-                            SharedPreferences preference2 = getSharedPreferences("freeLogin",Context.MODE_PRIVATE);
-                            startLocationService();
-                            BeaconFindRequest beaconFindRequest = new BeaconFindRequest(preference2.getString("Id", ""), UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
-                            RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
-                            queue.add(beaconFindRequest);
+                                };
+                                String UUID = beacon.getId1().toString();
+                                String major = beacon.getId2().toString();
+                                String minor = beacon.getId3().toString();
+                                SharedPreferences preference2 = getSharedPreferences("freeLogin", Context.MODE_PRIVATE);
+                                startLocationService();
+
+                                BeaconFindRequest beaconFindRequest = new BeaconFindRequest(preference2.getString("Id", ""), UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                                RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
+                                queue.add(beaconFindRequest);
+                            }
 
                             start = System.currentTimeMillis();
                             end = System.currentTimeMillis();

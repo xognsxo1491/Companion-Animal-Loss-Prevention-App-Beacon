@@ -221,7 +221,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-        getData("http://xognsxo1491.cafe24.com/Board_Region_connect.php", googleMap);
+        getData1("http://xognsxo1491.cafe24.com/Board_Region_connect.php", googleMap);
 
         fab_gps.setTag("실행");
 
@@ -256,7 +256,6 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
         fab_gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-
 
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
@@ -323,7 +322,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    protected void showList(GoogleMap googleMap) {  // php 파싱 설정
+    protected void showList1(GoogleMap googleMap) {  // php 파싱 설정
         try {
             JSONObject jsonObject = new JSONObject(myJSON);
             jsonArray = jsonObject.getJSONArray(TAG_RESULT);
@@ -396,7 +395,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    public void getData(String url, final GoogleMap googleMap) { // php 파싱관련
+    public void getData1(String url, final GoogleMap googleMap) { // php 파싱관련
 
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
@@ -413,7 +412,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
             protected void onPostExecute(String s) { // url 추출
                 progressDialog.dismiss();
                 myJSON = s;
-                showList(googleMap);
+                showList1(googleMap);
             }
 
             @Override

@@ -27,8 +27,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.estimote.internal_plugins_api.scanning.BluetoothScanner;
-import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
 import com.example.taehun.totalmanager.Request.TokenChangeRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
