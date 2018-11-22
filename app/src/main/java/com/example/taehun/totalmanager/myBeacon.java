@@ -387,11 +387,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                                 && beacon.getId2().toString().equals(missingBeacon.getMajor())
                                 & beacon.getId3().toString().equals(missingBeacon.getMinor())) {
                             Log.d("비콘", "실종발견");
-                            Log.d( "latitube : ",String.valueOf(gpsListener.latitude));
 
-                            Double dou = 0.0;
-
-                            if (!dou.equals(gpsListener.latitude)) {
                                 Response.Listener<String> responseListener = new Response.Listener<String>() {
 
                                     @Override
@@ -401,7 +397,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                                             boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
                                             if (success) { // 성공일 경우
-                                                Log.d("비콘", "실종발견");
+//                                                Log.d("비콘", "실종발견");
                                             }
 
                                         } catch (JSONException e) { //오류 캐치
@@ -412,13 +408,11 @@ public class myBeacon extends Application implements BeaconConsumer{
                                 String UUID = beacon.getId1().toString();
                                 String major = beacon.getId2().toString();
                                 String minor = beacon.getId3().toString();
-                                SharedPreferences preference2 = getSharedPreferences("freeLogin", Context.MODE_PRIVATE);
                                 startLocationService();
-
-                                BeaconFindRequest beaconFindRequest = new BeaconFindRequest(preference2.getString("Id", ""), UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                                BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                                 RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
                                 queue.add(beaconFindRequest);
-                            }
+
 
                             start = System.currentTimeMillis();
                             end = System.currentTimeMillis();
