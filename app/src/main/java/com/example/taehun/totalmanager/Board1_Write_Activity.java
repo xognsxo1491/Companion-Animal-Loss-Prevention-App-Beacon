@@ -27,7 +27,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Request.Board1WriteRequest;
-import com.example.taehun.totalmanager.Request.Board1WriteRequest2;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,9 +154,14 @@ public class Board1_Write_Activity extends AppCompatActivity {
                     break;
 
                 } else { // 공백이 아닐 경우
-                    if (ShowSelectedImage.getDrawable() == null) {
+                    String imageName = null;
+                    if (ShowSelectedImage.getDrawable() != null) {
+                        FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+                        byteArray = byteArrayOutputStream.toByteArray();
+                        ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                        imageName = Long.toString(System.currentTimeMillis());
+                    }
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
-
                             @Override
                             public void onResponse(String response) {
                                 try {
@@ -174,48 +178,13 @@ public class Board1_Write_Activity extends AppCompatActivity {
                                 }
                             }
                         };
-
-                        Board1WriteRequest board_write_request = new Board1WriteRequest(userId, boardTitle, boardContent, boardTime, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
-                        RequestQueue queue = Volley.newRequestQueue(Board1_Write_Activity.this);
-                        queue.add(board_write_request);
-                    }
-
-                    else {
-
-                        FixBitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
-                        byteArray = byteArrayOutputStream.toByteArray();
-                        ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                        String imageName = Long.toString(System.currentTimeMillis());
-
-                        Response.Listener<String> responseListener = new Response.Listener<String>() {
-
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    boolean success = jsonObject.getBoolean("success");
-
-                                    if (success) { // 성공일 경우
-                                        Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
-                                        startActivity(intent);
-                                    }
-
-                                } catch (JSONException e) { //오류 캐치
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        };
-
-                        Board1WriteRequest2 board_write_request = new Board1WriteRequest2(userId, boardTitle, boardContent, boardTime, ConvertImage, imageName, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
-                        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                        queue.add(board_write_request);
-                    }
+                    Board1WriteRequest board_write_request = new Board1WriteRequest(userId, boardTitle, boardContent, boardTime, ConvertImage, imageName, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                    queue.add(board_write_request);
                     break;
                 }
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
