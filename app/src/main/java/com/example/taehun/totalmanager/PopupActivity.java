@@ -24,9 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class PopupActivity extends Activity implements BeaconConsumer{
-    TextView uuid;
-    TextView major;
-    TextView mainor;
+
     TextView distance;
     Button btn;
     BeaconManager beaconManager;
@@ -49,9 +47,6 @@ public class PopupActivity extends Activity implements BeaconConsumer{
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
-        uuid = findViewById(R.id.notification_uuid);
-        mainor = findViewById(R.id.notification_minor);
-        major = findViewById(R.id.notification_major);
         distance = findViewById(R.id.notification_distance);
         btn = findViewById(R.id.notification_btn);
         Intent intent = getIntent();
@@ -100,9 +95,6 @@ public class PopupActivity extends Activity implements BeaconConsumer{
             for(Beacon beacon : beaconList){
 
                 if(beacon.getId1().toString().equals(strUuid.toLowerCase())&&beacon.getId2().toString().equals(strMajor.toLowerCase())&&beacon.getId3().toString().equals(strminor.toLowerCase())){
-                    uuid.setText(beacon.getId1().toString());
-                    major.setText(beacon.getId2().toString());
-                    mainor.setText(beacon.getId3().toString());
                     distance.setText( String.format("%.3f", beacon.getDistance()) +" m");
                     }
             }
