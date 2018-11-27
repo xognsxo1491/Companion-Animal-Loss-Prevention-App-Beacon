@@ -1,10 +1,8 @@
 package com.example.taehun.totalmanager;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,10 +11,8 @@ import android.provider.Settings;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -32,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taehun.totalmanager.Adapter.Adapter_BeaconSearch;
-import com.example.taehun.totalmanager.BoardRegion.BoardRegionActivity;
 import com.example.taehun.totalmanager.BoardRegion.BoardRegionCommentActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -55,7 +50,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -322,16 +316,12 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    protected void showList1(GoogleMap googleMap) {  // php 파싱 설정
+    protected void showList(GoogleMap googleMap) {  // php 파싱 설정
         try {
             JSONObject jsonObject = new JSONObject(myJSON);
             jsonArray = jsonObject.getJSONArray(TAG_RESULT);
 
-            HashMap<String, String> hashMap = new HashMap<>();
-
-            int i;
-
-            for (i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object = jsonArray.getJSONObject(i);
 
                 String Id = object.getString(TAG_ID);
@@ -350,7 +340,8 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
                 String Image_Path = object.getString(TAG_IMAGE_PATH);
                 String Image_Name = object.getString(TAG_IMAGE_NAME);
 
-                HashMap<String, String> hashMap2 = new HashMap<String, String>();
+                HashMap<String, String> hashMap = new HashMap<String, String>();
+
                 hashMap.put(TAG_ID, Id);
                 hashMap.put(TAG_UUID, UUID);
                 hashMap.put(TAG_MAJOR, Major);
@@ -374,25 +365,30 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(lat, lon))
-                        .title(Title)
-                        .snippet("Major : "+ Major + "  Minor : " +Minor);
+                        .title("No : " + String.valueOf(i))
+                        .snippet(Title);
 
                 googleMap.addMarker(markerOptions);
             }
 
-
-            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-
-                    Intent intent = new Intent(getApplicationContext(), BoardRegionCommentActivity.class);
-                    intent.putExtra("boardList", boardList.get(0));
-                    startActivity(intent);
-                }
-            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                String title = marker.getTitle();
+                String title2 = title.replace("No : ","");
+
+                int a = Integer.valueOf(title2);
+
+                Intent intent = new Intent(getApplicationContext(), BoardRegionCommentActivity.class);
+                intent.putExtra("boardList",boardList.get(a));
+                startActivity(intent);
+            }
+        });
     }
 
     public void getData1(String url, final GoogleMap googleMap) { // php 파싱관련
@@ -412,7 +408,7 @@ public class BeaconMapActivity extends FragmentActivity implements OnMapReadyCal
             protected void onPostExecute(String s) { // url 추출
                 progressDialog.dismiss();
                 myJSON = s;
-                showList1(googleMap);
+                showList(googleMap);
             }
 
             @Override

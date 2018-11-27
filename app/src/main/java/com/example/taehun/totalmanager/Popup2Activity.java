@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.taehun.totalmanager.BoardRegion.BoardRegionMapActivity;
 import com.example.taehun.totalmanager.Request.BeaconMissingRequest;
 
 import org.json.JSONException;
@@ -29,7 +30,7 @@ public class Popup2Activity extends Activity {
 
     String strMajor,strminor,strUuid;
     GPSListener gpsListener;
-    Button btn,btn2;
+    Button btn, btn2 ,btn3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class Popup2Activity extends Activity {
 
         btn = findViewById(R.id.notification2_btn1);
         btn2 = findViewById(R.id.notification2_btn2);
+        btn3 = findViewById(R.id.notification2_btn3);
 
         Intent intent = getIntent();
 
@@ -86,6 +88,16 @@ public class Popup2Activity extends Activity {
                 finish();
             }
         });
+
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent1 = new Intent(getApplicationContext(), BoardRegionMapActivity.class);
+                startActivity(intent1);
+            }
+        });
+
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
