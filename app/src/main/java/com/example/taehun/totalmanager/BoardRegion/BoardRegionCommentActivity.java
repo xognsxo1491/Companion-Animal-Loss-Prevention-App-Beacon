@@ -60,7 +60,7 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
     SharedPreferences preferences;
     EditText edit_comment_content;
 
-    TextView text_comment_id, text_uuid, text_major, text_minor, text_comment_time, text_comment_title, text_comment_content, text_form_uuid, text_form_major, text_form_minor;
+    TextView text_comment_id, text_uuid, text_major, text_minor, text_comment_time, text_comment_title, text_comment_content, text_kind, text_nickname, text_form_uuid, text_form_major, text_form_minor;
     ArrayList<BoardCommentItem> commentItemList;
     Adapter_BoardComment boardCommentAdapter;
     ImageView imageView;
@@ -88,6 +88,8 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
         text_uuid = (TextView) header.findViewById(R.id.text_uuid);
         text_major = (TextView) header.findViewById(R.id.text_major);
         text_minor = (TextView) header.findViewById(R.id.text_minor);
+        text_nickname = (TextView) header.findViewById(R.id.text_nickname);
+        text_kind = (TextView) header.findViewById(R.id.text_kind);
         text_form_uuid = (TextView) header.findViewById(R.id.text_form_uuid);
         text_form_major = (TextView) header.findViewById(R.id.text_form_major);
         text_form_minor = (TextView) header.findViewById(R.id.text_form_minor);
@@ -156,6 +158,12 @@ public class BoardRegionCommentActivity extends AppCompatActivity {
 
             if (key.equals("Content"))
                 text_comment_content.setText(hashMap.get(key));
+
+            if (key.equals("Kind"))
+                text_kind.setText(hashMap.get(key));
+
+            if (key.equals("NickName"))
+                text_nickname.setText(hashMap.get(key));
 
             if (key.equals("Image_Path")) {
                 if (hashMap.get(key).isEmpty()) {

@@ -302,7 +302,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
                             }
                         };
 
-                        BoardRegionRequest boardRegionRequest = new BoardRegionRequest(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
+                        BoardRegionRequest boardRegionRequest = new BoardRegionRequest(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, boarddKind, boarddName, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                         RequestQueue queue = Volley.newRequestQueue(BoardRegionWriteActivity.this);
                         queue.add(boardRegionRequest);
 
@@ -338,7 +338,7 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
                         };
 
-                        BoardRegionRequest2 boardRegionRequest2 = new BoardRegionRequest2(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, ConvertImage, str_now, responseListener);
+                        BoardRegionRequest2 boardRegionRequest2 = new BoardRegionRequest2(userId, uuid, major, minor, str_lat, str_lon, missing, Region, Region_name, boardTitle, boardContent, boardTime, str_now, ConvertImage, str_now, boarddKind, boarddName, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                         queue.add(boardRegionRequest2);
                     }

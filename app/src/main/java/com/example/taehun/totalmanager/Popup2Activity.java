@@ -30,7 +30,7 @@ public class Popup2Activity extends Activity {
 
     String strMajor,strminor,strUuid;
     GPSListener gpsListener;
-    Button btn, btn2 ,btn3;
+    Button btn ,btn3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,6 @@ public class Popup2Activity extends Activity {
         setContentView(R.layout.activity_popup2);
 
         btn = findViewById(R.id.notification2_btn1);
-        btn2 = findViewById(R.id.notification2_btn2);
         btn3 = findViewById(R.id.notification2_btn3);
 
         Intent intent = getIntent();
@@ -97,15 +96,8 @@ public class Popup2Activity extends Activity {
                 startActivity(intent1);
             }
         });
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                finish();
-            }
-        });
     }
+
     private void startLocationService() {
         // 위치 관리자 객체 참조
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

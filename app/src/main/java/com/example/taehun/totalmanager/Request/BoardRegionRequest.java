@@ -13,7 +13,7 @@ public class BoardRegionRequest extends StringRequest {
     private Map<String, String> parameters;
 
     public BoardRegionRequest (String userId, String UUID, String Major, String Minor, String Latitude, String Longitude, String Missing, String Region, String Region_name,
-                               String boardTitle, String boardContent, String boardTime, String Number, Response.Listener<String> listener){
+                               String boardTitle, String boardContent, String boardTime, String Number, String kind, String nickname, Response.Listener<String> listener){
         super(Request.Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
@@ -30,6 +30,8 @@ public class BoardRegionRequest extends StringRequest {
         parameters.put("Content",boardContent);
         parameters.put("Time",boardTime);
         parameters.put("Number",Number);
+        parameters.put("Kind", kind);
+        parameters.put("NickName", nickname);
     }
 
     @Override

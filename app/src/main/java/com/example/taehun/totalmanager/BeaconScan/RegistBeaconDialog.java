@@ -1,18 +1,22 @@
 package com.example.taehun.totalmanager.BeaconScan;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.IntentCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -30,6 +34,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_Dialog;
+import com.example.taehun.totalmanager.MainActivity;
+import com.example.taehun.totalmanager.MainFragment;
+import com.example.taehun.totalmanager.Popup3Activity;
+import com.example.taehun.totalmanager.Popup4Activity;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.BeaconWriteRequest;
 import com.example.taehun.totalmanager.Sign_InActivity;
@@ -47,14 +55,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RegistBeaconDialog implements BeaconConsumer{
+public class RegistBeaconDialog extends Activity implements BeaconConsumer{
 
     private  ArrayList<BeaconItem> listViewBeacon = new ArrayList<>();
     private List<Beacon> beaconList = new ArrayList<>();
     private BeaconManager beaconManager;
     private ListView listView;
     private Context context;
-    SharedPreferences preferences;// 자동 로그인 데이터 저장
+    SharedPreferences preferences, sharedPreferences;// 자동 로그인 데이터 저장
     SharedPreferences.Editor editor;
     FloatingActionButton fab_scan;
     Adapter_Dialog adapterDialog;
@@ -140,9 +148,9 @@ public class RegistBeaconDialog implements BeaconConsumer{
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
-                    public void onItemClick(final AdapterView<?> adapterView, View view, int i, long l) {
+                    public void onItemClick(final AdapterView<?> adapterView, final View view, int i, long l) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        AlertDialog dialog;
+                        final AlertDialog dialog;
 
                         builder.setPositiveButton("취소", null);
 
@@ -157,7 +165,7 @@ public class RegistBeaconDialog implements BeaconConsumer{
                                     public void onClick(DialogInterface dialogInterface, int i) {
 
                                         SharedPreferences preferences = context.getSharedPreferences("freeLogin", Context.MODE_PRIVATE); // freeLogin 이라는 키 안에 데이터 저장
-                                        String userId = preferences.getString("Id", null);
+                                        final String userId = preferences.getString("Id", null);
 
                                         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
@@ -169,7 +177,20 @@ public class RegistBeaconDialog implements BeaconConsumer{
                                                     boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
                                                     if (success) { // 성공일 경우
-                                                        Toast.makeText(context, "비콘 등록에 성공하였습니다", Toast.LENGTH_SHORT).show();
+
+                                                        Popup4Activity popup4Activity = new Popup4Activity(context);
+                                                        // 커스텀 다이얼로그를 호출한다.
+                                                        // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
+                                                        popup4Activity.callFunction();
+
+                                                        sharedPreferences = context.getSharedPreferences("nick", MODE_PRIVATE);
+                                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                                        editor.putString("id",userId);
+                                                        editor.putString("uuid",uuid);
+                                                        editor.putString("major",major);
+                                                        editor.putString("minor",minor);
+                                                        editor.commit();
 
                                                     }else {
                                                         Toast.makeText(context, "이미 등록된 비콘입니다.", Toast.LENGTH_SHORT).show();

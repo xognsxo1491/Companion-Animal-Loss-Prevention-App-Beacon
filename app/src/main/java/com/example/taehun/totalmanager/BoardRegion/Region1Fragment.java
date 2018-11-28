@@ -50,6 +50,8 @@ public class Region1Fragment extends Fragment {
     private static final String TAG_NUMBER = "Number";
     private static final String TAG_IMAGE_PATH = "Image_Path";
     private static final String TAG_IMAGE_NAME = "Image_Name";
+    private static final String TAG_KIND = "Kind";
+    private static final String TAG_NICKNAME = "NickName";
 
     public Region1Fragment() { }
 
@@ -96,6 +98,8 @@ public class Region1Fragment extends Fragment {
                 String number = object.getString(TAG_NUMBER);
                 String Image_Path = object.getString(TAG_IMAGE_PATH);
                 String Image_Name = object.getString(TAG_IMAGE_NAME);
+                String Kind = object.getString(TAG_KIND);
+                String NickName = object.getString(TAG_NICKNAME);
 
                 HashMap<String, String> hashMap = new HashMap<String, String>();
                 hashMap.put(TAG_ID, Id);
@@ -113,6 +117,8 @@ public class Region1Fragment extends Fragment {
                 hashMap.put(TAG_NUMBER, number);
                 hashMap.put(TAG_IMAGE_PATH, Image_Path);
                 hashMap.put(TAG_IMAGE_NAME, Image_Name);
+                hashMap.put(TAG_KIND, Kind);
+                hashMap.put(TAG_NICKNAME, NickName);
 
                 boardList.add(hashMap);
             }

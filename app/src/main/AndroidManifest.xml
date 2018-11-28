@@ -99,6 +99,7 @@
             android:label="@string/title_activity_find_maps" />
         >>>>>>> 48fd840574a0f48619a06dfbbae6f6189283ce25
         <activity android:name=".BeaconScan.UnRegistBeaconDialog" />
+        <activity android:name=".Popup4Activity"></activity>
     </application>
 
 </manifest>

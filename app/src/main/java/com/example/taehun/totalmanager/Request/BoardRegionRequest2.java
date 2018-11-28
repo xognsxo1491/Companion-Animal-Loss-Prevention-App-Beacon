@@ -13,7 +13,7 @@ public class BoardRegionRequest2 extends StringRequest {
     private Map<String, String> parameters;
 
     public BoardRegionRequest2 (String userId, String UUID, String Major, String Minor, String Latitude, String Longitude, String Missing, String Region, String Region_name,
-                               String boardTitle, String boardContent, String boardTime, String Number, String Image_Path, String Image_Name, Response.Listener<String> listener){
+                               String boardTitle, String boardContent, String boardTime, String Number, String Image_Path, String Image_Name, String kind, String nickname, Response.Listener<String> listener){
         super(Request.Method.POST, URL, listener, null);
 
         parameters = new HashMap<>();
@@ -32,6 +32,8 @@ public class BoardRegionRequest2 extends StringRequest {
         parameters.put("Number",Number);
         parameters.put("Image_Path", Image_Path);
         parameters.put("Image_Name", Image_Name);
+        parameters.put("Kind", kind);
+        parameters.put("NickName", nickname);
     }
 
     @Override
