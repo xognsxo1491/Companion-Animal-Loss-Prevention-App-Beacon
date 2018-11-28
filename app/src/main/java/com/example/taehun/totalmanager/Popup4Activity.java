@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -63,7 +64,6 @@ public class Popup4Activity extends Activity {
         uuid  = sharedPreferences.getString("uuid","");
         major = sharedPreferences.getString("major","");
         minor = sharedPreferences.getString("minor","");
-
         edit_nickname = (EditText) dlg.findViewById(R.id.edit_nickname);
 
         btn_ok = (Button) dlg.findViewById(R.id.btn_ok);
@@ -86,7 +86,7 @@ public class Popup4Activity extends Activity {
 
                                 if (success) { // 성공일 경우
                                     dlg.dismiss();
-
+                                    Toast.makeText(context, "닉변성공", Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (JSONException e) { //오류 캐치

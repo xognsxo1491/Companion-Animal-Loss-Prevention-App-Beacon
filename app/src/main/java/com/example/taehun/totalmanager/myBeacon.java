@@ -440,7 +440,7 @@ public class myBeacon extends Application implements BeaconConsumer{
         }
     };
     private void startLocationService() {
-        // 위치 관리자 객체 참조
+        // 위치 관리자 객체 참조  
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // 위치 정보를 받을 리스너 생성
         long minTime = 10000;

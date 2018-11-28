@@ -1,5 +1,7 @@
 package com.example.taehun.totalmanager.Request;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
@@ -20,7 +22,6 @@ public class BeaconNickNameRequest extends StringRequest {
         parameters.put("Major", major);
         parameters.put("Minor", minor);
         parameters.put("NickName", nickname);
-
     }
 
     @Override

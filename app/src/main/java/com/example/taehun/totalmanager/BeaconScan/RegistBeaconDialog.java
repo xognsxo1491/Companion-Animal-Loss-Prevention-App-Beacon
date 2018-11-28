@@ -17,6 +17,7 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.IntentCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -183,14 +184,14 @@ public class RegistBeaconDialog extends Activity implements BeaconConsumer{
                                                         // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
                                                         popup4Activity.callFunction();
 
-                                                        sharedPreferences = context.getSharedPreferences("nick", MODE_PRIVATE);
-                                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
                                                         editor.putString("id",userId);
                                                         editor.putString("uuid",uuid);
                                                         editor.putString("major",major);
                                                         editor.putString("minor",minor);
                                                         editor.commit();
+                                                        sharedPreferences = context.getSharedPreferences("nick", MODE_PRIVATE);
+                                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
 
                                                     }else {
                                                         Toast.makeText(context, "이미 등록된 비콘입니다.", Toast.LENGTH_SHORT).show();

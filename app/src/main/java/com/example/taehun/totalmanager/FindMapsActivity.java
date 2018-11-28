@@ -192,7 +192,7 @@ public class FindMapsActivity extends FragmentActivity implements OnMapReadyCall
 
     public void getData(String url) { // php 파싱관련
 
-        class GetDataJSON extends AsyncTask<String, Void, String> {
+            class GetDataJSON extends AsyncTask<String, Void, String> {
 
             @Override
             protected String doInBackground(String... params) {
@@ -203,7 +203,6 @@ public class FindMapsActivity extends FragmentActivity implements OnMapReadyCall
                 BufferedReader bufferedReader = null;
 
                 String postParameter = "Id="+ preference2.getString("Id","");
-                Log.d("Number", postParameter);
 
                 try {
                     URL url = new URL(uri);
