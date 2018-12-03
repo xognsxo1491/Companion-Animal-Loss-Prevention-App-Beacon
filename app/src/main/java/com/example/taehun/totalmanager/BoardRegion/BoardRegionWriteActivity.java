@@ -148,6 +148,10 @@ public class BoardRegionWriteActivity extends AppCompatActivity {
 
                 }
             }
+
+            if (key.equals("NickName")) {
+                edit_dname.setText(hashMap.get(key));
+            }
         }
 
         showSelectedImage = (ImageView) findViewById(R.id.imageView1);
