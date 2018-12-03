@@ -269,10 +269,10 @@ public class FindMapsActivity extends FragmentActivity implements OnMapReadyCall
                 double lat = Double.parseDouble(object.getString(TAG_LATITUDE));
                 double lon = Double.parseDouble(object.getString(TAG_LONGTITUDE));
 
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(new LatLng(lat, lon)).title("발견시각 " +time);
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(lat, lon)).title("발견 시간 ").snippet(time);
 
-                mMap.addMarker(markerOptions);
+                    mMap.addMarker(markerOptions);
 
             }
 

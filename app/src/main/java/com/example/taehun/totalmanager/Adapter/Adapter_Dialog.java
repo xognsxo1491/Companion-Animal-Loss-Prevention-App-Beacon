@@ -59,9 +59,9 @@ public class Adapter_Dialog extends BaseAdapter {
         text_distance = convertView.findViewById(R.id.text_scan_distance);
         text_distance.setText(getItem(position).getDistance()+" m");
         text_distanceName = convertView.findViewById(R.id.textView14);
-        if (getItem(position).getDistance().equals("")){
-            text_distance.setVisibility(View.GONE);
-            text_distanceName.setVisibility(View.GONE);
+        if (!getItem(position).getDistance().equals("")){
+            text_distance.setVisibility(View.VISIBLE);
+            text_distanceName.setVisibility(View.VISIBLE);
         }
 //        inListContentView.setText(getItem(position).getContent());
 //        inListTimeView.setText(getItem(position).getTime());

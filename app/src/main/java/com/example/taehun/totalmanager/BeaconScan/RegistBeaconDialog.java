@@ -179,19 +179,12 @@ public class RegistBeaconDialog extends Activity implements BeaconConsumer{
 
                                                     if (success) { // 성공일 경우
 
-                                                        Popup4Activity popup4Activity = new Popup4Activity(context);
-                                                        // 커스텀 다이얼로그를 호출한다.
-                                                        // 커스텀 다이얼로그의 결과를 출력할 TextView를 매개변수로 같이 넘겨준다.
-                                                        popup4Activity.callFunction();
-
-                                                        editor.putString("id",userId);
-                                                        editor.putString("uuid",uuid);
-                                                        editor.putString("major",major);
-                                                        editor.putString("minor",minor);
-                                                        editor.commit();
-                                                        sharedPreferences = context.getSharedPreferences("nick", MODE_PRIVATE);
-                                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
+                                                        Intent intent = new Intent(context, Popup4Activity.class);
+                                                        intent.putExtra("id",userId);
+                                                        intent.putExtra("uuid",uuid);
+                                                        intent.putExtra("major",major);
+                                                        intent.putExtra("minor",minor);
+                                                        context.startActivity(intent);
 
                                                     }else {
                                                         Toast.makeText(context, "이미 등록된 비콘입니다.", Toast.LENGTH_SHORT).show();

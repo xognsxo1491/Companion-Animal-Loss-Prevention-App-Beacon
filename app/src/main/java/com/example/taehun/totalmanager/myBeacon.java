@@ -392,6 +392,8 @@ public class myBeacon extends Application implements BeaconConsumer{
 
                                     @Override
                                     public void onResponse(String response) {
+                                        Log.d( "좌표 :",gpsListener.latitude +", "+ gpsListener.longitude);
+
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
                                             boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
@@ -405,6 +407,7 @@ public class myBeacon extends Application implements BeaconConsumer{
                                         }
                                     }
                                 };
+
                                 String UUID = beacon.getId1().toString();
                                 String major = beacon.getId2().toString();
                                 String minor = beacon.getId3().toString();
@@ -412,7 +415,6 @@ public class myBeacon extends Application implements BeaconConsumer{
                                 BeaconFindRequest beaconFindRequest = new BeaconFindRequest(UUID, major, minor, gpsListener.latitude, gpsListener.longitude, responseListener); // 입력 값을 넣기 위한 request 클래스 참조
                                 RequestQueue queue = Volley.newRequestQueue(myBeacon.this);
                                 queue.add(beaconFindRequest);
-
 
                             start = System.currentTimeMillis();
                             end = System.currentTimeMillis();

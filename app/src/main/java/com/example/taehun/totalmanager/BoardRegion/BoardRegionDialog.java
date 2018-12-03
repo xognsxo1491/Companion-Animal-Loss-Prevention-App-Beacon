@@ -42,7 +42,7 @@ public class BoardRegionDialog {
     private static final String TAG_UUID = "UUID";
     private static final String TAG_MAJOR = "Major";
     private static final String TAG_MINOR = "Minor";
-    private static final String TAG_MISSING = "Missing";
+    private static final String TAG_NICKNAME = "NickName";
     private static final String TAG_RESULT = "result";
 
     ArrayList<HashMap<String, String>> boardList;
@@ -95,7 +95,7 @@ public class BoardRegionDialog {
                 String uuid = object.getString(TAG_UUID);
                 String major = object.getString(TAG_MAJOR);
                 String minor = object.getString(TAG_MINOR);
-                String missing = object.getString(TAG_MISSING);
+                String nickname = object.getString(TAG_NICKNAME);
 
                 if (key_id.equals(id)) {
 
@@ -103,14 +103,14 @@ public class BoardRegionDialog {
                     hashMap.put(TAG_UUID, uuid);
                     hashMap.put(TAG_MAJOR, major);
                     hashMap.put(TAG_MINOR, minor);
-                    hashMap.put(TAG_MISSING, missing);
+                    hashMap.put(TAG_NICKNAME, nickname);
 
                     boardList.add(hashMap);
                 }
             }
 
-            final BaseAdapter adapter = new SimpleAdapter(context, boardList, R.layout.listview_dialog_region, new String[]{TAG_UUID, TAG_MAJOR, TAG_MINOR, TAG_MISSING},
-                    new int[]{R.id.text_scan_uuid, R.id.text_scan_major, R.id.text_scan_minor, R.id.text_scan_missing}); // 리스트뷰의 어댑터 속성
+            final BaseAdapter adapter = new SimpleAdapter(context, boardList, R.layout.listview_dialog_region, new String[]{TAG_UUID, TAG_MAJOR, TAG_MINOR, TAG_NICKNAME},
+                    new int[]{R.id.text_scan_uuid, R.id.text_scan_major, R.id.text_scan_minor, R.id.text_nickname}); // 리스트뷰의 어댑터 속성
 
             adapter.getCount();
 
