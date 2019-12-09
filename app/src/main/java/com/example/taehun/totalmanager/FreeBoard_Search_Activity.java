@@ -25,7 +25,7 @@ public class FreeBoard_Search_Activity extends AppCompatActivity { // 자유게�
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board1_search);
+        setContentView(R.layout.activity_Freeboard_search);
 
         final EditText edit_search_result = (EditText) findViewById(R.id.edit_search_result);
         final TextView text_board1_result = (TextView) findViewById(R.id.text_board1_result);
