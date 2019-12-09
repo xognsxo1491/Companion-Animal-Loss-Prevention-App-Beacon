@@ -280,7 +280,7 @@ public class myBeacon extends Application implements BeaconConsumer{
             @Override
             protected void onPostExecute(String s) { // url 추출
                 myJSON = s;
-                addBeacons(myBeacons);
+                // addBeacons(myBeacons); // 호스팅시 사용
             }
 
         }
@@ -341,7 +341,7 @@ public class myBeacon extends Application implements BeaconConsumer{
             @Override
             protected void onPostExecute(String s) { // url 추출
                 myJSON = s;
-                addBeacons(missingBeacons);
+                // addBeacons(myBeacons); // 호스팅시 사용
             }
 
         }

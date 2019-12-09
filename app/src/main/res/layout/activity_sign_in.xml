@@ -78,6 +78,19 @@
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/text_password" />
 
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/round_7dp"
+            android:text="호스팅 만료시 임시 로그인"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_sign_in" />
+
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout

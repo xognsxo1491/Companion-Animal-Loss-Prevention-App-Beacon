@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Request.SignInRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -47,6 +48,7 @@ public class Sign_InActivity extends AppCompatActivity {
 
         final Button btn_sign_in = (Button) findViewById(R.id.btn_sign_in);
         final Button btn_sign_up = (Button) findViewById(R.id.btn_sign_up);
+        Button btn_test = (Button)findViewById(R.id.btn_test);
         Button btn_search  = (Button)findViewById(R.id.btn_search);
 
         SharedPreferences preferences = getSharedPreferences("freeLogin",Context.MODE_PRIVATE); // 자동 로그인 데이터 저장
@@ -91,10 +93,21 @@ public class Sign_InActivity extends AppCompatActivity {
                                         .show();
                                 user_password.setText("");
                             }
+
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                    System.out.println("에러 발생");
+                                }
+                            };
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
+
+
                 };
                 SignInRequest sign_inRequest = new SignInRequest(userid,userpw, responseListener); // 데이터베이스 연동
                 RequestQueue queue = Volley.newRequestQueue(Sign_InActivity.this);
@@ -104,7 +117,7 @@ public class Sign_InActivity extends AppCompatActivity {
 
         btn_sign_up.setOnClickListener(new View.OnClickListener() { // 회원가입 버튼
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // 회원가입
                 Intent intent = new Intent(getApplicationContext(), Sign_UpActivity.class);
                 startActivity(intent);
             }
@@ -112,8 +125,16 @@ public class Sign_InActivity extends AppCompatActivity {
 
         btn_search.setOnClickListener(new View.OnClickListener() {  // 아이디/비밀번호 찾기
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // 아이디 & 비밀번호 찾기
                 Intent intent = new Intent(getApplicationContext(),SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_test.setOnClickListener(new View.OnClickListener() { // 메인 엑티비티 접속
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
         });

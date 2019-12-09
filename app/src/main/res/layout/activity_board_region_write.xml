@@ -6,7 +6,7 @@
     android:background="#eaeaea"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Board1_Write_Activity">
+    tools:context=".FreeBoard_Write_Activity">
 
     <ScrollView
         android:layout_width="match_parent"

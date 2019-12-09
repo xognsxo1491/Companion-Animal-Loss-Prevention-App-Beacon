@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Board1_Activity extends AppCompatActivity {
+public class FreeBoard_Activity extends AppCompatActivity { // 자유게시판
 
     private static final String TAG_ID = "Id";
     private static final String TAG_TiTIE = "Title";
@@ -98,7 +98,7 @@ public class Board1_Activity extends AppCompatActivity {
                 boardList.add(hashMap);
             }
 
-            final BaseAdapter adapter = new SimpleAdapter(Board1_Activity.this, boardList, R.layout.listview_item, new String[]{TAG_ID, TAG_TiTIE, TAG_CONTENT, TAG_TIME},
+            final BaseAdapter adapter = new SimpleAdapter(FreeBoard_Activity.this, boardList, R.layout.listview_item, new String[]{TAG_ID, TAG_TiTIE, TAG_CONTENT, TAG_TIME},
                     new int[]{R.id.text_board_id, R.id.text_board_title, R.id.text_board_content, R.id.text_board_time}); // 리스트뷰의 어댑터 속성
 
             adapter.getCount();
@@ -143,7 +143,7 @@ public class Board1_Activity extends AppCompatActivity {
 
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
-            ProgressDialog progressDialog = new ProgressDialog(Board1_Activity.this);
+            ProgressDialog progressDialog = new ProgressDialog(FreeBoard_Activity.this);
 
             @Override
             protected void onPreExecute() {
@@ -202,14 +202,14 @@ public class Board1_Activity extends AppCompatActivity {
 
             case R.id.nav_write: {
 
-                Intent intent = new Intent(getApplicationContext(), Board1_Write_Activity.class);
+                Intent intent = new Intent(getApplicationContext(), FreeBoard_Write_Activity.class);
                 startActivity(intent);
                 break;
             }
 
             case R.id.nav_search: {
 
-                Intent intent = new Intent(getApplicationContext(), Board1_Search_Activity.class);
+                Intent intent = new Intent(getApplicationContext(), FreeBoard_Search_Activity.class);
                 startActivity(intent);
                 break;
             }

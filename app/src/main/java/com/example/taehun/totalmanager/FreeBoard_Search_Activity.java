@@ -11,14 +11,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taehun.totalmanager.Adapter.Adapter_ListView;
 
-public class Board1_Search_Activity extends AppCompatActivity {
+public class FreeBoard_Search_Activity extends AppCompatActivity { // 자유게시판 검색기능
 
     ListView listView;
     Adapter_ListView adapter;
@@ -62,7 +61,7 @@ public class Board1_Search_Activity extends AppCompatActivity {
                     String text = edit_search_result.getText().toString();
 
                     if (text.equals("")) // 공백일 경우
-                        Toast.makeText(Board1_Search_Activity.this, "검색란이 공백입니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FreeBoard_Search_Activity.this, "검색란이 공백입니다.", Toast.LENGTH_SHORT).show();
 
                     else { // 아닐경우
                         Log.d("검색어", "onEditorAction: "+ text);

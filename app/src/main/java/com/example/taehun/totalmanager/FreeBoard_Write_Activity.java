@@ -37,7 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Board1_Write_Activity extends AppCompatActivity {
+public class FreeBoard_Write_Activity extends AppCompatActivity { // 자유게시판 글 작성
 
     private int GALLERY = 1000;
 
@@ -138,7 +138,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                 String boardTime = dateFormat.format(new Date()); // 시간 설정 포맷
 
                 if (boardTitle.equals("")) { // 제목이 공백일 경우
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Board1_Write_Activity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(FreeBoard_Write_Activity.this);
                     dialog = builder.setMessage("제목을 입력하지 않았습니다.")
                             .setNegativeButton("확인", null)
                             .create();
@@ -146,7 +146,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                     break;
 
                 } else if (boardContent.equals("")) { // 내용이 공백일 경우
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Board1_Write_Activity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(FreeBoard_Write_Activity.this);
                     dialog = builder.setMessage("내용을 입력하지 않았습니다.")
                             .setNegativeButton("확인", null)
                             .create();
@@ -169,7 +169,7 @@ public class Board1_Write_Activity extends AppCompatActivity {
                                     boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 
                                     if (success) { // 성공일 경우
-                                        Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+                                        Intent intent = new Intent(getApplicationContext(), FreeBoard_Activity.class);
                                         startActivity(intent);
                                     }
 

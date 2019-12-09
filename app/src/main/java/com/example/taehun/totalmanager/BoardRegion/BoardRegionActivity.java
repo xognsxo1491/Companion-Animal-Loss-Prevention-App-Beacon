@@ -1,47 +1,20 @@
 package com.example.taehun.totalmanager.BoardRegion;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
-import com.example.taehun.totalmanager.Board1_Activity;
-import com.example.taehun.totalmanager.Board1_Search_Activity;
-import com.example.taehun.totalmanager.Board1_Write_Activity;
-import com.example.taehun.totalmanager.Board_Comment_Activity;
 import com.example.taehun.totalmanager.MainActivity;
 import com.example.taehun.totalmanager.R;
-import com.example.taehun.totalmanager.Search1Fragment;
-import com.example.taehun.totalmanager.Search2Fragment;
-import com.example.taehun.totalmanager.SearchActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class BoardRegionActivity extends AppCompatActivity {
 

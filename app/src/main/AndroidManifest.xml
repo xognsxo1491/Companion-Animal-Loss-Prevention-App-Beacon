@@ -39,12 +39,12 @@
         <!-- <activity android:name=".MainFragment" /> -->
         <!-- <activity android:name=".Sub1Fragment" /> -->
         <!-- <activity android:name=".Sub2Fragment" /> -->
-        <activity android:name=".Board1_Activity" />
+        <activity android:name=".FreeBoard_Activity" />
         <activity android:name=".Sign_editActivity" />
         <activity
             android:name=".Sign_UpActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Board1_Write_Activity" />
+        <activity android:name=".FreeBoard_Write_Activity" />
         <!-- <activity android:name=".Search1Fragment" /> -->
         <!-- <activity android:name=".Search2Fragment" /> -->
 
@@ -55,7 +55,7 @@
         <activity
             android:name=".Board_Comment_Activity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".Board1_Search_Activity" />
+        <activity android:name=".FreeBoard_Search_Activity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

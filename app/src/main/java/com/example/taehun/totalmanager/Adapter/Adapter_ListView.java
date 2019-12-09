@@ -1,9 +1,6 @@
 package com.example.taehun.totalmanager.Adapter;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +10,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.example.taehun.totalmanager.Board1_Search_Activity;
 import com.example.taehun.totalmanager.R;
 
 import org.json.JSONArray;

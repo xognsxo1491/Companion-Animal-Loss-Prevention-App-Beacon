@@ -28,12 +28,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.taehun.totalmanager.Adapter.Adapter_BoardComment;
-import com.example.taehun.totalmanager.Board1_Activity;
 import com.example.taehun.totalmanager.BoardCommentItem;
 import com.example.taehun.totalmanager.R;
 import com.example.taehun.totalmanager.Request.Board1CommentWriteRequest;
 import com.example.taehun.totalmanager.Request.Board1DeleteCommentRequest;
-import com.example.taehun.totalmanager.Request.Board1DeleteRequest;
 import com.example.taehun.totalmanager.Request.BoardRegionDeleteRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 

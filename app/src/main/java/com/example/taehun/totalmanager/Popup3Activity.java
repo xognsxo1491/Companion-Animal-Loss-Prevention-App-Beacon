@@ -76,7 +76,7 @@ public class Popup3Activity extends  Activity {
 //                                boolean success = jsonObject.getBoolean("success"); // php가 db 접속이 성공적일 경우 success라는 문구가 나오는데 success를 캐치
 //
 //                                if (success) { // 성공일 경우
-//                                    Intent intent = new Intent(getApplicationContext(), Board1_Activity.class);
+//                                    Intent intent = new Intent(getApplicationContext(), FreeBoard_Activity.class);
 //                                    startActivity(intent);
 //                                }
 //

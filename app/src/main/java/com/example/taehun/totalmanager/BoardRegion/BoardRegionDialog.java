@@ -7,21 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
-import com.example.taehun.totalmanager.BeaconScan.BeaconItem;
-import com.example.taehun.totalmanager.Board1_Activity;
-import com.example.taehun.totalmanager.Board_Comment_Activity;
 import com.example.taehun.totalmanager.R;
-import com.example.taehun.totalmanager.Sign_InActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
