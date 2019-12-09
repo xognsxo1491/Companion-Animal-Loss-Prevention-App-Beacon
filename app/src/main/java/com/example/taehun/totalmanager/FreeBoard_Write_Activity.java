@@ -51,7 +51,7 @@ public class FreeBoard_Write_Activity extends AppCompatActivity { // 자유게�
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_Freeboard_write);
+        setContentView(R.layout.activity_freeboard_write);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.write_toolbar);
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab_image);

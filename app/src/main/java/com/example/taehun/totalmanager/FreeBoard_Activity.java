@@ -47,7 +47,7 @@ public class FreeBoard_Activity extends AppCompatActivity { // 자유게시판
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_Freeboard);
+        setContentView(R.layout.activity_freeboard);
 
         boardList = new ArrayList<HashMap<String, String>>();
 
